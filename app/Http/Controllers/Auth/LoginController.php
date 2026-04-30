@@ -32,7 +32,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Handle an authentication attempt.
+     * Handle an authentication attempt. 
      */
     public function login(Request $request)
     {
