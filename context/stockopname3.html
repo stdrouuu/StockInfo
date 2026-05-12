@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockInfo - Laporan Stock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#f8fafc] text-[#1e293b]">
+
+    <div class="flex min-h-screen">
+        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col fixed h-screen z-10">
+            <div class="p-6 flex items-center gap-3">
+                <div class="bg-[#1e40af] p-2 rounded-lg text-white">
+                    <i class="fas fa-warehouse text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">StockInfo</h1>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Warehouse Admin</p>
+                </div>
+            </div>
+
+            <nav class="flex-1 px-4 space-y-1 mt-4">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-th-large w-5"></i>
+                    <span class="text-sm font-medium">Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-box w-5"></i>
+                    <span class="text-sm font-medium">Data Produk</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-exchange-alt w-5"></i>
+                    <span class="text-sm font-medium">Stock</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-xl transition-all">
+                    <i class="fas fa-clipboard-check w-5"></i>
+                    <span class="text-sm font-medium">Stock Opname</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-user-friends w-5"></i>
+                    <span class="text-sm font-medium">Supplier</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-file-import w-5"></i>
+                    <span class="text-sm font-medium">Transaksi Masuk</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-chart-line w-5"></i>
+                    <span class="text-sm font-medium">Laporan</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-sync-alt w-5"></i>
+                    <span class="text-sm font-medium">Proses</span>
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-slate-100">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-cog w-5"></i>
+                    <span class="text-sm font-medium">Pengaturan</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="flex-1 ml-64 p-8">
+            <header class="flex justify-between items-center mb-8">
+                <div class="relative w-96">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" placeholder="Cari..." class="w-full pl-11 pr-4 py-2 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex items-center gap-4">
+                    <button class="relative p-2 text-slate-400 hover:text-slate-600">
+                        <i class="far fa-bell text-xl"></i>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    </button>
+                    <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+                        <div class="text-right">
+                            <p class="text-sm font-bold text-slate-800">Halo, Admin !</p>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Administrator</p>
+                        </div>
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" alt="Avatar" class="w-10 h-10 rounded-xl border border-slate-200">
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-8 space-y-8">
+                <div class="bg-[#d35400] rounded-3xl p-8 text-white relative overflow-hidden shadow-xl shadow-orange-900/10">
+                    <div class="relative z-10 flex items-center gap-6">
+                        <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md">
+                            <i class="fas fa-archive text-3xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold">Laporan Periode Stok Opname</h2>
+                            <div class="flex items-center gap-2 text-orange-100 text-[10px] mt-1 font-bold">
+                                <i class="fas fa-home"></i>
+                                <i class="fas fa-chevron-right text-[8px]"></i>
+                                <span class="uppercase">STOK OPNAME</span>
+                                <i class="fas fa-chevron-right text-[8px]"></i>
+                                <span class="text-white uppercase font-black tracking-widest">DATA</span>
+                            </div>
+                        </div>
+                    </div>
+                    <i class="fas fa-box absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
+                </div>
+
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-8 mb-8">
+                <div class="grid grid-cols-12 gap-8 items-center">
+                    <div class="col-span-7 space-y-4">
+                        <div class="space-y-2">
+                            <p class="text-xl font-bold text-slate-800">Periode : 01 Sep 2025 s/d 30 Sep 2025</p>
+                            <div class="space-y-1 text-slate-600 font-semibold">
+                                <p>Jumlah Barang : 10</p>
+                                <p>Jumlah Barang Sesuai : 7</p>
+                                <p>Jumlah Barang Selisih : 3</p>
+                                <p>Status Kerja : Tidak Aktif</p>
+                                <p>Pelaporan Stok : Selesai</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-5 flex flex-col items-center">
+                        <div class="relative w-48 h-48 rounded-full border-[16px] border-emerald-500 border-l-rose-500 flex items-center justify-center transform -rotate-45">
+                            <div class="absolute top-4 right-4 transform rotate-45 text-[10px] font-bold text-emerald-600">70.0%</div>
+                            <div class="absolute top-4 left-4 transform rotate-45 text-[10px] font-bold text-rose-600">30.0%</div>
+                        </div>
+                        <div class="mt-6 flex gap-6 text-[10px] font-bold uppercase tracking-widest">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 bg-emerald-500 rounded-full"></span>
+                                <span class="text-slate-500">Sesuai</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 bg-rose-500 rounded-full"></span>
+                                <span class="text-slate-500">Selisih</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12 overflow-hidden border border-slate-100 rounded-2xl">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-[#2d46b9] text-white text-[10px] font-black uppercase tracking-widest">
+                                <th class="px-6 py-4">No</th>
+                                <th class="px-6 py-4">Nomor SKU</th>
+                                <th class="px-6 py-4 text-center">Produk</th>
+                                <th class="px-6 py-4 text-center">Stock</th>
+                                <th class="px-6 py-4 text-center">Terlapor</th>
+                                <th class="px-6 py-4 text-center">Status</th>
+                                <th class="px-6 py-4">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            <tr class="text-sm">
+                                <td class="px-6 py-5 text-slate-400 font-medium tracking-tight">1</td>
+                                <td class="px-6 py-5 font-bold text-blue-600 tracking-tighter">SKU09238231</td>
+                                <td class="px-6 py-5 font-medium text-slate-600 text-center">Baja Ringan</td>
+                                <td class="px-6 py-5 font-black text-slate-800 text-center tracking-tighter">150</td>
+                                <td class="px-6 py-5 font-medium text-slate-500 text-center tracking-tighter">150</td>
+                                <td class="px-6 py-5 text-center">
+                                    <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-full uppercase">Sesuai</span>
+                                </td>
+                                <td class="px-6 py-5 text-slate-500 font-medium italic">lengkap</td>
+                            </tr>
+                            <tr class="text-sm">
+                                <td class="px-6 py-5 text-slate-400 font-medium tracking-tight">2</td>
+                                <td class="px-6 py-5 font-bold text-blue-600 tracking-tighter">SKU09238232</td>
+                                <td class="px-6 py-5 font-medium text-slate-600 text-center">Cat</td>
+                                <td class="px-6 py-5 font-black text-slate-800 text-center tracking-tighter">20</td>
+                                <td class="px-6 py-5 font-medium text-slate-500 text-center tracking-tighter">13</td>
+                                <td class="px-6 py-5 text-center">
+                                    <span class="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black rounded-full uppercase">Selisih</span>
+                                </td>
+                                <td class="px-6 py-5 text-slate-500 font-medium italic">barang rusak</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-8 flex items-center justify-between">
+                    <p class="text-xs text-slate-400 font-medium">Menampilkan 1-10 dari 1,290 transaksi</p>
+                    <div class="flex items-center gap-2">
+                        <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#2d46b9] text-white text-xs font-bold shadow-lg shadow-blue-200 transition-all">1</button>
+                        <button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 text-xs font-bold transition-all">2</button>
+                        <button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 text-xs font-bold transition-all">3</button>
+                        <span class="text-slate-300 text-xs mx-1 font-bold">...</span>
+                        <button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 text-xs font-bold transition-all">129</button>
+                        <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-100 hover:bg-slate-100 text-slate-400 text-xs transition-all">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

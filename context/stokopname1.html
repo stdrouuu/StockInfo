@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockInfo - Stok Opname</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#f8fafc] text-[#1e293b]">
+
+    <div class="flex min-h-screen">
+        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col fixed h-screen z-10">
+            <div class="p-6 flex items-center gap-3">
+                <div class="bg-[#1e40af] p-2 rounded-lg text-white">
+                    <i class="fas fa-warehouse text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">StockInfo</h1>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Warehouse Admin</p>
+                </div>
+            </div>
+
+            <nav class="flex-1 px-4 space-y-1 mt-4">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-th-large w-5"></i>
+                    <span class="text-sm font-medium">Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-box w-5"></i>
+                    <span class="text-sm font-medium">Data Produk</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-exchange-alt w-5"></i>
+                    <span class="text-sm font-medium">Stock</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-clipboard-check w-5"></i>
+                    <span class="text-sm font-medium">Stock Opname</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-user-friends w-5"></i>
+                    <span class="text-sm font-medium">Supplier</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-file-import w-5"></i>
+                    <span class="text-sm font-medium">Transaksi Masuk</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-chart-line w-5"></i>
+                    <span class="text-sm font-medium">Laporan</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-sync-alt w-5"></i>
+                    <span class="text-sm font-medium">Proses</span>
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-slate-100">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                    <i class="fas fa-cog w-5"></i>
+                    <span class="text-sm font-medium">Pengaturan</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="flex-1 ml-64">
+            <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 py-4 flex justify-between items-center sticky top-0 z-10">
+                <div class="relative w-96">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 text-sm"></i>
+                    <input type="text" placeholder="Cari Barang atau Supplier..." class="w-full pl-11 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none">
+                </div>
+                <div class="flex items-center gap-6">
+                    <button class="relative text-slate-400 hover:text-slate-600">
+                        <i class="far fa-bell text-lg"></i>
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    </button>
+                    <div class="flex items-center gap-3 pl-6 border-l border-slate-200">
+                        <div class="text-right">
+                            <p class="text-sm font-bold text-slate-800">Halo, Admin !</p>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">Administrator</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-slate-200 overflow-hidden border border-slate-100">
+                            <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" alt="Avatar">
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-8 space-y-8">
+                <div class="bg-[#d35400] rounded-3xl p-8 text-white relative overflow-hidden shadow-xl shadow-orange-900/10">
+                    <div class="relative z-10 flex items-center gap-6">
+                        <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md">
+                            <i class="fas fa-archive text-3xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold">Stok Opname</h2>
+                            <div class="flex items-center gap-2 text-orange-100 text-[10px] mt-1 font-bold">
+                                <i class="fas fa-home"></i>
+                                <i class="fas fa-chevron-right text-[8px]"></i>
+                                <span class="uppercase">STOK OPNAME</span>
+                                <i class="fas fa-chevron-right text-[8px]"></i>
+                                <span class="text-white uppercase font-black tracking-widest">DATA</span>
+                            </div>
+                        </div>
+                    </div>
+                    <i class="fas fa-box absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden p-6">
+                    <div class="mb-6">
+                        <button class="bg-[#2d46b9] hover:bg-blue-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-blue-200 transition-all">
+                            <i class="fas fa-plus text-xs"></i>
+                            Buat Periode
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="bg-[#2d46b9] text-white text-[10px] font-black uppercase tracking-widest">
+                                    <th class="px-6 py-4 rounded-tl-xl">No</th>
+                                    <th class="px-6 py-4">Periode</th>
+                                    <th class="px-6 py-4 text-center">Jumlah Barang</th>
+                                    <th class="px-6 py-4 text-center">Jumlah Sesuai Barang</th>
+                                    <th class="px-6 py-4 text-center">Jumlah Selisih Barang</th>
+                                    <th class="px-6 py-4 text-center">Status Kerja</th>
+                                    <th class="px-6 py-4 text-center">Status Pelaporan</th>
+                                    <th class="px-6 py-4 rounded-tr-xl text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-50">
+                                <script>
+                                    const data = [
+                                        { no: 1, period: "1 Okt 2025 s/d 30 Okt 2025", qty: 150, match: 150, diff: 0, work: "Tidak Aktif", status: "LENGKAP", statusClass: "bg-emerald-50 text-emerald-600" },
+                                        { no: 2, period: "01 Sep 2025 s/d 29 Sep 2025", qty: 85, match: 87, diff: 2, work: "Tidak Aktif", status: "LENGKAP", statusClass: "bg-emerald-50 text-emerald-600" },
+                                        { no: 3, period: "01 Sep 2025 s/d 29 Sep 2025", qty: 20, match: 20, diff: 0, work: "Aktif", status: "BELUM LENGKAP", statusClass: "bg-rose-50 text-rose-600" },
+                                        { no: 4, period: "01 Sep 2025 s/d 29 Sep 2025", qty: 300, match: 300, diff: 0, work: "Tidak Aktif", status: "SELESAI", statusClass: "bg-slate-50 text-slate-400" },
+                                        { no: 5, period: "01 Sep 2025 s/d 29 Sep 2025", qty: 200, match: 201, diff: 1, work: "Tidak Aktif", status: "SELESAI", statusClass: "bg-slate-50 text-slate-400" },
+                                        { no: 6, period: "01 Sep 2025 s/d 29 Sep 2025", qty: 45, match: 47, diff: 2, work: "Tidak Aktif", status: "SELESAI", statusClass: "bg-slate-50 text-slate-400" },
+                                        { no: 7, period: "01 Sep 2025 s/d 29 Sep 2025", qty: 120, match: 121, diff: 1, work: "Tidak Aktif", status: "SELESAI", statusClass: "bg-slate-50 text-slate-400" },
+                                        { no: 8, period: "01 Sep 2025 s/d 29 Sep 2025", qty: 10, match: 10, diff: 0, work: "Tidak Aktif", status: "SELESAI", statusClass: "bg-slate-50 text-slate-400" },
+                                        { no: 9, period: "01 Agu 2025 s/d 30 Agu 2025", qty: 410, match: 410, diff: 0, work: "Tidak Aktif", status: "SELESAI", statusClass: "bg-slate-50 text-slate-400" },
+                                        { no: 10, period: "01 Jul 2025 s/d 31 Jul 2025", qty: 95, match: 92, diff: 3, work: "Tidak Aktif", status: "SELESAI", statusClass: "bg-slate-50 text-slate-400" }
+                                    ];
+
+                                    document.write(data.map(row => `
+                                        <tr class="hover:bg-slate-50 transition-colors">
+                                            <td class="px-6 py-5 text-sm text-slate-400 font-medium">${row.no}</td>
+                                            <td class="px-6 py-5 text-sm font-extrabold text-[#2d46b9] leading-relaxed">${row.period}</td>
+                                            <td class="px-6 py-5 text-sm font-medium text-slate-500 text-center">${row.qty}</td>
+                                            <td class="px-6 py-5 text-sm font-black text-slate-800 text-center">${row.match}</td>
+                                            <td class="px-6 py-5 text-sm font-medium text-slate-500 text-center">${row.diff}</td>
+                                            <td class="px-6 py-5 text-sm font-medium text-slate-400 text-center">${row.work}</td>
+                                            <td class="px-6 py-5 text-center">
+                                                <span class="px-3 py-1 ${row.statusClass} text-[10px] font-black uppercase rounded-full">${row.status}</span>
+                                            </td>
+                                            <td class="px-6 py-5 text-center">
+                                                <button class="text-slate-300 hover:text-slate-600"><i class="fas fa-ellipsis-v"></i></button>
+                                            </td>
+                                        </tr>
+                                    `).join(''));
+                                </script>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-8 flex items-center justify-between">
+                        <p class="text-xs text-slate-400 font-medium tracking-tight">Menampilkan 1-10 dari 1,290 transaksi</p>
+                        <div class="flex items-center gap-2">
+                            <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#2d46b9] text-white text-xs font-bold shadow-md">1</button>
+                            <button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 text-xs font-bold transition-all">2</button>
+                            <button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 text-xs font-bold transition-all">3</button>
+                            <span class="text-slate-300 text-xs mx-1 font-bold tracking-widest">...</span>
+                            <button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 text-xs font-bold transition-all">129</button>
+                            <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-100 hover:bg-slate-100 text-slate-400 text-xs transition-all">
+                                <i class="fas fa-chevron-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

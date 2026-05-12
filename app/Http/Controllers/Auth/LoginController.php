@@ -52,8 +52,13 @@ class LoginController extends Controller
             $this->users[$role]['username'] === $username &&
             $this->users[$role]['password'] === $password
         ) {
-            // Kita tidak menyimpan session 'is_logged_in' agar bisa diam di login untuk testing berulang kali
-            return redirect('/login')->with('status', 'Login berhasil!');
+            session([
+                'is_logged_in' => true,
+                'user_name'    => $this->users[$role]['name'],
+                'user_role'    => $role
+            ]);
+            
+            return redirect()->route('dashboard.dashboard')->with('status', 'Login berhasil!');
         }
 
         return back()->withErrors([

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockInfo - Settings Simple</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-700">
+
+    <div class="flex min-h-screen">
+        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col fixed h-screen z-20">
+            <div class="p-6 flex items-center gap-3">
+                <div class="bg-[#1e40af] p-2 rounded-lg text-white">
+                    <i class="fas fa-warehouse text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg leading-tight tracking-tight text-slate-800">StockInfo</h1>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-[0.1em] font-bold">Warehouse Admin</p>
+                </div>
+            </div>
+
+            <nav class="flex-1 px-4 space-y-1 mt-4">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-50 rounded-xl transition-all group">
+                    <i class="fas fa-th-large w-5 text-lg group-hover:text-slate-600"></i>
+                    <span class="text-sm font-semibold group-hover:text-slate-600">Dashboard</span>
+                </a>
+                </nav>
+
+            <div class="p-4 border-t border-slate-100">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 bg-[#eff6ff] text-[#2563eb] rounded-xl mb-2">
+                    <i class="fas fa-cog w-5 text-lg"></i>
+                    <span class="text-sm font-bold">Pengaturan</span>
+                </a>
+                <button class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-all font-bold text-sm">
+                    <i class="fas fa-sign-out-alt w-5 text-lg"></i>
+                    Keluar Akun
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 ml-64 p-10">
+            <div class="max-w-4xl">
+                <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight mb-8">Pengaturan</h2>
+
+                <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                    <div class="flex items-center gap-8">
+                        <div class="relative">
+                            <div class="w-24 h-24 bg-[#1e40af] rounded-[2rem] flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-blue-100">
+                                AR
+                            </div>
+                            <button class="absolute -bottom-1 -right-1 bg-white p-2 rounded-xl shadow-md border border-slate-100 text-blue-600">
+                                <i class="fas fa-camera text-xs"></i>
+                            </button>
+                        </div>
+
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="text-2xl font-extrabold text-slate-800">Alex Rivera</h3>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <span class="text-sm text-slate-400 font-medium">Admin Level 4</span>
+                                        <span class="text-slate-300 text-xs">•</span>
+                                        <span class="text-[10px] bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-lg font-bold uppercase tracking-wider">Akun Aktif</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-12 pt-10 border-t border-slate-50">
+                        <div class="max-w-sm">
+                            <label class="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em] mb-3 block">Nama Lengkap</label>
+                            <p class="text-lg font-bold text-slate-700 border-b border-slate-100 pb-2">Alex Rivera</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex justify-between items-center px-10">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center text-red-500">
+                            <i class="fas fa-power-off"></i>
+                        </div>
+                        <p class="font-bold text-slate-800">Sesi Akun</p>
+                    </div>
+                    <button class="text-red-500 font-extrabold text-sm hover:underline">
+                        Sign Out dari Perangkat Ini
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
