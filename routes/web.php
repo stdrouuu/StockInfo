@@ -21,13 +21,13 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Dashboard Route
 Route::get('/dashboard', function () {
-    return view('dashboard.index');
+    return view('dashboard.dashboard');
 })->name('dashboard.dashboard');
 
 // Data Produk Routes
 Route::prefix('produk')->group(function () {
     Route::get('/', function () {
-        return view('produk.index');
+        return view('produk.produk');
     })->name('produk.index');
 
     Route::get('/kategori', function () {
@@ -38,7 +38,7 @@ Route::prefix('produk')->group(function () {
 // Transaksi Masuk Routes
 Route::prefix('transaksi')->group(function () {
     Route::get('/', function () {
-        return view('transaksi.index');
+        return view('transaksi.transaksi');
     })->name('transaksi.index');
 
     Route::get('/input', function () {
@@ -48,12 +48,12 @@ Route::prefix('transaksi')->group(function () {
 
 // Supplier Route
 Route::get('/supplier', function () {
-    return view('supplier.index');
+    return view('supplier.supplier');
 })->name('supplier.index');
 
 // Proses Route
 Route::get('/proses', function () {
-    return view('proses.index');
+    return view('proses.proses');
 })->name('proses.index');
 
 // Stok Opname Routes
@@ -73,10 +73,10 @@ Route::prefix('stok-opname')->group(function () {
 
 // Laporan Route
 Route::get('/laporan', function () {
-    return view('laporan.index');
+    return view('laporan.laporan');
 })->name('laporan.index');
 
 // Pengaturan Route
 Route::get('/pengaturan', function () {
-    return view('pengaturan.index');
+    return view('pengaturan.pengaturan');
 })->name('pengaturan.index');

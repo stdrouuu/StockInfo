@@ -133,7 +133,7 @@
                                     <button class="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-blue-600 hover:border-blue-200 transition-all">
                                         <i class="far fa-eye text-sm"></i>
                                     </button>
-                                    <button class="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-red-600 hover:border-red-200 transition-all">
+                                    <button @click="showDeleteModal = true; deleteTarget = trx.id" class="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-red-600 hover:border-red-200 transition-all">
                                         <i class="far fa-trash-alt text-sm"></i>
                                     </button>
                                 </div>
