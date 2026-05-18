@@ -21,7 +21,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Dashboard Route
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('dashboard.index');
 })->name('dashboard.dashboard');
 
 // Data Produk Routes
@@ -53,7 +53,7 @@ Route::get('/supplier', function () {
 
 // Proses Route
 Route::get('/proses', function () {
-    return view('proses');
+    return view('proses.index');
 })->name('proses.index');
 
 // Stok Opname Routes
@@ -73,10 +73,10 @@ Route::prefix('stok-opname')->group(function () {
 
 // Laporan Route
 Route::get('/laporan', function () {
-    return view('laporan');
+    return view('laporan.index');
 })->name('laporan.index');
 
 // Pengaturan Route
 Route::get('/pengaturan', function () {
-    return view('pengaturan');
+    return view('pengaturan.index');
 })->name('pengaturan.index');
