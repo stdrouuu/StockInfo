@@ -40,24 +40,14 @@
             </div>
         </div>
 
-        <!-- Transaksi Masuk -->
-        <div class="space-y-1">
-            <button @click="openSub = (openSub === 'transaksi' ? '' : 'transaksi')" 
-               class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all group"
-               :class="activeMenu === 'transaksi' ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-slate-400 hover:bg-slate-50'">
-                <div class="flex items-center gap-3">
-                    <i class="fas fa-file-import w-5 text-lg" :class="activeMenu === 'transaksi' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
-                    <span class="text-sm font-bold" :class="activeMenu === 'transaksi' ? '' : 'group-hover:text-slate-600'">Transaksi</span>
-                </div>
-                <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="openSub === 'transaksi' ? 'rotate-180' : ''"></i>
-            </button>
-            <div x-show="openSub === 'transaksi'" x-cloak class="pl-12 pr-4 space-y-1 pb-2">
-                <a href="{{ route('transaksi.index') }}" class="block py-2 text-sm font-semibold transition-colors"
-                   :class="activeMenu === 'transaksi' && !window.location.href.includes('input') ? 'text-[#2563eb]' : 'text-slate-400 hover:text-slate-600'">Data Transaksi</a>
-                <a href="{{ route('transaksi.input') }}" class="block py-2 text-sm font-semibold transition-colors"
-                   :class="window.location.href.includes('input') ? 'text-[#2563eb]' : 'text-slate-400 hover:text-slate-600'">Input Transaksi</a>
-            </div>
-        </div>
+        <!-- Transaksi -->
+        <a href="{{ route('transaksi.index') }}" 
+           class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group"
+           :class="activeMenu === 'transaksi' ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-slate-400 hover:bg-slate-50'">
+            <i class="fas fa-file-import w-5 text-lg" :class="activeMenu === 'transaksi' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
+            <span class="text-sm font-bold" :class="activeMenu === 'transaksi' ? '' : 'group-hover:text-slate-600'">Transaksi</span>
+        </a>
+
 
         <!-- Supplier -->
         <a href="{{ route('supplier.index') }}" 

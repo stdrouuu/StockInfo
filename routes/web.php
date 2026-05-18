@@ -42,7 +42,7 @@ Route::prefix('transaksi')->group(function () {
     })->name('transaksi.index');
 
     Route::get('/input', function () {
-        return view('transaksi.input');
+        return redirect()->route('transaksi.index');
     })->name('transaksi.input');
 });
 
