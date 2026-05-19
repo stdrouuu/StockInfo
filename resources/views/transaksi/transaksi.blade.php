@@ -169,35 +169,7 @@
 
 @section('modal-content')
 <!-- Input Transaksi Modal -->
-<div x-show="modalType === 'add-transaction'" x-data="{ 
-    step: 1, 
-    type: 'Masuk',
-    tanggal: '{{ date('Y-m-d') }}',
-    supplier_id: '',
-    tujuan: '',
-    keterangan: '',
-    items: [{id: 1, produk_id: '', qty: 1, price: 0}],
-    productsList: {!! $produks->mapWithKeys(fn($p) => [$p->id => ['id' => $p->id, 'nama' => $p->nama, 'harga' => (int)$p->harga]])->toJson() !!},
-    addItem() {
-        this.items.push({id: Date.now(), produk_id: '', qty: 1, price: 0});
-    },
-    removeItem(index) {
-        if (this.items.length !== 1) this.items.splice(index, 1);
-    },
-    updatePrice(item) {
-        if (item.produk_id && this.productsList[item.produk_id]) {
-            item.price = this.productsList[item.produk_id].harga;
-        } else {
-            item.price = 0;
-        }
-    },
-    calculateTotal() {
-        return this.items.reduce((acc, curr) => acc + (parseInt(curr.qty || 0) * parseFloat(curr.price || 0)), 0);
-    },
-    formatRupiah(number) {
-        return 'Rp ' + new Intl.NumberFormat('id-ID').format(number);
-    }
-}">
+<div x-show="modalType === 'add-transaction'" x-data="transaksiModal">
     <div class="flex items-center justify-between mb-10">
         <div>
             <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mb-1">Pencatatan Transaksi</h2>
@@ -343,3 +315,39 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('transaksiModal', () => ({
+            step: 1,
+            type: 'Masuk',
+            tanggal: '{{ date("Y-m-d") }}',
+            supplier_id: '',
+            tujuan: '',
+            keterangan: '',
+            items: [{id: 1, produk_id: '', qty: 1, price: 0}],
+            productsList: {!! $produks->mapWithKeys(fn($p) => [$p->id => ['id' => $p->id, 'nama' => $p->nama, 'harga' => (int)$p->harga]])->toJson() !!},
+            addItem() {
+                this.items.push({id: Date.now(), produk_id: '', qty: 1, price: 0});
+            },
+            removeItem(index) {
+                if (this.items.length !== 1) this.items.splice(index, 1);
+            },
+            updatePrice(item) {
+                if (item.produk_id && this.productsList[item.produk_id]) {
+                    item.price = this.productsList[item.produk_id].harga;
+                } else {
+                    item.price = 0;
+                }
+            },
+            calculateTotal() {
+                return this.items.reduce((acc, curr) => acc + (parseInt(curr.qty || 0) * parseFloat(curr.price || 0)), 0);
+            },
+            formatRupiah(number) {
+                return 'Rp ' + new Intl.NumberFormat('id-ID').format(number);
+            }
+        }));
+    });
+</script>
+@endpush
