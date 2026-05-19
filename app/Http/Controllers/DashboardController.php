@@ -6,6 +6,7 @@ use App\Models\Produk;
 use App\Models\TransaksiItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use ArielMejiaDev\LarapexCharts\LarapexChart;
 
 class DashboardController extends Controller
 {
@@ -36,7 +37,6 @@ class DashboardController extends Controller
             ->get();
 
         // 6. Stock Movement Trends (Dummy / calculate daily transactions for current week)
-        // Let's calculate the real inbound and outbound values for the current week or a mock structure based on db
         $trends = [
             'Mon' => ['in' => 120, 'out' => 80],
             'Tue' => ['in' => 240, 'out' => 150],
@@ -68,13 +68,45 @@ class DashboardController extends Controller
             }
         }
 
+        // Build Larapex Chart
+        $chart = (new LarapexChart)->barChart()
+            ->setXAxis(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])
+            ->setDataset([
+                [
+                    'name' => 'Inbound',
+                    'data' => [
+                        $trends['Mon']['in'],
+                        $trends['Tue']['in'],
+                        $trends['Wed']['in'],
+                        $trends['Thu']['in'],
+                        $trends['Fri']['in'],
+                        $trends['Sat']['in'],
+                        $trends['Sun']['in'],
+                    ]
+                ],
+                [
+                    'name' => 'Outbound',
+                    'data' => [
+                        $trends['Mon']['out'],
+                        $trends['Tue']['out'],
+                        $trends['Wed']['out'],
+                        $trends['Thu']['out'],
+                        $trends['Fri']['out'],
+                        $trends['Sat']['out'],
+                        $trends['Sun']['out'],
+                    ]
+                ]
+            ])
+            ->setColors(['#2563eb', '#cbd5e1']) // blue-600 and slate-300
+            ->setHeight(280);
+
         return view('dashboard.dashboard', compact(
             'jumlahStok',
             'stokRendah',
             'stokMasuk',
             'inventoryValue',
             'lowStockProducts',
-            'trends'
+            'chart'
         ));
     }
 }

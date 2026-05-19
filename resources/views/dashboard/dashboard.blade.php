@@ -51,49 +51,17 @@
     </div>
 </div>
 
+<!-- Larapex Chart Integrated Container -->
 <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm mb-10">
-    <div class="flex justify-between items-start mb-12">
+    <div class="flex justify-between items-start mb-6">
         <div>
             <h4 class="font-extrabold text-xl text-slate-800 mb-1">Stock Movement Trends</h4>
-            <p class="text-xs font-medium text-slate-400">Volume harian material yang datang dan berangkat.</p>
-        </div>
-        <div class="flex items-center gap-4">
-            <div class="flex items-center gap-6 mr-4">
-                <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 bg-blue-600 rounded-sm"></span>
-                    <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Inbound</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 bg-slate-300 rounded-sm"></span>
-                    <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Outbound</span>
-                </div>
-            </div>
-            <select class="bg-slate-50 border border-slate-100 text-[10px] font-extrabold text-slate-600 py-2 px-4 rounded-xl outline-none">
-                <option>Mingguan</option>
-            </select>
+            <p class="text-xs font-medium text-slate-400">Volume harian material yang datang dan keluar.</p>
         </div>
     </div>
-
-    <div class="flex items-end justify-between h-64 gap-6 px-4">
-        @php
-            $maxTrend = 1;
-            foreach ($trends as $t) {
-                $maxTrend = max($maxTrend, $t['in'], $t['out']);
-            }
-        @endphp
-        @foreach ($trends as $day => $val)
-            @php
-                $inPercent = $maxTrend > 0 ? ($val['in'] / $maxTrend) * 100 : 0;
-                $outPercent = $maxTrend > 0 ? ($val['out'] / $maxTrend) * 100 : 0;
-            @endphp
-            <div class="flex-1 flex flex-col items-center gap-4 h-full group">
-                <div class="flex-1 w-full flex items-end justify-center gap-1.5 h-full">
-                    <div style="height: {{ max($inPercent, 5) }}%;" class="w-full bg-blue-400 rounded-t-lg shadow-lg shadow-blue-100 transition-all group-hover:bg-blue-500" title="Inbound: {{ $val['in'] }}"></div>
-                    <div style="height: {{ max($outPercent, 5) }}%;" class="w-full bg-slate-300 rounded-t-lg transition-all group-hover:bg-slate-400" title="Outbound: {{ $val['out'] }}"></div>
-                </div>
-                <span class="text-[10px] font-extrabold {{ $day === date('D') ? 'text-slate-800 border-b-2 border-blue-500 pb-1' : 'text-slate-300' }} uppercase tracking-widest">{{ $day }}</span>
-            </div>
-        @endforeach
+    
+    <div class="w-full">
+        {!! $chart->container() !!}
     </div>
 </div>
 
@@ -146,3 +114,8 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+{!! $chart->script() !!}
+@endpush
