@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'StockInfo - Laporan Stok Opname')
+@section('title', 'StockInfo - Laporan Kecocokan Stok')
 
 @section('content')
 <div class="space-y-8">
@@ -10,13 +10,13 @@
                 <i class="fas fa-archive text-3xl"></i>
             </div>
             <div>
-                <h2 class="text-2xl font-bold">Laporan Periode Stok Opname</h2>
+                <h2 class="text-2xl font-bold">Laporan Kecocokan Stok Fisik Toko</h2>
                 <div class="flex items-center gap-2 text-orange-100 text-[10px] mt-1 font-bold">
                     <i class="fas fa-home"></i>
                     <i class="fas fa-chevron-right text-[8px]"></i>
                     <span class="uppercase">STOK OPNAME</span>
                     <i class="fas fa-chevron-right text-[8px]"></i>
-                    <span class="text-white uppercase font-black tracking-widest">LAPORAN</span>
+                    <span class="text-white uppercase font-black tracking-widest">LAPORAN KECOCOKAN</span>
                 </div>
             </div>
         </div>
@@ -27,13 +27,13 @@
         <div class="grid grid-cols-12 gap-8 items-center">
             <div class="col-span-7 space-y-4">
                 <div class="space-y-2">
-                    <p class="text-xl font-bold text-slate-800">Periode : {{ $periode->tanggal_mulai->format('d M Y') }} s/d {{ $periode->tanggal_selesai->format('d M Y') }}</p>
+                    <p class="text-xl font-bold text-slate-800">Jadwal Pengecekan: {{ $periode->tanggal_mulai->format('d M Y') }} s/d {{ $periode->tanggal_selesai->format('d M Y') }}</p>
                     <div class="space-y-1.5 text-slate-600 font-semibold">
-                        <p>Jumlah Barang : {{ $totalItems }}</p>
-                        <p>Jumlah Barang Sesuai : {{ $totalSesuai }}</p>
-                        <p>Jumlah Barang Selisih : {{ $totalSelisih }}</p>
-                        <p>Status Kerja : {{ $periode->status_kerja }}</p>
-                        <p>Pelaporan Stok : {{ $periode->status_pelaporan }}</p>
+                        <p>Total Jenis Barang Dicek : {{ $totalItems }} jenis</p>
+                        <p>Jumlah Stok Sesuai (Aman) : <span class="text-emerald-600 font-extrabold">{{ $totalSesuai }} jenis</span></p>
+                        <p>Jumlah Stok Selisih (Beda) : <span class="text-rose-500 font-extrabold">{{ $totalSelisih }} jenis</span></p>
+                        <p>Status Pengecekan : <span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs font-bold rounded">{{ $periode->status_kerja === 'Aktif' ? 'Berjalan' : 'Selesai' }}</span></p>
+                        <p>Kondisi Laporan : <span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs font-bold rounded">{{ $periode->status_pelaporan }}</span></p>
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                     <!-- Innermost circle for donut hole aesthetic -->
                     <div class="w-32 h-32 rounded-full bg-white flex flex-col items-center justify-center shadow-inner">
                         <span class="text-2xl font-black text-slate-800">{{ $sesuaiPercent }}%</span>
-                        <span class="text-[9px] font-black uppercase text-slate-400 tracking-wider">Akurasi</span>
+                        <span class="text-[9px] font-black uppercase text-slate-400 tracking-wider">Akurasi Stok</span>
                     </div>
                 </div>
                 <div class="mt-6 flex gap-6 text-[10px] font-bold uppercase tracking-widest">
@@ -66,13 +66,13 @@
                 <thead>
                     <tr class="bg-[#2d46b9] text-white text-[10px] font-black uppercase tracking-widest">
                         <th class="px-6 py-4">No</th>
-                        <th class="px-6 py-4">Nomor SKU</th>
-                        <th class="px-6 py-4">Produk</th>
-                        <th class="px-6 py-4 text-center">Stok Sistem</th>
-                        <th class="px-6 py-4 text-center">Terlapor</th>
-                        <th class="px-6 py-4 text-center">Selisih</th>
-                        <th class="px-6 py-4 text-center">Status</th>
-                        <th class="px-6 py-4">Keterangan</th>
+                        <th class="px-6 py-4">Kode Barang</th>
+                        <th class="px-6 py-4">Nama Barang</th>
+                        <th class="px-6 py-4 text-center">Stok Komputer</th>
+                        <th class="px-6 py-4 text-center">Stok Nyata (Fisik)</th>
+                        <th class="px-6 py-4 text-center">Selisih Stok</th>
+                        <th class="px-6 py-4 text-center">Hasil Cek</th>
+                        <th class="px-6 py-4">Alasan Perbedaan</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
@@ -88,14 +88,14 @@
                         </td>
                         <td class="px-6 py-5 text-center">
                             @if($item->catatan === 'belum dilaporkan')
-                                <span class="px-3 py-1 bg-amber-50 text-amber-600 text-[10px] font-black rounded-full uppercase">BELUM</span>
+                                <span class="px-3 py-1 bg-amber-50 text-amber-600 text-[10px] font-black rounded-full uppercase">BELUM DICEK</span>
                             @elseif($item->selisih === 0)
-                                <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-full uppercase font-black">Sesuai</span>
+                                <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-full uppercase font-black">SESUAI</span>
                             @else
-                                <span class="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black rounded-full uppercase font-black font-black">Selisih</span>
+                                <span class="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black rounded-full uppercase font-black font-black">BEDA (SELISIH)</span>
                             @endif
                         </td>
-                        <td class="px-6 py-5 text-slate-500 font-medium italic">{{ $item->catatan }}</td>
+                        <td class="px-6 py-5 text-slate-500 font-medium italic">{{ $item->catatan === 'belum dilaporkan' ? 'Belum dicatat' : $item->catatan }}</td>
                     </tr>
                     @empty
                     <tr>

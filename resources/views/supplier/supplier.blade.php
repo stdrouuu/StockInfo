@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'StockInfo - Supplier')
+@section('title', 'StockInfo - Daftar Agen / Supplier')
 
 @section('content')
 <div class="space-y-8">
@@ -22,11 +22,11 @@
                 <i class="fas fa-truck text-3xl"></i>
             </div>
             <div>
-                <h2 class="text-2xl font-bold">Supplier</h2>
+                <h2 class="text-2xl font-bold">Daftar Agen & Supplier Toko</h2>
                 <div class="flex items-center gap-2 text-purple-100 text-xs mt-1">
                     <i class="fas fa-home"></i>
                     <i class="fas fa-chevron-right text-[8px]"></i>
-                    <span class="font-bold text-white uppercase tracking-wider">Supplier</span>
+                    <span class="font-bold text-white uppercase tracking-wider">AGEN / SUPPLIER</span>
                 </div>
             </div>
         </div>
@@ -38,12 +38,12 @@
             <div class="flex flex-1 items-center gap-3 max-w-2xl">
                 <!-- Search Form -->
                 <form method="GET" action="{{ route('supplier.index') }}" class="relative flex-1">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Supplier..." class="w-full px-5 py-3 bg-[#f1f5f9] border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama agen, sales, atau alamat..." class="w-full px-5 py-3 bg-[#f1f5f9] border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400">
                 </form>
             </div>
             <button @click="$dispatch('open-supplier-modal', { mode: 'add', action: '{{ route('supplier.store') }}' })" class="bg-[#1e40af] hover:bg-blue-800 text-white px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-3 shadow-lg shadow-blue-200 transition-all">
                 <i class="fas fa-user-plus"></i>
-                Supplier Baru
+                + Tambah Agen Baru
             </button>
         </div>
 
@@ -52,10 +52,10 @@
                 <thead>
                     <tr class="bg-[#2d46b9] text-white text-[10px] font-black uppercase tracking-widest text-left">
                         <th class="px-6 py-4 rounded-tl-2xl">No</th>
-                        <th class="px-6 py-4">Nama Supplier</th>
-                        <th class="px-6 py-4 text-center">Kontak Person</th>
-                        <th class="px-6 py-4">No. Telepon</th>
-                        <th class="px-6 py-4">Alamat</th>
+                        <th class="px-6 py-4">Nama Perusahaan / Agen</th>
+                        <th class="px-6 py-4 text-center">Nama Sales (CP)</th>
+                        <th class="px-6 py-4">No. WA / Telepon</th>
+                        <th class="px-6 py-4">Alamat Agen</th>
                         <th class="px-6 py-4 text-center rounded-tr-2xl">Aksi</th>
                     </tr>
                 </thead>
@@ -71,16 +71,17 @@
                             <div class="flex justify-center gap-3">
                                 <button @click="$dispatch('open-supplier-modal', {
                                     mode: 'edit',
+                                    id: '{{ $supplier->id }}',
                                     nama: '{{ $supplier->nama }}',
                                     kontak_person: '{{ $supplier->kontak_person }}',
                                     telepon: '{{ $supplier->telepon }}',
                                     email: '{{ $supplier->email }}',
                                     alamat: '{{ $supplier->alamat }}',
                                     action: '{{ route('supplier.update', $supplier->id) }}'
-                                })" class="p-2 text-slate-400 hover:text-blue-600 transition-colors">
+                                })" class="p-2 text-slate-400 hover:text-blue-600 transition-colors" title="Ubah data agen">
                                     <i class="far fa-edit text-sm"></i>
                                 </button>
-                                <button @click="showDeleteModal = true; deleteTarget = '{{ $supplier->nama }}'; deleteAction = '{{ route('supplier.destroy', $supplier->id) }}'" class="p-2 text-slate-400 hover:text-red-600 transition-colors">
+                                <button @click="showDeleteModal = true; deleteTarget = '{{ $supplier->nama }}'; deleteAction = '{{ route('supplier.destroy', $supplier->id) }}'" class="p-2 text-slate-400 hover:text-red-600 transition-colors" title="Hapus agen">
                                     <i class="far fa-trash-alt text-sm"></i>
                                 </button>
                             </div>
@@ -88,7 +89,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-8 text-center text-slate-400 font-medium">Tidak ada supplier ditemukan.</td>
+                        <td colspan="6" class="px-6 py-8 text-center text-slate-400 font-medium">Belum ada agen terdaftar di toko.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -140,7 +141,7 @@
         alamat = $event.detail.alamat || '';
         action = $event.detail.action || '{{ route('supplier.store') }}';
      ">
-    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6" x-text="mode === 'add' ? 'Tambah Supplier Baru' : 'Edit Supplier'"></h2>
+    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6" x-text="mode === 'add' ? 'Tambah Agen Baru Ke Toko' : 'Ubah Data Agen Toko'"></h2>
     <form :action="action" method="POST" class="space-y-5">
         @csrf
         <template x-if="mode === 'edit'">
@@ -149,29 +150,29 @@
         
         <div class="grid grid-cols-2 gap-5">
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Nama Supplier</label>
-                <input type="text" name="nama" x-model="nama" required placeholder="PT. Jaya Abadi" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Nama Toko Agen / Perusahaan</label>
+                <input type="text" name="nama" x-model="nama" required placeholder="Contoh: PT. Jaya Makmur Besi" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
             </div>
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Kontak Person</label>
-                <input type="text" name="kontak_person" x-model="kontak_person" required placeholder="Nama Lengkap" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Nama Sales / Kontak Person</label>
+                <input type="text" name="kontak_person" x-model="kontak_person" required placeholder="Contoh: Pak Eko (Sales)" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
             </div>
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">No. Telepon</label>
-                <input type="text" name="telepon" x-model="telepon" required placeholder="0812xxxx" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">No. Telepon / WhatsApp</label>
+                <input type="text" name="telepon" x-model="telepon" required placeholder="Contoh: 08123456789" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
             </div>
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Email</label>
-                <input type="email" name="email" x-model="email" required placeholder="supplier@example.com" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Alamat Email (Boleh Kosong)</label>
+                <input type="email" name="email" x-model="email" placeholder="Contoh: sales@jayamakmur.com" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
             </div>
         </div>
         <div class="space-y-2">
-            <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Alamat Lengkap</label>
-            <textarea name="alamat" x-model="alamat" required placeholder="Masukkan alamat lengkap supplier" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none" rows="3"></textarea>
+            <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Alamat Lengkap Kantor / Toko</label>
+            <textarea name="alamat" x-model="alamat" required placeholder="Masukkan alamat lengkap toko agen untuk mempermudah pemesanan..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none" rows="3"></textarea>
         </div>
         <div class="flex justify-end gap-3 pt-4">
             <button type="button" @click="showModal = false" class="px-8 py-2.5 bg-slate-100 text-slate-800 rounded-xl text-sm font-bold hover:bg-slate-200 transition-all">Batal</button>
-            <button type="submit" class="px-8 py-2.5 bg-[#2d46b9] text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 hover:bg-blue-800 transition-all">Simpan</button>
+            <button type="submit" class="px-8 py-2.5 bg-[#2d46b9] text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 hover:bg-blue-800 transition-all">Simpan Agen</button>
         </div>
     </form>
 </div>

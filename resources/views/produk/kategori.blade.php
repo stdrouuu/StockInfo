@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'StockInfo - Kategori Produk')
+@section('title', 'StockInfo - Kategori Barang')
 
 @section('content')
 <div class="space-y-8">
@@ -22,11 +22,11 @@
                 <i class="fas fa-box text-3xl"></i>
             </div>
             <div>
-                <h2 class="text-2xl font-bold">Kategori Produk</h2>
+                <h2 class="text-2xl font-bold">Kategori Barang Toko</h2>
                 <div class="flex items-center gap-2 text-blue-100 text-xs mt-1">
                     <i class="fas fa-home"></i>
                     <i class="fas fa-chevron-right text-[8px]"></i>
-                    <span>DATA PRODUK</span>
+                    <span>PENGELOLAAN BARANG</span>
                     <i class="fas fa-chevron-right text-[8px]"></i>
                     <span class="font-bold text-white">KATEGORI</span>
                 </div>
@@ -40,11 +40,11 @@
             <!-- Search Form -->
             <form method="GET" action="{{ route('kategori.index') }}" class="relative w-full max-w-md">
                 <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Kategori Produk..." class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Kategori Barang..." class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
             </form>
             <button @click="$dispatch('open-category-modal', { mode: 'add', action: '{{ route('kategori.store') }}' })" class="bg-[#1e40af] hover:bg-blue-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-blue-200 transition-all">
                 <i class="fas fa-plus"></i>
-                Kategori baru
+                + Tambah Kategori Baru
             </button>
         </div>
 
@@ -54,7 +54,7 @@
                     <tr class="bg-[#0038a8] text-white text-[11px] font-bold uppercase tracking-widest text-left">
                         <th class="px-8 py-4 w-20">No</th>
                         <th class="px-8 py-4 text-center">Nama Kategori</th>
-                        <th class="px-8 py-4 text-right w-32">Opsi</th>
+                        <th class="px-8 py-4 text-right w-32">Ubah / Hapus</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -68,10 +68,10 @@
                                     mode: 'edit',
                                     nama: '{{ $category->nama }}',
                                     action: '{{ route('kategori.update', $category->id) }}'
-                                })" class="flex items-center justify-center p-1 text-slate-400 hover:text-blue-600 transition-all">
+                                })" class="flex items-center justify-center p-1 text-slate-400 hover:text-blue-600 transition-all" title="Ubah nama kategori">
                                     <i class="far fa-edit text-sm"></i>
                                 </button>
-                                <button @click="showDeleteModal = true; deleteTarget = '{{ $category->nama }}'; deleteAction = '{{ route('kategori.destroy', $category->id) }}'" class="flex items-center justify-center p-1 text-slate-400 hover:text-red-600 transition-all">
+                                <button @click="showDeleteModal = true; deleteTarget = '{{ $category->nama }}'; deleteAction = '{{ route('kategori.destroy', $category->id) }}'" class="flex items-center justify-center p-1 text-slate-400 hover:text-red-600 transition-all" title="Hapus kategori">
                                     <i class="far fa-trash-alt text-sm"></i>
                                 </button>
                             </div>
@@ -79,7 +79,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="3" class="px-8 py-8 text-center text-slate-400 font-medium">Tidak ada kategori ditemukan.</td>
+                        <td colspan="3" class="px-8 py-8 text-center text-slate-400 font-medium">Kategori tidak ditemukan.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -123,7 +123,7 @@
         nama = $event.detail.nama || '';
         action = $event.detail.action || '{{ route('kategori.store') }}';
      ">
-    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6" x-text="mode === 'add' ? 'Tambah Kategori' : 'Edit Kategori'"></h2>
+    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6" x-text="mode === 'add' ? 'Tambah Kategori Barang Baru' : 'Ubah Nama Kategori Barang'"></h2>
     <form :action="action" method="POST" class="space-y-5">
         @csrf
         <template x-if="mode === 'edit'">
@@ -132,11 +132,11 @@
         
         <div class="space-y-2">
             <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Nama Kategori</label>
-            <input type="text" name="nama" x-model="nama" required placeholder="Masukkan nama kategori baru" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+            <input type="text" name="nama" x-model="nama" required placeholder="Contoh: Kayu, Cat, Kelistrikan, Semen..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
         </div>
         <div class="flex justify-end gap-3 pt-4">
             <button type="button" @click="showModal = false" class="px-8 py-2.5 bg-slate-100 text-slate-800 rounded-xl text-sm font-bold hover:bg-slate-200 transition-all">Batal</button>
-            <button type="submit" class="px-8 py-2.5 bg-[#2d46b9] text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 hover:bg-blue-800 transition-all">Simpan</button>
+            <button type="submit" class="px-8 py-2.5 bg-[#2d46b9] text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 hover:bg-blue-800 transition-all">Simpan Kategori</button>
         </div>
     </form>
 </div>

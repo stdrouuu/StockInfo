@@ -5,7 +5,7 @@
         </div>
         <div>
             <h1 class="font-extrabold text-lg leading-tight tracking-tight text-slate-800">StockInfo</h1>
-            <p class="text-[10px] text-slate-400 uppercase tracking-[0.1em] font-bold">Admin</p>
+            <p class="text-[10px] text-slate-400 uppercase tracking-[0.1em] font-bold">Aplikasi Toko</p>
         </div>
     </div>
 
@@ -13,93 +13,92 @@
         activeMenu: '{{ Request::segment(1) ?: 'dashboard' }}',
         openSub: '{{ in_array(Request::segment(1), ['produk', 'kategori', 'transaksi', 'stok-opname']) ? Request::segment(1) : '' }}'
     }">
-        <!-- Dashboard -->
+        <!-- Ringkasan Toko (Dashboard) -->
         <a href="{{ route('dashboard.dashboard') }}" 
            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group"
            :class="activeMenu === 'dashboard' ? 'bg-[#eff6ff] text-[#2563eb] shadow-sm' : 'text-slate-400 hover:bg-slate-50'">
             <i class="fas fa-th-large w-5 text-lg" :class="activeMenu === 'dashboard' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
-            <span class="text-sm font-bold" :class="activeMenu === 'dashboard' ? '' : 'group-hover:text-slate-600'">Dashboard</span>
+            <span class="text-sm font-bold" :class="activeMenu === 'dashboard' ? '' : 'group-hover:text-slate-600'">Ringkasan Toko (Home)</span>
         </a>
 
-        <!-- Data Produk -->
+        <!-- Kelola Barang -->
         <div class="space-y-1">
             <button @click="openSub = (openSub === 'produk' ? '' : 'produk')" 
                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all group"
                :class="activeMenu === 'produk' || activeMenu === 'kategori' ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-slate-400 hover:bg-slate-50'">
                 <div class="flex items-center gap-3">
                     <i class="fas fa-box w-5 text-lg" :class="activeMenu === 'produk' || activeMenu === 'kategori' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
-                    <span class="text-sm font-bold" :class="activeMenu === 'produk' || activeMenu === 'kategori' ? '' : 'group-hover:text-slate-600'">Data Produk</span>
+                    <span class="text-sm font-bold" :class="activeMenu === 'produk' || activeMenu === 'kategori' ? '' : 'group-hover:text-slate-600'">Kelola Barang</span>
                 </div>
                 <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="openSub === 'produk' ? 'rotate-180' : ''"></i>
             </button>
             <div x-show="openSub === 'produk'" x-cloak class="pl-12 pr-4 space-y-1 pb-2">
                 <a href="{{ route('produk.index') }}" class="block py-2 text-sm font-semibold transition-colors"
-                   :class="activeMenu === 'produk' ? 'text-[#2563eb]' : 'text-slate-400 hover:text-slate-600'">Data Produk</a>
+                   :class="activeMenu === 'produk' ? 'text-[#2563eb]' : 'text-slate-400 hover:text-slate-600'">Daftar Barang</a>
                 <a href="{{ route('kategori.index') }}" class="block py-2 text-sm font-semibold transition-colors"
-                   :class="activeMenu === 'kategori' ? 'text-[#2563eb]' : 'text-slate-400 hover:text-slate-600'">Kategori Produk</a>
+                   :class="activeMenu === 'kategori' ? 'text-[#2563eb]' : 'text-slate-400 hover:text-slate-600'">Kategori Barang</a>
             </div>
         </div>
 
-        <!-- Transaksi -->
+        <!-- Keluar Masuk Barang (Transaksi) -->
         <a href="{{ route('transaksi.index') }}" 
            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group"
            :class="activeMenu === 'transaksi' ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-slate-400 hover:bg-slate-50'">
             <i class="fas fa-file-import w-5 text-lg" :class="activeMenu === 'transaksi' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
-            <span class="text-sm font-bold" :class="activeMenu === 'transaksi' ? '' : 'group-hover:text-slate-600'">Transaksi</span>
+            <span class="text-sm font-bold" :class="activeMenu === 'transaksi' ? '' : 'group-hover:text-slate-600'">Keluar Masuk Barang</span>
         </a>
 
-
-        <!-- Supplier -->
+        <!-- Daftar Pemasok (Supplier) -->
         <a href="{{ route('supplier.index') }}" 
            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group"
            :class="activeMenu === 'supplier' ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-slate-400 hover:bg-slate-50'">
             <i class="fas fa-user-friends w-5 text-lg" :class="activeMenu === 'supplier' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
-            <span class="text-sm font-bold" :class="activeMenu === 'supplier' ? '' : 'group-hover:text-slate-600'">Supplier</span>
+            <span class="text-sm font-bold" :class="activeMenu === 'supplier' ? '' : 'group-hover:text-slate-600'">Daftar Agen (Supplier)</span>
         </a>
 
-        <!-- Proses -->
+        <!-- Pengiriman (Proses) -->
         <a href="{{ route('proses.index') }}" 
            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group"
            :class="activeMenu === 'proses' ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-slate-400 hover:bg-slate-50'">
             <i class="fas fa-sync-alt w-5 text-lg" :class="activeMenu === 'proses' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
-            <span class="text-sm font-bold" :class="activeMenu === 'proses' ? '' : 'group-hover:text-slate-600'">Proses</span>
+            <span class="text-sm font-bold" :class="activeMenu === 'proses' ? '' : 'group-hover:text-slate-600'">Surat Jalan (DO)</span>
         </a>
 
-        <!-- Stok Opname -->
+        <!-- Cocokkan Stok (Stok Opname) -->
         <div class="space-y-1">
             <button @click="openSub = (openSub === 'stok-opname' ? '' : 'stok-opname')" 
                class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all group"
                :class="activeMenu === 'stok-opname' ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-slate-400 hover:bg-slate-50'">
                 <div class="flex items-center gap-3">
                     <i class="fas fa-clipboard-check w-5 text-lg" :class="activeMenu === 'stok-opname' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
-                    <span class="text-sm font-bold" :class="activeMenu === 'stok-opname' ? '' : 'group-hover:text-slate-600'">Stok Opname</span>
+                    <span class="text-sm font-bold" :class="activeMenu === 'stok-opname' ? '' : 'group-hover:text-slate-600'">Cocokkan Stok (Opname)</span>
                 </div>
                 <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="openSub === 'stok-opname' ? 'rotate-180' : ''"></i>
             </button>
             <div x-show="openSub === 'stok-opname'" x-cloak class="pl-12 pr-4 space-y-1 pb-2">
                 <a href="{{ route('stok.opname1') }}" class="block py-2 text-sm font-semibold transition-colors"
-                   :class="activeMenu === 'stok-opname' && !window.location.href.includes('input') && !window.location.href.includes('laporan') ? 'text-[#2563eb]' : 'text-slate-400 hover:text-slate-600'">Periode Opname</a>
+                   :class="activeMenu === 'stok-opname' && !window.location.href.includes('input') && !window.location.href.includes('laporan') ? 'text-[#2563eb]' : 'text-slate-400 hover:text-slate-600'">Daftar Periode Opname</a>
                 <a href="{{ route('stok.opname2') }}" class="block py-2 text-sm font-semibold transition-colors"
-                   :class="window.location.href.includes('input') ? 'text-[#2563eb]' : 'text-slate-400 hover:text-slate-600'">Input Opname</a>
+                   :class="window.location.href.includes('input') ? 'text-[#2563eb]' : 'text-slate-400 hover:text-slate-600'">Input Cocokkan Stok</a>
                 <a href="{{ route('stok.opname3') }}" class="block py-2 text-sm font-semibold transition-colors"
-                   :class="window.location.href.includes('laporan') ? 'text-[#2563eb]' : 'text-slate-400 hover:text-slate-600'">Laporan Opname</a>
+                   :class="window.location.href.includes('laporan') ? 'text-[#2563eb]' : 'text-slate-400 hover:text-slate-600'">Laporan Kecocokan</a>
             </div>
         </div>
 
-        <!-- Laporan -->
+        <!-- Laporan Toko -->
         <a href="{{ route('laporan.index') }}" 
            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group"
            :class="activeMenu === 'laporan' ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-slate-400 hover:bg-slate-50'">
             <i class="fas fa-chart-bar w-5 text-lg" :class="activeMenu === 'laporan' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
-            <span class="text-sm font-bold" :class="activeMenu === 'laporan' ? '' : 'group-hover:text-slate-600'">Laporan</span>
+            <span class="text-sm font-bold" :class="activeMenu === 'laporan' ? '' : 'group-hover:text-slate-600'">Laporan Toko</span>
         </a>
 
-        <!-- Pengaturan -->
+        <!-- Pengaturan Profil -->
         <a href="{{ route('pengaturan.index') }}" 
            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group mt-auto"
            :class="activeMenu === 'pengaturan' ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-slate-400 hover:bg-slate-50'">
             <i class="fas fa-cog w-5 text-lg" :class="activeMenu === 'pengaturan' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
-            <span class="text-sm font-bold" :class="activeMenu === 'pengaturan' ? '' : 'group-hover:text-slate-600'">Pengaturan</span>
+            <span class="text-sm font-bold" :class="activeMenu === 'pengaturan' ? '' : 'group-hover:text-slate-600'">Setelan & Profil</span>
         </a>
     </nav>
 

@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'StockInfo - Pengaturan')
+@section('title', 'StockInfo - Setelan & Profil Akun')
 
 @section('content')
 <div class="max-w-4xl">
-    <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight mb-8">Pengaturan</h2>
+    <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight mb-8">Setelan & Profil Akun Toko</h2>
 
     <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
         <div class="flex items-center gap-8">
@@ -17,7 +17,7 @@
             <div class="flex-1">
                 <div class="flex justify-between items-start">
                     <div>
-                        <h3 class="text-2xl font-extrabold text-slate-800">{{ $user->name ?? session('user.name', 'Administrator') }}</h3>
+                        <h3 class="text-2xl font-extrabold text-slate-800">{{ $user->name ?? session('user.name', 'Pemilik Toko') }}</h3>
                         <div class="flex items-center gap-2 mt-1">
                             <span class="text-sm text-slate-400 font-medium capitalize">{{ $user->role ?? session('user.role', 'admin') }}</span>
                             <span class="text-slate-300 text-xs">•</span>
@@ -30,15 +30,15 @@
 
         <div class="mt-12 pt-10 border-t border-slate-50">
             <div class="max-w-sm">
-                <label class="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em] mb-3 block">Nama Lengkap</label>
-                <p class="text-lg font-bold text-slate-700 border-b border-slate-100 pb-2">{{ $user->name ?? session('user.name', 'Administrator') }}</p>
+                <label class="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em] mb-3 block">Nama Lengkap Pengguna</label>
+                <p class="text-lg font-bold text-slate-700 border-b border-slate-100 pb-2">{{ $user->name ?? session('user.name', 'Pemilik Toko') }}</p>
             </div>
             <div class="max-w-sm mt-6">
-                <label class="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em] mb-3 block">Alamat Email</label>
+                <label class="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em] mb-3 block">Alamat Email Terdaftar</label>
                 <p class="text-lg font-bold text-slate-700 border-b border-slate-100 pb-2">{{ $user->email ?? session('user.email', 'admin@stockinfo.com') }}</p>
             </div>
             <div class="max-w-sm mt-6">
-                <label class="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em] mb-3 block">Hak Akses</label>
+                <label class="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em] mb-3 block">Level Hak Akses</label>
                 <p class="text-lg font-bold text-slate-700 border-b border-slate-100 pb-2 capitalize">{{ $user->role ?? session('user.role', 'admin') }}</p>
             </div>
         </div>
@@ -49,10 +49,10 @@
             <div class="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center text-red-500">
                 <i class="fas fa-power-off"></i>
             </div>
-            <p class="font-bold text-slate-800">Sesi Akun</p>
+            <p class="font-bold text-slate-800">Keamanan Sesi</p>
         </div>
         <button @click="showLogoutModal = true" class="text-red-500 font-extrabold text-sm hover:underline">
-            Sign Out dari Perangkat Ini
+            Keluar Akun dari Sistem (Logout)
         </button>
     </div>
 </div>

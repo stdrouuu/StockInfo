@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'StockInfo - Data Transaksi Inventory')
+@section('title', 'StockInfo - Catatan Keluar Masuk Barang')
 
 @section('content')
 <div class="space-y-8">
@@ -24,13 +24,13 @@
                     <i class="fas fa-exchange-alt text-4xl"></i>
                 </div>
                 <div>
-                    <h2 class="text-3xl font-extrabold tracking-tight">Transaksi Keluar & Masuk</h2>
+                    <h2 class="text-3xl font-extrabold tracking-tight">Catatan Keluar & Masuk Barang</h2>
                     <div class="flex items-center gap-3 text-emerald-100/80 text-[11px] font-bold mt-2 uppercase tracking-widest">
                         <i class="fas fa-home"></i>
                         <i class="fas fa-chevron-right text-[8px]"></i>
-                        <span>Transaksi</span>
+                        <span>Menu Utama</span>
                         <i class="fas fa-chevron-right text-[8px]"></i>
-                        <span class="text-white">Data Transaksi</span>
+                        <span class="text-white">Keluar Masuk Barang</span>
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
             <div class="flex items-center gap-4">
                 <button @click="showModal = true; modalType = 'add-transaction'" class="bg-emerald-500 hover:bg-emerald-400 text-white px-8 py-4 rounded-2xl text-sm font-black flex items-center gap-3 transition-all transform hover:scale-105 active:scale-95 shadow-xl shadow-emerald-900/40">
                     <i class="fas fa-plus"></i>
-                    TAMBAH TRANSAKSI
+                    + CATAT TRANSAKSI BARU
                 </button>
             </div>
         </div>
@@ -56,8 +56,8 @@
                 <i class="fas fa-arrow-down text-xl"></i>
             </div>
             <div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Stock Masuk</p>
-                <h4 class="text-2xl font-black text-slate-800 mt-1">{{ number_format($stockMasukCount, 0, ',', '.') }} <span class="text-xs font-bold text-slate-400">Items</span></h4>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Barang Masuk (Restock)</p>
+                <h4 class="text-2xl font-black text-slate-800 mt-1">{{ number_format($stockMasukCount, 0, ',', '.') }} <span class="text-xs font-bold text-slate-400">Unit</span></h4>
             </div>
         </div>
         <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-5 group hover:border-rose-200 transition-all">
@@ -65,8 +65,8 @@
                 <i class="fas fa-arrow-up text-xl"></i>
             </div>
             <div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Stock Keluar</p>
-                <h4 class="text-2xl font-black text-slate-800 mt-1">{{ number_format($stockKeluarCount, 0, ',', '.') }} <span class="text-xs font-bold text-slate-400">Items</span></h4>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Barang Keluar (Terjual/Dikirim)</p>
+                <h4 class="text-2xl font-black text-slate-800 mt-1">{{ number_format($stockKeluarCount, 0, ',', '.') }} <span class="text-xs font-bold text-slate-400">Unit</span></h4>
             </div>
         </div>
     </div>
@@ -82,13 +82,13 @@
                         <input type="hidden" name="filter" value="{{ request('filter') }}">
                     @endif
                     <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors"></i>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari kode transaksi, tujuan, atau supplier..." class="w-full pl-12 pr-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari kode nota, nama pemasok, atau tujuan kirim..." class="w-full pl-12 pr-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400">
                 </form>
 
                 <div class="flex bg-slate-50 p-1.5 rounded-2xl">
-                    <a href="{{ route('transaksi.index', ['search' => request('search'), 'filter' => 'Semua']) }}" class="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all {{ request('filter', 'Semua') === 'Semua' ? 'bg-white shadow-md text-blue-600' : 'text-slate-500 hover:text-slate-700' }}">Semua</a>
-                    <a href="{{ route('transaksi.index', ['search' => request('search'), 'filter' => 'Masuk']) }}" class="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all {{ request('filter') === 'Masuk' ? 'bg-white shadow-md text-emerald-600' : 'text-slate-500 hover:text-slate-700' }}">Masuk</a>
-                    <a href="{{ route('transaksi.index', ['search' => request('search'), 'filter' => 'Keluar']) }}" class="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all {{ request('filter') === 'Keluar' ? 'bg-white shadow-md text-rose-600' : 'text-slate-500 hover:text-slate-700' }}">Keluar</a>
+                    <a href="{{ route('transaksi.index', ['search' => request('search'), 'filter' => 'Semua']) }}" class="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all {{ request('filter', 'Semua') === 'Semua' ? 'bg-white shadow-md text-blue-600' : 'text-slate-500 hover:text-slate-700' }}">Semua Riwayat</a>
+                    <a href="{{ route('transaksi.index', ['search' => request('search'), 'filter' => 'Masuk']) }}" class="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all {{ request('filter') === 'Masuk' ? 'bg-white shadow-md text-emerald-600' : 'text-slate-500 hover:text-slate-700' }}">Barang Masuk</a>
+                    <a href="{{ route('transaksi.index', ['search' => request('search'), 'filter' => 'Keluar']) }}" class="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all {{ request('filter') === 'Keluar' ? 'bg-white shadow-md text-rose-600' : 'text-slate-500 hover:text-slate-700' }}">Barang Keluar</a>
                 </div>
             </div>
         </div>
@@ -98,46 +98,65 @@
             <table class="w-full border-separate border-spacing-0">
                 <thead>
                     <tr class="bg-[#2d46b9] text-white text-[10px] font-black uppercase tracking-[0.2em] text-left">
-                        <th class="px-8 py-6 rounded-tl-2xl">No</th>
-                        <th class="px-8 py-6">Kode Transaksi</th>
-                        <th class="px-8 py-6 text-center">Tipe</th>
-                        <th class="px-8 py-6">Asal / Tujuan</th>
-                        <th class="px-8 py-6 text-center">Total Item</th>
-                        <th class="px-8 py-6">Total Nilai</th>
-                        <th class="px-8 py-6">Tanggal</th>
-                        <th class="px-8 py-6 text-center rounded-tr-2xl">Aksi</th>
+                        <th class="px-8 py-5 rounded-tl-[32px]">No</th>
+                        <th class="px-8 py-5">Kode Nota</th>
+                        <th class="px-8 py-5">Arah Barang</th>
+                        <th class="px-8 py-5">Asal / Penerima</th>
+                        <th class="px-8 py-5">Tanggal Nota</th>
+                        <th class="px-8 py-5">Petugas Toko</th>
+                        <th class="px-8 py-5">Total Transaksi</th>
+                        <th class="px-8 py-5 rounded-tr-[32px] text-center">Hapus</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-50">
-                    @forelse($transaksis as $index => $trx)
+                <tbody class="divide-y divide-slate-100">
+                    @forelse ($transaksis as $index => $transaksi)
                     <tr class="hover:bg-slate-50/50 transition-colors group">
-                        <td class="px-8 py-7 text-sm font-bold text-slate-400">{{ str_pad($index + 1 + ($transaksis->currentPage() - 1) * $transaksis->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
-                        <td class="px-8 py-7">
-                            <div class="flex flex-col">
-                                <span class="text-sm font-black text-slate-800 group-hover:text-blue-600 transition-colors">{{ $trx->kode }}</span>
-                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-tight mt-0.5">{{ $trx->status }}</span>
-                            </div>
+                        <td class="px-8 py-6 text-slate-400 text-sm font-bold">{{ str_pad($index + 1 + ($transaksis->currentPage() - 1) * $transaksis->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
+                        <td class="px-8 py-6 font-black text-slate-800 text-sm tracking-wide">{{ $transaksi->kode }}</td>
+                        <td class="px-8 py-6">
+                            @if ($transaksi->tipe === 'masuk')
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-wider rounded-lg">
+                                    <i class="fas fa-arrow-down text-[8px]"></i> Masuk
+                                </span>
+                            @else
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black uppercase tracking-wider rounded-lg">
+                                    <i class="fas fa-arrow-up text-[8px]"></i> Keluar
+                                </span>
+                            @endif
                         </td>
-                        <td class="px-8 py-7 text-center">
-                            <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest {{ strtolower($trx->tipe) === 'masuk' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600' }}">{{ $trx->tipe }}</span>
+                        <td class="px-8 py-6">
+                            @if ($transaksi->tipe === 'masuk')
+                                <div class="flex items-center gap-2">
+                                    <i class="far fa-building text-slate-400"></i>
+                                    <span class="font-bold text-slate-700 text-sm">{{ $transaksi->supplier->nama ?? 'Pemasok Umum' }}</span>
+                                </div>
+                            @else
+                                <div class="flex items-center gap-2">
+                                    <i class="far fa-user text-slate-400"></i>
+                                    <span class="font-bold text-slate-700 text-sm">{{ $transaksi->tujuan ?? 'Pelanggan Toko' }}</span>
+                                </div>
+                            @endif
                         </td>
-                        <td class="px-8 py-7 text-sm font-semibold text-slate-600">
-                            {{ strtolower($trx->tipe) === 'masuk' ? ($trx->supplier->nama ?? '-') : $trx->tujuan }}
+                        <td class="px-8 py-6 text-sm text-slate-500 font-semibold">{{ \Carbon\Carbon::parse($transaksi->tanggal)->format('d M Y') }}</td>
+                        <td class="px-8 py-6">
+                            <span class="px-3 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold uppercase rounded-lg">{{ $transaksi->user->name ?? 'Admin' }}</span>
                         </td>
-                        <td class="px-8 py-7 text-center text-sm font-bold text-slate-800">{{ number_format($trx->total_qty, 0, ',', '.') }}</td>
-                        <td class="px-8 py-7 text-sm font-black text-slate-800">Rp {{ number_format($trx->total_nilai, 0, ',', '.') }}</td>
-                        <td class="px-8 py-7 text-sm font-medium text-slate-500">{{ $trx->tanggal->format('d M Y') }}</td>
-                        <td class="px-8 py-7">
-                            <div class="flex items-center justify-center gap-3 transition-opacity">
-                                <button @click="showDeleteModal = true; deleteTarget = '{{ $trx->kode }}'; deleteAction = '{{ route('transaksi.destroy', $trx->id) }}'" class="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-red-600 hover:border-red-200 transition-all">
-                                    <i class="far fa-trash-alt text-sm"></i>
-                                </button>
-                            </div>
+                        <td class="px-8 py-6 text-sm font-black text-slate-800">Rp {{ number_format($transaksi->total_nilai, 0, ',', '.') }}</td>
+                        <td class="px-8 py-6 text-center">
+                            <button @click="showDeleteModal = true; deleteTarget = 'Nota {{ $transaksi->kode }}'; deleteAction = '{{ route('transaksi.destroy', $transaksi->id) }}'" class="p-2.5 text-slate-300 hover:text-rose-600 rounded-xl hover:bg-rose-50/50 transition-all" title="Hapus catatan transaksi ini">
+                                <i class="far fa-trash-alt text-sm"></i>
+                            </button>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="px-8 py-8 text-center text-slate-400 font-medium">Tidak ada transaksi ditemukan.</td>
+                        <td colspan="8" class="px-8 py-16 text-center">
+                            <div class="max-w-xs mx-auto">
+                                <i class="fas fa-receipt text-slate-200 text-5xl mb-4"></i>
+                                <h5 class="font-bold text-slate-700 mb-1">Belum Ada Riwayat Transaksi</h5>
+                                <p class="text-xs text-slate-400 font-medium">Klik tombol "+ CATAT TRANSAKSI BARU" di atas untuk mulai mencatat keluar masuk barang.</p>
+                            </div>
+                        </td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -145,8 +164,8 @@
         </div>
 
         <!-- Pagination -->
-        <div class="p-8 bg-slate-50/50 flex items-center justify-between border-t border-slate-100">
-            <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+        <div class="p-8 border-t border-slate-50 flex items-center justify-between">
+            <div class="text-xs text-slate-400 font-black uppercase tracking-wider">
                 Menampilkan {{ $transaksis->firstItem() ?? 0 }}-{{ $transaksis->lastItem() ?? 0 }} dari {{ $transaksis->total() }} Transaksi
             </div>
             <div class="flex items-center gap-2">
@@ -172,8 +191,8 @@
 <div x-show="modalType === 'add-transaction'" x-data="transaksiModal">
     <div class="flex items-center justify-between mb-10">
         <div>
-            <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mb-1">Pencatatan Transaksi</h2>
-            <h3 class="text-2xl font-extrabold text-slate-800">Tambah Transaksi Baru</h3>
+            <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mb-1">Formulir Toko</h2>
+            <h3 class="text-2xl font-extrabold text-slate-800">Catat Keluar Masuk Baru</h3>
         </div>
         <div class="flex gap-1.5">
             <template x-for="i in 2">
@@ -190,7 +209,7 @@
         <div x-show="step === 1" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                 <div class="md:col-span-2">
-                    <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1 mb-3">Tipe Transaksi</label>
+                    <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1 mb-3">Pilih Arah Barang</label>
                     <div class="grid grid-cols-2 gap-4">
                         <label class="relative cursor-pointer group">
                             <input type="radio" value="Masuk" x-model="type" class="peer hidden">
@@ -200,7 +219,7 @@
                                 </div>
                                 <div>
                                     <p class="text-sm font-black text-slate-800">Barang Masuk</p>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tight">Stock Replenishment</p>
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tight">Beli/Tambah Stok Toko</p>
                                 </div>
                             </div>
                         </label>
@@ -212,7 +231,7 @@
                                 </div>
                                 <div>
                                     <p class="text-sm font-black text-slate-800">Barang Keluar</p>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tight">Stock Distribution</p>
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tight">Jual/Kirim Barang</p>
                                 </div>
                             </div>
                         </label>
@@ -220,13 +239,13 @@
                 </div>
 
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Tanggal Transaksi</label>
+                    <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Tanggal Nota</label>
                     <input type="date" name="tanggal" x-model="tanggal" required class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                 </div>
                 
                 <div class="space-y-2">
                     <!-- Dynamic Label based on transaction type -->
-                    <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1" x-text="type === 'Masuk' ? 'Supplier / Pengirim' : 'Penerima / Proyek'"></label>
+                    <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1" x-text="type === 'Masuk' ? 'Nama Agen / Pemasok (Supplier)' : 'Nama Pembeli / Proyek Penerima'"></label>
                     
                     <!-- Supplier select list if Masuk -->
                     <div x-show="type === 'Masuk'" class="relative">
@@ -241,13 +260,13 @@
 
                     <!-- Destination Text Input if Keluar -->
                     <div x-show="type === 'Keluar'">
-                        <input type="text" name="tujuan" x-model="tujuan" :required="type === 'Keluar'" placeholder="Contoh: Proyek Bendungan A" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                        <input type="text" name="tujuan" x-model="tujuan" :required="type === 'Keluar'" placeholder="Contoh: Pak Budi / Proyek Ruko A" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     </div>
                 </div>
 
                 <div class="md:col-span-2 space-y-2">
-                    <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Keterangan (Opsional)</label>
-                    <textarea name="keterangan" x-model="keterangan" placeholder="Catatan tambahan untuk transaksi ini..." rows="3" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"></textarea>
+                    <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Catatan Tambahan (Boleh Kosong)</label>
+                    <textarea name="keterangan" x-model="keterangan" placeholder="Contoh: Dikirim menggunakan mobil L300..." rows="3" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"></textarea>
                 </div>
             </div>
         </div>
@@ -255,10 +274,10 @@
         <!-- Step 2: Items -->
         <div x-show="step === 2" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" class="space-y-6">
             <div class="flex items-center justify-between">
-                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Daftar Barang</h4>
+                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Pilih Barang yang Mau Dimasukkan / Dikeluarkan</h4>
                 <button type="button" @click="addItem()" class="text-[#2d46b9] hover:text-blue-800 text-xs font-black flex items-center gap-2">
                     <i class="fas fa-plus-circle"></i>
-                    TAMBAH BARANG
+                    + TAMBAH BARIS BARANG
                 </button>
             </div>
 
@@ -266,23 +285,23 @@
                 <template x-for="(item, index) in items" :key="item.id">
                     <div class="p-5 rounded-2xl border border-slate-100 bg-slate-50/50 flex flex-wrap md:flex-nowrap items-end gap-4 relative group">
                         <div class="flex-1 min-w-[200px] space-y-2">
-                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block ml-1">Nama Barang</label>
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block ml-1">Pilih Nama Barang</label>
                             <select :name="'items[' + index + '][produk_id]'" x-model="item.produk_id" @change="updatePrice(item)" required class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">Pilih Barang...</option>
                                 @foreach($produks as $produk)
-                                    <option value="{{ $produk->id }}">{{ $produk->nama }} (Stok: {{ $produk->stok }})</option>
+                                    <option value="{{ $produk->id }}">{{ $produk->nama }} (Stok Toko: {{ $produk->stok }})</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="w-24 space-y-2">
-                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block ml-1">Qty</label>
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block ml-1">Jumlah</label>
                             <input type="number" :name="'items[' + index + '][qty]'" x-model="item.qty" required min="1" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div class="w-40 space-y-2">
-                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block ml-1">Harga Satuan</label>
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block ml-1">Harga Per Unit (Rp)</label>
                             <input type="number" :name="'items[' + index + '][harga_satuan]'" x-model="item.price" required min="0" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
-                        <button type="button" @click="removeItem(index)" class="w-10 h-10 flex items-center justify-center rounded-xl text-slate-300 hover:text-red-500 transition-colors mb-0.5">
+                        <button type="button" @click="removeItem(index)" class="w-10 h-10 flex items-center justify-center rounded-xl text-slate-300 hover:text-red-500 transition-colors mb-0.5" title="Hapus baris barang">
                             <i class="fas fa-trash-alt text-sm"></i>
                         </button>
                     </div>
@@ -291,25 +310,24 @@
 
             <div class="p-6 bg-blue-50 rounded-2xl flex items-center justify-between">
                 <div>
-                    <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Estimasi Total</p>
+                    <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Perkiraan Total Nilai</p>
                     <p class="text-xl font-black text-blue-600" x-text="formatRupiah(calculateTotal())"></p>
                 </div>
                 <div class="text-right">
-                    <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Total Qty</p>
+                    <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Total Jumlah Barang</p>
                     <p class="text-xl font-black text-blue-600" x-text="items.reduce((acc, curr) => acc + parseInt(curr.qty || 0), 0)"></p>
                 </div>
             </div>
         </div>
 
         <div class="flex items-center justify-between pt-6 border-t border-slate-50">
-            <button type="button" @click="showModal = false" class="px-8 py-4 text-slate-400 hover:text-slate-600 text-sm font-bold transition-colors">Batal</button>
+            <button type="button" @click="showModal = false" class="px-8 py-4 text-slate-400 hover:text-slate-600 text-sm font-bold transition-colors">Batalkan</button>
             <div class="flex gap-3">
-                <button type="button" x-show="step === 2" @click="step = 1" class="px-8 py-4 bg-slate-100 hover:bg-slate-200 text-slate-800 text-sm font-black rounded-2xl transition-all">Kembali</button>
+                <button type="button" x-show="step === 2" @click="step = 1" class="px-8 py-4 bg-slate-100 hover:bg-slate-200 text-slate-800 text-sm font-black rounded-2xl transition-all">Sebelumnya</button>
                 <button type="button" x-show="step === 1" @click="step = 2" class="px-10 py-4 bg-[#2d46b9] hover:bg-blue-800 text-white text-sm font-black rounded-2xl shadow-xl shadow-blue-200 transition-all flex items-center gap-3">
-                    Lanjutkan
-                    <i class="fas fa-arrow-right text-[10px]"></i>
+                    Pilih Barang ➔
                 </button>
-                <button type="submit" x-show="step === 2" class="px-10 py-4 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-black rounded-2xl shadow-xl shadow-emerald-100 transition-all">Simpan Transaksi</button>
+                <button type="submit" x-show="step === 2" class="px-10 py-4 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-black rounded-2xl shadow-xl shadow-emerald-100 transition-all">Simpan Nota Transaksi</button>
             </div>
         </div>
     </form>
