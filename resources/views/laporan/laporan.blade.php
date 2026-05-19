@@ -25,15 +25,15 @@
         <div class="col-span-7 bg-white rounded-3xl border border-slate-100 shadow-sm p-8 flex justify-between items-center relative overflow-hidden">
             <div class="relative z-10">
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Total Inventory Value</p>
-                <h3 class="text-4xl font-black text-slate-800">Rp 45.000.000</h3>
-                <p class="text-xs text-slate-400 mt-2 font-medium">Calculated across 4,102 unique SKU entries.</p>
+                <h3 class="text-4xl font-black text-slate-800">Rp {{ number_format($invValue, 0, ',', '.') }}</h3>
+                <p class="text-xs text-slate-400 mt-2 font-medium">Calculated across {{ number_format($totalSKU, 0, ',', '.') }} unique SKU entries.</p>
             </div>
             <i class="fas fa-wallet text-[120px] text-slate-50 absolute -right-4 -bottom-4"></i>
         </div>
         <div class="col-span-5 bg-white rounded-3xl border border-slate-100 shadow-sm p-8 flex flex-col justify-between">
             <div>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Active SKUs</p>
-                <h3 class="text-4xl font-black text-slate-800">3,842</h3>
+                <h3 class="text-4xl font-black text-slate-800">{{ number_format($totalSKU, 0, ',', '.') }}</h3>
             </div>
         </div>
     </div>
@@ -45,7 +45,7 @@
                     <i class="fas fa-exclamation-triangle text-red-500"></i>
                     <h4 class="font-bold text-slate-800">Low Stock Alerts</h4>
                 </div>
-                <a href="#" class="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">View All Alerts</a>
+                <a href="{{ route('produk.index', ['filter' => 'kritis']) }}" class="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">View All Alerts</a>
             </div>
 
             <table class="w-full text-left">
@@ -53,48 +53,39 @@
                     <tr class="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50">
                         <th class="pb-4">Item Description</th>
                         <th class="pb-4">SKU</th>
-                        <th class="pb-4">Current</th>
+                        <th class="pb-4 text-center">Current</th>
                         <th class="pb-4 text-center">Min. Level</th>
-                        <th class="pb-4">Status</th>
+                        <th class="pb-4 text-center">Status</th>
                         <th class="pb-4 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
+                    @forelse($lowStockAlerts as $alert)
                     <tr class="text-sm group">
-                        <td class="py-4 font-bold text-slate-700">Industrial Steel Beam 12ft</td>
-                        <td class="py-4 text-slate-400 font-medium">ST-BL-1209</td>
-                        <td class="py-4 font-black text-red-500">12</td>
-                        <td class="py-4 text-slate-400 font-medium text-center">45</td>
-                        <td class="py-4">
-                            <span class="px-2 py-0.5 bg-red-50 text-red-600 text-[9px] font-black uppercase rounded">Critical</span>
+                        <td class="py-4 font-bold text-slate-700">{{ $alert->nama }}</td>
+                        <td class="py-4 text-slate-400 font-medium">{{ $alert->sku }}</td>
+                        <td class="py-4 font-black text-red-500 text-center">{{ $alert->stok }}</td>
+                        <td class="py-4 text-slate-400 font-medium text-center">{{ $alert->stok_minimum }}</td>
+                        <td class="py-4 text-center">
+                            @if($alert->stok == 0)
+                                <span class="px-2 py-0.5 bg-rose-100 text-rose-700 text-[9px] font-black uppercase rounded">Empty</span>
+                            @elseif($alert->stok <= $alert->stok_minimum / 2)
+                                <span class="px-2 py-0.5 bg-red-50 text-red-600 text-[9px] font-black uppercase rounded">Critical</span>
+                            @else
+                                <span class="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[9px] font-black uppercase rounded">Low</span>
+                            @endif
                         </td>
                         <td class="py-4 text-right">
-                            <button class="text-blue-600 font-bold text-xs hover:underline">Reorder Now</button>
+                            <a href="{{ route('transaksi.index') }}" class="text-blue-600 font-bold text-xs hover:underline">Restock</a>
                         </td>
                     </tr>
-                    <tr class="text-sm">
-                        <td class="py-4 font-bold text-slate-700">Reinforced Concrete Mix</td>
-                        <td class="py-4 text-slate-400 font-medium">CM-RF-50KG</td>
-                        <td class="py-4 font-black text-slate-700">156</td>
-                        <td class="py-4 text-slate-400 font-medium text-center">200</td>
-                        <td class="py-4">
-                            <span class="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[9px] font-black uppercase rounded">Low</span>
-                        </td>
-                        <td class="py-4 text-right">
-                            <button class="text-blue-600 font-bold text-xs hover:underline">Reorder Now</button>
-                        </td>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="py-6 text-center text-slate-400 font-semibold text-sm">Semua barang memiliki stok yang aman!</td>
                     </tr>
+                    @endforelse
                 </tbody>
             </table>
-
-            <div class="flex justify-end gap-3 pt-6">
-                <button class="px-6 py-2.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold flex items-center gap-2 hover:bg-slate-200 transition-all">
-                    <i class="fas fa-file-pdf"></i> Export to PDF
-                </button>
-                <button class="px-6 py-2.5 bg-[#2d46b9] text-white rounded-xl text-xs font-bold flex items-center gap-2 hover:bg-blue-800 transition-all shadow-lg shadow-blue-200">
-                    <i class="fas fa-file-excel"></i> Export to Excel
-                </button>
-            </div>
         </div>
 
         <div class="col-span-4 bg-white rounded-3xl border border-slate-200 shadow-sm p-8 flex flex-col">
@@ -104,26 +95,22 @@
             </div>
 
             <div class="flex-1 space-y-6">
+                @forelse($recentTransactions as $row)
                 <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-green-50 text-green-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-sign-in-alt"></i>
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 {{ strtolower($row->tipe) === 'masuk' ? 'bg-green-50 text-green-600' : 'bg-rose-50 text-rose-600' }}">
+                        <i class="fas {{ strtolower($row->tipe) === 'masuk' ? 'fa-sign-in-alt' : 'fa-sign-out-alt' }}"></i>
                     </div>
-                    <div class="flex-1">
-                        <p class="text-sm font-bold text-slate-800">Concrete Mesh</p>
-                        <p class="text-[9px] font-black text-green-500 uppercase">Inbound</p>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-bold text-slate-800 truncate">{{ $row->kode }}</p>
+                        <p class="text-[9px] font-black uppercase {{ strtolower($row->tipe) === 'masuk' ? 'text-green-500' : 'text-rose-500' }}">
+                            {{ strtolower($row->tipe) === 'masuk' ? 'Inbound' : 'Outbound' }}
+                        </p>
                     </div>
-                    <span class="text-[10px] text-slate-300 font-bold uppercase">10:45 AM</span>
+                    <span class="text-[10px] text-slate-300 font-bold uppercase">{{ $row->tanggal->format('d M') }}</span>
                 </div>
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="text-sm font-bold text-slate-800">Portland Cement (Type I)</p>
-                        <p class="text-[9px] font-black text-red-400 uppercase">Outbound</p>
-                    </div>
-                    <span class="text-[10px] text-slate-300 font-bold uppercase">09:12 AM</span>
-                </div>
+                @empty
+                <div class="text-center py-6 text-slate-400 font-medium text-xs">Belum ada transaksi dicatat.</div>
+                @endforelse
             </div>
 
             <a href="{{ route('transaksi.index') }}" class="w-full block bg-slate-50 text-slate-500 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest mt-8 hover:bg-slate-100 transition-all text-center">

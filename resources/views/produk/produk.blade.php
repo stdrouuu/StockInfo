@@ -4,6 +4,13 @@
 
 @section('content')
 <div class="space-y-8">
+    <!-- Flash Messages -->
+    @if(session('success'))
+        <div class="mb-4 p-4 rounded-xl bg-emerald-50 text-emerald-700 text-sm font-semibold border border-emerald-200">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <!-- Page Title Card -->
     <div class="bg-[#1e40af] rounded-3xl p-8 text-white relative overflow-hidden shadow-xl shadow-blue-900/10">
         <div class="relative z-10 flex items-center gap-6">
@@ -27,7 +34,7 @@
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total SKU</p>
-                <p class="text-2xl font-bold">1,284</p>
+                <p class="text-2xl font-bold">{{ number_format($totalSKU, 0, ',', '.') }}</p>
             </div>
         </div>
         <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-5">
@@ -36,7 +43,7 @@
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Stok Rendah</p>
-                <p class="text-2xl font-bold">14</p>
+                <p class="text-2xl font-bold">{{ $stokRendahCount }}</p>
             </div>
         </div>
         <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-5">
@@ -45,7 +52,7 @@
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Dalam Transit</p>
-                <p class="text-2xl font-bold">82</p>
+                <p class="text-2xl font-bold">{{ $dalamTransit }}</p>
             </div>
         </div>
         <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-5">
@@ -54,7 +61,7 @@
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Inv. Value</p>
-                <p class="text-2xl font-bold">Rp 5.000.000</p>
+                <p class="text-2xl font-bold">Rp {{ number_format($invValue, 0, ',', '.') }}</p>
             </div>
         </div>
     </div>
@@ -63,24 +70,46 @@
         <!-- Table Toolbar -->
         <div class="p-6 flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-4 flex-1">
-                <div class="relative w-full max-w-md">
-                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input type="text" placeholder="Cari Produk..." class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                </div>
+                <!-- Search Form -->
+                <form method="GET" action="{{ route('produk.index') }}" class="flex items-center gap-4 flex-1">
+                    @if(request('filter'))
+                        <input type="hidden" name="filter" value="{{ request('filter') }}">
+                    @endif
+                    <div class="relative w-full max-w-md">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari SKU atau Nama Produk..." class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    </div>
+                </form>
+                
+                <!-- Filter Dropdown -->
                 <div class="relative">
                     <button @click="openFilter = !openFilter" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-slate-100 transition-all">
                         <i class="fas fa-sort-amount-down text-slate-400"></i>
-                        Stock
+                        @if(request('filter') === 'tinggi_rendah')
+                            Stok: Tinggi ke Rendah
+                        @elseif(request('filter') === 'rendah_tinggi')
+                            Stok: Rendah ke Tinggi
+                        @elseif(request('filter') === 'kritis')
+                            Stok: Kritis (Low)
+                        @else
+                            Urutkan Stok
+                        @endif
                         <i class="fas fa-chevron-down text-[10px] transition-transform" :class="openFilter ? 'rotate-180' : ''"></i>
                     </button>
-                    <div x-show="openFilter" @click.away="openFilter = false" x-cloak class="absolute left-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-xl z-30 overflow-hidden">
-                        <a href="#" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50">Tinggi ke Rendah</a>
-                        <a href="#" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50">Rendah ke Tinggi</a>
-                        <a href="#" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50">Stok Kritis</a>
+                    <div x-show="openFilter" @click.away="openFilter = false" x-cloak class="absolute left-0 mt-2 w-56 bg-white border border-slate-100 rounded-2xl shadow-xl z-30 overflow-hidden">
+                        <a href="{{ route('produk.index', ['search' => request('search'), 'filter' => 'tinggi_rendah']) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">Tinggi ke Rendah</a>
+                        <a href="{{ route('produk.index', ['search' => request('search'), 'filter' => 'rendah_tinggi']) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">Rendah ke Tinggi</a>
+                        <a href="{{ route('produk.index', ['search' => request('search'), 'filter' => 'kritis']) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">Stok Kritis</a>
+                        @if(request('filter'))
+                            <div class="border-t border-slate-100">
+                                <a href="{{ route('produk.index', ['search' => request('search')]) }}" class="block px-6 py-3 text-xs font-bold text-rose-500 hover:bg-rose-50 transition-colors">Reset Urutan</a>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
-            <button @click="showModal = true; modalType = 'add-product'" class="bg-[#1e40af] hover:bg-blue-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-blue-200 transition-all">
+            
+            <button @click="$dispatch('open-product-modal', { mode: 'add', action: '{{ route('produk.store') }}' })" class="bg-[#1e40af] hover:bg-blue-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-blue-200 transition-all">
                 <i class="fas fa-plus"></i>
                 Produk Baru
             </button>
@@ -101,124 +130,167 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
+                    @forelse ($produks as $index => $produk)
                     <tr class="hover:bg-slate-50/50 transition-colors">
-                        <td class="px-6 py-5 text-slate-400 text-sm">01</td>
-                        <td class="px-6 py-5 font-bold text-slate-700 text-sm">ST-001-CM</td>
+                        <td class="px-6 py-5 text-slate-400 text-sm">{{ str_pad($index + 1 + ($produks->currentPage() - 1) * $produks->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
+                        <td class="px-6 py-5 font-bold text-slate-700 text-sm">{{ $produk->sku }}</td>
                         <td class="px-6 py-5">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                                    <i class="far fa-image text-slate-300"></i>
+                                <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+                                    @if ($produk->gambar)
+                                        <img src="{{ asset('storage/' . $produk->gambar) }}" class="w-full h-full object-cover">
+                                    @else
+                                        <i class="far fa-image text-slate-300"></i>
+                                    @endif
                                 </div>
                                 <div>
-                                    <p class="text-sm font-bold text-slate-800">Semen Tiga Roda 50kg</p>
-                                    <p class="text-[10px] text-slate-400 font-bold uppercase">Indocement</p>
+                                    <p class="text-sm font-bold text-slate-800">{{ $produk->nama }}</p>
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase">{{ $produk->kategori->nama ?? 'Umum' }}</p>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-5 text-sm text-slate-600 font-medium">Semen & Mortar</td>
-                        <td class="px-6 py-5 text-sm font-bold text-slate-700">850</td>
-                        <td class="px-6 py-5 text-sm font-bold text-slate-700">Rp 65.000</td>
+                        <td class="px-6 py-5 text-sm text-slate-600 font-medium">{{ $produk->kategori->nama ?? 'Umum' }}</td>
+                        <td class="px-6 py-5">
+                            @if ($produk->isLowStock())
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm font-bold text-rose-600">{{ $produk->stok }}</span>
+                                    <span class="px-2 py-0.5 bg-rose-50 text-rose-600 text-[9px] font-bold uppercase rounded">Low</span>
+                                </div>
+                            @else
+                                <span class="text-sm font-bold text-slate-700">{{ $produk->stok }}</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-5 text-sm font-bold text-slate-700">Rp {{ number_format($produk->harga, 0, ',', '.') }}</td>
                         <td class="px-6 py-5">
                             <div class="flex justify-center gap-2">
-                                <button @click="showModal = true; modalType = 'add-product'" class="p-2 text-slate-400 hover:text-blue-600 transition-colors"><i class="far fa-edit"></i></button>
-                                <button @click="showDeleteModal = true; deleteTarget = 'Semen Tiga Roda 50kg'" class="p-2 text-slate-400 hover:text-rose-600 transition-colors"><i class="far fa-trash-alt"></i></button>
+                                <button @click="$dispatch('open-product-modal', {
+                                    mode: 'edit',
+                                    id: '{{ $produk->id }}',
+                                    nama: '{{ $produk->nama }}',
+                                    sku: '{{ $produk->sku }}',
+                                    kategori_id: '{{ $produk->kategori_id }}',
+                                    stok: '{{ $produk->stok }}',
+                                    harga: '{{ (int)$produk->harga }}',
+                                    stok_minimum: '{{ $produk->stok_minimum }}',
+                                    action: '{{ route('produk.update', $produk->id) }}'
+                                })" class="p-2 text-slate-400 hover:text-blue-600 transition-colors">
+                                    <i class="far fa-edit"></i>
+                                </button>
+                                <button @click="showDeleteModal = true; deleteTarget = '{{ $produk->nama }}'; deleteAction = '{{ route('produk.destroy', $produk->id) }}'" class="p-2 text-slate-400 hover:text-rose-600 transition-colors">
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
-                    <!-- Row 2 (Low Stock) -->
-                    <tr class="hover:bg-slate-50/50 transition-colors">
-                        <td class="px-6 py-5 text-slate-400 text-sm">02</td>
-                        <td class="px-6 py-5 font-bold text-slate-700 text-sm">BS-002-8MM</td>
-                        <td class="px-6 py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                                    <i class="far fa-image text-slate-300"></i>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-bold text-slate-800">Besi Beton 8mm SNI</p>
-                                    <p class="text-[10px] text-slate-400 font-bold uppercase">Krakatau Steel</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-5 text-sm text-slate-600 font-medium">Besi & Baja</td>
-                        <td class="px-6 py-5">
-                            <div class="flex items-center gap-2">
-                                <span class="text-sm font-bold text-rose-600">15</span>
-                                <span class="px-2 py-0.5 bg-rose-50 text-rose-600 text-[9px] font-bold uppercase rounded">Low</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-5 text-sm font-bold text-slate-700">Rp 45.000</td>
-                        <td class="px-6 py-5">
-                            <div class="flex justify-center gap-2">
-                                <button @click="showModal = true; modalType = 'add-product'" class="p-2 text-slate-400 hover:text-blue-600 transition-colors"><i class="far fa-edit"></i></button>
-                                <button @click="showDeleteModal = true; deleteTarget = 'Semen Tiga Roda 50kg'" class="p-2 text-slate-400 hover:text-rose-600 transition-colors"><i class="far fa-trash-alt"></i></button>
-                            </div>
-                        </td>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="px-6 py-8 text-center text-slate-400 font-medium">Tidak ada produk ditemukan.</td>
                     </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
 
         <!-- Pagination -->
         <div class="p-6 border-t border-slate-100 flex items-center justify-between">
-            <button class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-400 hover:bg-slate-50 transition-all">Sebelumnya</button>
-            <div class="flex items-center gap-2">
-                <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 text-white text-xs font-bold">1</button>
-                <button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 text-xs font-bold">2</button>
+            <div class="text-xs text-slate-400 font-bold uppercase tracking-wider">
+                Menampilkan {{ $produks->firstItem() ?? 0 }}-{{ $produks->lastItem() ?? 0 }} dari {{ $produks->total() }} Produk
             </div>
-            <button class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all">Selanjutnya</button>
+            <div class="flex items-center gap-2">
+                @if ($produks->onFirstPage())
+                    <span class="px-4 py-2 border border-slate-100 rounded-xl text-xs font-bold text-slate-300 cursor-not-allowed">Sebelumnya</span>
+                @else
+                    <a href="{{ $produks->appends(request()->query())->previousPageUrl() }}" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all">Sebelumnya</a>
+                @endif
+
+                @if ($produks->hasMorePages())
+                    <a href="{{ $produks->appends(request()->query())->nextPageUrl() }}" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all">Selanjutnya</a>
+                @else
+                    <span class="px-4 py-2 border border-slate-100 rounded-xl text-xs font-bold text-slate-300 cursor-not-allowed">Selanjutnya</span>
+                @endif
+            </div>
         </div>
     </div>
 </div>
 @endsection
 
 @section('modal-content')
-<div x-show="modalType === 'add-product'">
-    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Tambah & Edit Produk</h2>
+<div x-show="modalType === 'add-product'" 
+     x-data="{ 
+        mode: 'add',
+        nama: '',
+        sku: '',
+        kategori_id: '',
+        stok: '',
+        harga: '',
+        stok_minimum: '',
+        action: '{{ route('produk.store') }}',
+        fileName: ''
+     }"
+     @open-product-modal.window="
+        showModal = true;
+        modalType = 'add-product';
+        mode = $event.detail.mode;
+        nama = $event.detail.nama || '';
+        sku = $event.detail.sku || '';
+        kategori_id = $event.detail.kategori_id || '';
+        stok = $event.detail.stok || '';
+        harga = $event.detail.harga || '';
+        stok_minimum = $event.detail.stok_minimum || '';
+        action = $event.detail.action || '{{ route('produk.store') }}';
+        fileName = '';
+     ">
+    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6" x-text="mode === 'add' ? 'Tambah Produk Baru' : 'Edit Produk'"></h2>
     
-    <form class="space-y-5">
+    <form :action="action" method="POST" enctype="multipart/form-data" class="space-y-5">
+        @csrf
+        <template x-if="mode === 'edit'">
+            <input type="hidden" name="_method" value="PUT">
+        </template>
+
         <div class="grid grid-cols-2 gap-5">
             <div class="space-y-2">
                 <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Nama Produk</label>
-                <input type="text" placeholder="Besi Beton Polos 10mm (12m)" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                <input type="text" name="nama" x-model="nama" required placeholder="Besi Beton Polos 10mm (12m)" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
             </div>
             <div class="space-y-2">
                 <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">No. SKU</label>
-                <div class="relative">
-                    <select class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option>ST-BPN-10-001</option>
-                    </select>
-                    <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-[10px]"></i>
-                </div>
+                <input type="text" name="sku" x-model="sku" required placeholder="ST-BPN-10-001" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
             </div>
 
             <div class="space-y-2">
                 <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Kategori</label>
                 <div class="relative">
-                    <select class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option>BESI & BAJA</option>
+                    <select name="kategori_id" x-model="kategori_id" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Pilih Kategori...</option>
+                        @foreach ($kategoris as $kategori)
+                            <option value="{{ $kategori->id }}">{{ strtoupper($kategori->nama) }}</option>
+                        @endforeach
                     </select>
-                    <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-[10px]"></i>
+                    <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
                 </div>
             </div>
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Jumlah Produk</label>
-                <input type="number" placeholder="500" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Jumlah Produk (Stok)</label>
+                <input type="number" name="stok" x-model="stok" required placeholder="500" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
             </div>
 
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Harga</label>
-                <input type="text" placeholder="95.000" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Harga (Rp)</label>
+                <input type="number" name="harga" x-model="harga" required placeholder="95000" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
             </div>
             <div class="space-y-2">
                 <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Jumlah Minimum Produk</label>
-                <input type="number" placeholder="50" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                <input type="number" name="stok_minimum" x-model="stok_minimum" required placeholder="50" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
             </div>
         </div>
 
-        <div class="w-full h-32 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50 flex items-center justify-center flex-col gap-2 hover:bg-slate-100 transition-all cursor-pointer group">
-            <i class="far fa-image text-slate-300 text-2xl group-hover:text-blue-400 transition-colors"></i>
-            <span class="text-xs font-semibold text-slate-400 group-hover:text-slate-500">Upload Image</span>
+        <div class="relative">
+            <input type="file" name="gambar" id="file-upload" class="hidden" accept="image/*" @change="fileName = $event.target.files[0] ? $event.target.files[0].name : ''">
+            <label for="file-upload" class="w-full h-32 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50 flex items-center justify-center flex-col gap-2 hover:bg-slate-100 transition-all cursor-pointer group">
+                <i class="far fa-image text-slate-300 text-2xl group-hover:text-blue-400 transition-colors"></i>
+                <span class="text-xs font-semibold text-slate-400 group-hover:text-slate-500" x-text="fileName || 'Upload Image'">Upload Image</span>
+            </label>
         </div>
 
         <div class="flex justify-end gap-3 pt-4">

@@ -17,7 +17,7 @@
     <div class="bg-[#2452c1] p-7 rounded-[1.5rem] text-white relative overflow-hidden shadow-xl shadow-blue-100">
         <div class="relative z-10">
             <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest mb-2">Jumlah Stok</p>
-            <h3 class="text-2xl font-extrabold">1300 Produk</h3>
+            <h3 class="text-2xl font-extrabold">{{ number_format($jumlahStok, 0, ',', '.') }} unit</h3>
         </div>
         <div class="absolute top-6 right-6 bg-white/20 p-2.5 rounded-xl"><i class="fas fa-archive"></i></div>
         <i class="fas fa-box-open absolute -bottom-4 -right-2 text-7xl opacity-10"></i>
@@ -26,7 +26,7 @@
     <div class="bg-[#cc443a] p-7 rounded-[1.5rem] text-white relative overflow-hidden shadow-xl shadow-red-100">
         <div class="relative z-10">
             <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest mb-2">Stok Rendah</p>
-            <h3 class="text-2xl font-extrabold">45 Produk</h3>
+            <h3 class="text-2xl font-extrabold">{{ $stokRendah }} Produk</h3>
         </div>
         <div class="absolute top-6 right-6 bg-white/20 p-2.5 rounded-xl"><i class="fas fa-arrow-trend-down"></i></div>
         <i class="fas fa-chart-line scale-y-[-1] absolute -bottom-4 -right-2 text-7xl opacity-10"></i>
@@ -35,7 +35,7 @@
     <div class="bg-[#3da56b] p-7 rounded-[1.5rem] text-white relative overflow-hidden shadow-xl shadow-emerald-100">
         <div class="relative z-10">
             <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest mb-2">Stok Masuk</p>
-            <h3 class="text-2xl font-extrabold">150 Produk</h3>
+            <h3 class="text-2xl font-extrabold">{{ number_format($stokMasuk, 0, ',', '.') }} unit</h3>
         </div>
         <div class="absolute top-6 right-6 bg-white/20 p-2.5 rounded-xl"><i class="fas fa-arrow-trend-up"></i></div>
         <i class="fas fa-chart-line absolute -bottom-4 -right-2 text-7xl opacity-10"></i>
@@ -43,9 +43,8 @@
 
     <div class="bg-[#e47d21] p-7 rounded-[1.5rem] text-white relative overflow-hidden shadow-xl shadow-orange-100">
         <div class="relative z-10">
-            <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest mb-2">Margin</p>
-            <h3 class="text-2xl font-extrabold">32.4%</h3>
-            <p class="text-[11px] mt-2 font-semibold opacity-90">Rp 192.300.000</p>
+            <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest mb-2">Nilai Inventaris</p>
+            <h3 class="text-2xl font-extrabold">Rp {{ number_format($inventoryValue, 0, ',', '.') }}</h3>
         </div>
         <div class="absolute top-6 right-6 bg-white/20 p-2.5 rounded-xl"><i class="fas fa-wallet"></i></div>
         <i class="fas fa-briefcase absolute -bottom-4 -right-2 text-7xl opacity-10"></i>
@@ -76,55 +75,25 @@
     </div>
 
     <div class="flex items-end justify-between h-64 gap-6 px-4">
-        <div class="flex-1 flex flex-col items-center gap-4 h-full group">
-            <div class="flex-1 w-full flex items-end justify-center gap-1.5 h-full">
-                <div class="w-full bg-blue-100 h-1/4 rounded-t-lg transition-all group-hover:bg-blue-200"></div>
-                <div class="w-full bg-slate-100 h-[15%] rounded-t-lg transition-all group-hover:bg-slate-200"></div>
+        @php
+            $maxTrend = 1;
+            foreach ($trends as $t) {
+                $maxTrend = max($maxTrend, $t['in'], $t['out']);
+            }
+        @endphp
+        @foreach ($trends as $day => $val)
+            @php
+                $inPercent = $maxTrend > 0 ? ($val['in'] / $maxTrend) * 100 : 0;
+                $outPercent = $maxTrend > 0 ? ($val['out'] / $maxTrend) * 100 : 0;
+            @endphp
+            <div class="flex-1 flex flex-col items-center gap-4 h-full group">
+                <div class="flex-1 w-full flex items-end justify-center gap-1.5 h-full">
+                    <div style="height: {{ max($inPercent, 5) }}%;" class="w-full bg-blue-400 rounded-t-lg shadow-lg shadow-blue-100 transition-all group-hover:bg-blue-500" title="Inbound: {{ $val['in'] }}"></div>
+                    <div style="height: {{ max($outPercent, 5) }}%;" class="w-full bg-slate-300 rounded-t-lg transition-all group-hover:bg-slate-400" title="Outbound: {{ $val['out'] }}"></div>
+                </div>
+                <span class="text-[10px] font-extrabold {{ $day === date('D') ? 'text-slate-800 border-b-2 border-blue-500 pb-1' : 'text-slate-300' }} uppercase tracking-widest">{{ $day }}</span>
             </div>
-            <span class="text-[10px] font-extrabold text-slate-300 uppercase tracking-widest">Mon</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-4 h-full group">
-            <div class="flex-1 w-full flex items-end justify-center gap-1.5 h-full">
-                <div class="w-full bg-blue-200 h-[45%] rounded-t-lg transition-all"></div>
-                <div class="w-full bg-slate-200 h-[30%] rounded-t-lg transition-all"></div>
-            </div>
-            <span class="text-[10px] font-extrabold text-slate-300 uppercase tracking-widest">Tue</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-4 h-full group">
-            <div class="flex-1 w-full flex items-end justify-center gap-1.5 h-full">
-                <div class="w-full bg-blue-400 h-[70%] rounded-t-lg shadow-lg shadow-blue-100"></div>
-                <div class="w-full bg-slate-300 h-[50%] rounded-t-lg"></div>
-            </div>
-            <span class="text-[10px] font-extrabold text-slate-800 uppercase tracking-widest border-b-2 border-blue-500 pb-1">Wed</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-4 h-full group">
-            <div class="flex-1 w-full flex items-end justify-center gap-1.5 h-full">
-                <div class="w-full bg-blue-100 h-[40%] rounded-t-lg"></div>
-                <div class="w-full bg-slate-200 h-[65%] rounded-t-lg"></div>
-            </div>
-            <span class="text-[10px] font-extrabold text-slate-300 uppercase tracking-widest">Thu</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-4 h-full group">
-            <div class="flex-1 w-full flex items-end justify-center gap-1.5 h-full">
-                <div class="w-full bg-blue-200 h-[80%] rounded-t-lg"></div>
-                <div class="w-full bg-slate-100 h-[55%] rounded-t-lg"></div>
-            </div>
-            <span class="text-[10px] font-extrabold text-slate-300 uppercase tracking-widest">Fri</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-4 h-full group">
-            <div class="flex-1 w-full flex items-end justify-center gap-1.5 h-full">
-                <div class="w-full bg-blue-50 h-[15%] rounded-t-lg"></div>
-                <div class="w-full bg-slate-50 h-[10%] rounded-t-lg"></div>
-            </div>
-            <span class="text-[10px] font-extrabold text-slate-300 uppercase tracking-widest">Sat</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-4 h-full group">
-            <div class="flex-1 w-full flex items-end justify-center gap-1.5 h-full">
-                <div class="w-full bg-slate-200 h-[45%] rounded-t-lg"></div>
-                <div class="w-full bg-slate-50 h-[20%] rounded-t-lg"></div>
-            </div>
-            <span class="text-[10px] font-extrabold text-slate-300 uppercase tracking-widest">Sun</span>
-        </div>
+        @endforeach
     </div>
 </div>
 
@@ -143,38 +112,33 @@
             </tr>
         </thead>
         <tbody class="divide-y divide-slate-50">
+            @forelse ($lowStockProducts as $produk)
             <tr class="hover:bg-slate-50 transition-colors">
                 <td class="px-10 py-6">
                     <div class="flex items-center gap-5">
-                        <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center">
-                            <i class="fas fa-paint-roller text-slate-400 text-xl"></i>
+                        <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center overflow-hidden">
+                            @if ($produk->gambar)
+                                <img src="{{ asset('storage/' . $produk->gambar) }}" class="w-full h-full object-cover">
+                            @else
+                                <i class="fas fa-box text-slate-300 text-xl"></i>
+                            @endif
                         </div>
                         <div>
-                            <p class="font-extrabold text-slate-800 text-base">Cat Tembok Putih 5Kg</p>
-                            <p class="text-[10px] text-slate-400 font-bold tracking-widest mt-1">SKU-CAT-WHT-05</p>
+                            <p class="font-extrabold text-slate-800 text-base">{{ $produk->nama }}</p>
+                            <p class="text-[10px] text-slate-400 font-bold tracking-widest mt-1">{{ $produk->sku }}</p>
                         </div>
                     </div>
                 </td>
                 <td class="px-10 py-6 text-right">
-                    <span class="text-red-500 font-extrabold text-lg">2</span>
+                    <span class="text-red-500 font-extrabold text-lg">{{ $produk->stok }}</span>
+                    <span class="text-xs text-slate-400 font-semibold ml-1">/ Min: {{ $produk->stok_minimum }}</span>
                 </td>
             </tr>
-            <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-10 py-6">
-                    <div class="flex items-center gap-5">
-                        <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center">
-                            <i class="fas fa-toolbox text-slate-400 text-xl"></i>
-                        </div>
-                        <div>
-                            <p class="font-extrabold text-slate-800 text-base">Baut Baja M8</p>
-                            <p class="text-[10px] text-slate-400 font-bold tracking-widest mt-1">SKU-BAUT-M8-01</p>
-                        </div>
-                    </div>
-                </td>
-                <td class="px-10 py-6 text-right">
-                    <span class="text-red-500 font-extrabold text-lg">5</span>
-                </td>
+            @empty
+            <tr>
+                <td colspan="2" class="px-10 py-8 text-center text-slate-400 font-medium">Semua produk memiliki stok yang cukup.</td>
             </tr>
+            @endforelse
         </tbody>
     </table>
     <div class="p-6 text-center">

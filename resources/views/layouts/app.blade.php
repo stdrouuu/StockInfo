@@ -28,7 +28,8 @@
     modalType: '',
     showLogoutModal: false,
     showDeleteModal: false,
-    deleteTarget: ''
+    deleteTarget: '',
+    deleteAction: ''
 }">
 
     <div class="flex min-h-screen">
@@ -161,7 +162,11 @@
             <p class="text-slate-500 text-sm mb-8">Apakah Anda yakin ingin menghapus data <span class="font-bold text-slate-800" x-text="deleteTarget"></span>? Tindakan ini tidak dapat dibatalkan.</p>
             <div class="flex gap-3">
                 <button @click="showDeleteModal = false" class="flex-1 py-3 bg-slate-100 text-slate-800 rounded-xl font-bold hover:bg-slate-200 transition-all">Batal</button>
-                <button @click="showDeleteModal = false" class="flex-1 py-3 bg-rose-500 text-white rounded-xl font-bold hover:bg-rose-600 shadow-lg shadow-rose-100 transition-all">Hapus</button>
+                <form :action="deleteAction" method="POST" class="flex-1">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="w-full py-3 bg-rose-500 text-white rounded-xl font-bold hover:bg-rose-600 shadow-lg shadow-rose-100 transition-all">Hapus</button>
+                </form>
             </div>
         </div>
     </div>

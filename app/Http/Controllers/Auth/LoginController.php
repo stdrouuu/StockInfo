@@ -3,31 +3,21 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    /**
-     * Hardcoded user credentials (no database needed).
-     */
-    private array $users = [
-        'admin' => [
-            'username' => 'admin_utama',
-            'password' => 'admin123',
-            'name'     => 'Administrator',
-        ],
-        'staff' => [
-            'username' => 'staff_toko',
-            'password' => 'staff123',
-            'name'     => 'Staff Gudang',
-        ],
-    ];
-
     /**
      * Show the login form.
      */
     public function showLoginForm()
     {
+        if (Auth::check() || session('is_logged_in')) {
+            return redirect()->route('dashboard.dashboard');
+        }
         return view('auth.login');
     }
 
@@ -46,24 +36,34 @@ class LoginController extends Controller
         $username = $request->input('username');
         $password = $request->input('password');
 
-        // Check if the credentials match the hardcoded user for the selected role
-        if (
-            isset($this->users[$role]) &&
-            $this->users[$role]['username'] === $username &&
-            $this->users[$role]['password'] === $password
-        ) {
+        // Map hardcoded/historical credentials to emails
+        $email = $username;
+        if ($username === 'admin_utama') {
+            $email = 'admin@stockinfo.com';
+        } elseif ($username === 'staff_toko') {
+            $email = 'staff@stockinfo.com';
+        }
+
+        // Attempt login using standard Laravel Auth
+        if (Auth::attempt(['email' => $email, 'password' => $password, 'role' => $role])) {
+            $user = Auth::user();
+            
             session([
                 'is_logged_in' => true,
-                'user_name'    => $this->users[$role]['name'],
-                'user_role'    => $role
+                'user' => [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'username' => explode('@', $user->email)[0]
+                ]
             ]);
-            
+
             return redirect()->route('dashboard.dashboard')->with('status', 'Login berhasil!');
         }
 
         return back()->withErrors([
             'username' => 'Username atau kata sandi salah, atau tidak sesuai dengan peran yang dipilih.',
-        ])->onlyInput('role');
+        ])->onlyInput('role', 'username');
     }
 
     /**
@@ -71,6 +71,7 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
