@@ -24,7 +24,7 @@
                     <i class="fas fa-exchange-alt text-4xl"></i>
                 </div>
                 <div>
-                    <h2 class="text-3xl font-extrabold tracking-tight">Transaksi Inventory</h2>
+                    <h2 class="text-3xl font-extrabold tracking-tight">Transaksi Keluar & Masuk</h2>
                     <div class="flex items-center gap-3 text-emerald-100/80 text-[11px] font-bold mt-2 uppercase tracking-widest">
                         <i class="fas fa-home"></i>
                         <i class="fas fa-chevron-right text-[8px]"></i>
@@ -182,7 +182,7 @@
         this.items.push({id: Date.now(), produk_id: '', qty: 1, price: 0});
     },
     removeItem(index) {
-        if (this.items.length > 1) this.items.splice(index, 1);
+        if (this.items.length !== 1) this.items.splice(index, 1);
     },
     updatePrice(item) {
         if (item.produk_id && this.productsList[item.produk_id]) {
