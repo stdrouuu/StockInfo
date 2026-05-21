@@ -29,24 +29,51 @@
     showLogoutModal: false,
     showDeleteModal: false,
     deleteTarget: '',
-    deleteAction: ''
+    deleteAction: '',
+    sidebarOpen: false
 }">
 
-    <div class="flex min-h-screen">
+    <div class="flex min-h-screen relative overflow-x-hidden">
+        <!-- Backdrop Overlay (visible only on mobile/tablet when sidebar is open) -->
+        <div x-show="sidebarOpen" 
+             x-cloak 
+             @click="sidebarOpen = false" 
+             class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-30 lg:hidden transition-opacity duration-300"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+        </div>
+
         <!-- Sidebar -->
         @include('partials.sidebar')
 
         <!-- Main Content -->
-        <main class="flex-1 ml-64 p-10">
-            <!-- Top Header -->
-            <div class="flex justify-between items-center mb-10">
+        <main class="flex-1 lg:ml-64 p-4 sm:p-6 lg:p-10 min-w-0 transition-all duration-300">
+            <!-- Mobile Header Bar -->
+            <div class="flex lg:hidden items-center justify-between bg-white border border-slate-200/60 px-4 py-3 rounded-2xl mb-6 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <button @click="sidebarOpen = true" class="w-10 h-10 flex items-center justify-center bg-[#eff6ff] text-[#1e40af] rounded-xl hover:bg-blue-100 transition-colors">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                    <span class="font-extrabold text-slate-800 tracking-tight text-base">StockInfo</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode(session('user.name', 'Administrator')) }}&background=1e40af&color=fff" class="w-8 h-8 rounded-lg shadow-sm border border-white">
+                </div>
+            </div>
+
+            <!-- Top Header (Desktop) -->
+            <div class="hidden lg:flex justify-between items-center mb-10">
                <div>
-    <!-- Date -->
-    <h2 class="text-sm font-bold text-slate-500 flex items-center gap-2">
-        <i class="far fa-calendar-alt text-slate-400"></i>
-        {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
-    </h2>
-</div>
+                    <!-- Date -->
+                    <h2 class="text-sm font-bold text-slate-500 flex items-center gap-2">
+                        <i class="far fa-calendar-alt text-slate-400"></i>
+                        {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
+                    </h2>
+                </div>
                 <div class="flex items-center gap-8">
                     <div class="relative cursor-pointer group">
                         <i class="far fa-bell text-xl text-slate-400 group-hover:text-slate-600 transition-colors"></i>
@@ -78,7 +105,7 @@
          x-transition:leave-end="opacity-0">
         
         <div @click.away="showModal = false" 
-             class="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl overflow-hidden"
+             class="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="opacity-0 scale-95"
              x-transition:enter-end="opacity-100 scale-100"
@@ -86,44 +113,8 @@
              x-transition:leave-start="opacity-100 scale-100"
              x-transition:leave-end="opacity-0 scale-95">
             
-            <div class="p-8">
+            <div class="p-6 sm:p-8 overflow-y-auto hide-scrollbar">
                 @yield('modal-content')
-
-                <!-- Global Processes Modals -->
-                <div x-show="modalType === 'add-proses'">
-                    <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mb-10">Tambah & Edit Proses</h2>
-                    <form class="space-y-8">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Nama Barang</label>
-                                <input type="text" placeholder="Besi & Baja" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">No Surat Jalan</label>
-                                <input type="text" placeholder="DO/2025/001" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all uppercase">
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Status</label>
-                                <input type="text" placeholder="On-Going" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Kategori</label>
-                                <div class="relative">
-                                    <select class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium appearance-none focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all">
-                                        <option>Construction</option>
-                                        <option>Raw Material</option>
-                                        <option>Finishing</option>
-                                    </select>
-                                    <i class="fas fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-end gap-3 pt-4">
-                            <button type="button" @click="showModal = false" class="px-10 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-sm font-bold rounded-xl transition-colors">Batal</button>
-                            <button type="submit" class="px-10 py-3.5 bg-[#2d46b9] hover:bg-blue-800 text-white text-sm font-bold rounded-xl shadow-lg shadow-blue-200 transition-all">Simpan</button>
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
     </div>

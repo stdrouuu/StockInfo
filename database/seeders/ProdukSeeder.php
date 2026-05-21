@@ -32,6 +32,7 @@ class ProdukSeeder extends Seeder
                 'stok'         => 850,
                 'harga'        => 65000,
                 'stok_minimum' => 100,
+                'gambar'       => 'images/products/semen.svg',
             ],
             [
                 'sku'          => 'SM-002-MP',
@@ -40,6 +41,7 @@ class ProdukSeeder extends Seeder
                 'stok'         => 620,
                 'harga'        => 62000,
                 'stok_minimum' => 80,
+                'gambar'       => 'images/products/semen.svg',
             ],
             [
                 'sku'          => 'SM-003-HC',
@@ -48,6 +50,7 @@ class ProdukSeeder extends Seeder
                 'stok'         => 200,
                 'harga'        => 55000,
                 'stok_minimum' => 50,
+                'gambar'       => 'images/products/semen.svg',
             ],
 
             // Besi & Baja
@@ -58,6 +61,7 @@ class ProdukSeeder extends Seeder
                 'stok'         => 15,
                 'harga'        => 45000,
                 'stok_minimum' => 50,
+                'gambar'       => 'images/products/besi.svg',
             ],
             [
                 'sku'          => 'BS-003-10MM',
@@ -66,6 +70,7 @@ class ProdukSeeder extends Seeder
                 'stok'         => 500,
                 'harga'        => 95000,
                 'stok_minimum' => 100,
+                'gambar'       => 'images/products/besi.svg',
             ],
             [
                 'sku'          => 'BS-004-12MM',
@@ -74,6 +79,7 @@ class ProdukSeeder extends Seeder
                 'stok'         => 320,
                 'harga'        => 120000,
                 'stok_minimum' => 80,
+                'gambar'       => 'images/products/besi.svg',
             ],
             [
                 'sku'          => 'BS-005-WM',
@@ -82,6 +88,7 @@ class ProdukSeeder extends Seeder
                 'stok'         => 45,
                 'harga'        => 350000,
                 'stok_minimum' => 20,
+                'gambar'       => 'images/products/besi.svg',
             ],
 
             // Cat & Pelapis
@@ -92,6 +99,7 @@ class ProdukSeeder extends Seeder
                 'stok'         => 180,
                 'harga'        => 285000,
                 'stok_minimum' => 30,
+                'gambar'       => 'images/products/cat.svg',
             ],
             [
                 'sku'          => 'CT-002-JTN',
@@ -100,6 +108,7 @@ class ProdukSeeder extends Seeder
                 'stok'         => 95,
                 'harga'        => 195000,
                 'stok_minimum' => 25,
+                'gambar'       => 'images/products/cat.svg',
             ],
 
             // Kayu & Papan
@@ -110,6 +119,7 @@ class ProdukSeeder extends Seeder
                 'stok'         => 75,
                 'harga'        => 320000,
                 'stok_minimum' => 20,
+                'gambar'       => 'images/products/kayu.svg',
             ],
 
             // Atap & Plafon
@@ -120,6 +130,7 @@ class ProdukSeeder extends Seeder
                 'stok'         => 120,
                 'harga'        => 85000,
                 'stok_minimum' => 30,
+                'gambar'       => 'images/products/atap.svg',
             ],
 
             // Pipa & Sanitasi
@@ -130,6 +141,7 @@ class ProdukSeeder extends Seeder
                 'stok'         => 200,
                 'harga'        => 78000,
                 'stok_minimum' => 40,
+                'gambar'       => 'images/products/pipa.svg',
             ],
 
             // Perkakas
@@ -140,6 +152,7 @@ class ProdukSeeder extends Seeder
                 'stok'         => 60,
                 'harga'        => 45000,
                 'stok_minimum' => 15,
+                'gambar'       => 'images/products/perkakas.svg',
             ],
 
             // Listrik
@@ -150,6 +163,7 @@ class ProdukSeeder extends Seeder
                 'stok'         => 40,
                 'harga'        => 425000,
                 'stok_minimum' => 10,
+                'gambar'       => 'images/products/listrik.svg',
             ],
         ];
 

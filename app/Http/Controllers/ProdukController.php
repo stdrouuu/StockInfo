@@ -78,7 +78,7 @@ class ProdukController extends Controller
             'stok' => 'required|integer|min:0',
             'harga' => 'required|numeric|min:0',
             'stok_minimum' => 'required|integer|min:0',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:12288',
         ]);
 
         $data = $request->except('gambar');
@@ -105,7 +105,7 @@ class ProdukController extends Controller
             'stok' => 'required|integer|min:0',
             'harga' => 'required|numeric|min:0',
             'stok_minimum' => 'required|integer|min:0',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:12288',
         ]);
 
         $data = $request->except('gambar');
