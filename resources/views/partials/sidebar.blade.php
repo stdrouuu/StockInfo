@@ -1,17 +1,23 @@
-<aside class="w-64 bg-white border-r border-slate-200 flex flex-col fixed h-screen z-20">
-    <div class="p-6 flex items-center gap-3">
-        <div class="bg-[#1e40af] p-2 rounded-lg text-white shadow-md shadow-blue-100">
-            <i class="fas fa-warehouse text-xl"></i>
+<aside class="w-64 bg-white border-r border-slate-200 flex flex-col fixed h-screen z-40 transition-transform duration-300 transform -translate-x-full lg:translate-x-0 lg:z-20 lg:transform-none"
+       :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+    <div class="p-6 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+            <div class="bg-[#1e40af] p-2 rounded-lg text-white shadow-md shadow-blue-100">
+                <i class="fas fa-warehouse text-xl"></i>
+            </div>
+            <div>
+                <h1 class="font-extrabold text-lg leading-tight tracking-tight text-slate-800">StockInfo</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-[0.1em] font-bold">Admin</p>
+            </div>
         </div>
-        <div>
-            <h1 class="font-extrabold text-lg leading-tight tracking-tight text-slate-800">StockInfo</h1>
-            <p class="text-[10px] text-slate-400 uppercase tracking-[0.1em] font-bold">Admin</p>
-        </div>
+        <button @click="sidebarOpen = false" class="lg:hidden w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors">
+            <i class="fas fa-times text-lg"></i>
+        </button>
     </div>
 
     <nav class="flex-1 px-4 space-y-1 mt-4 overflow-y-auto hide-scrollbar flex flex-col" x-data="{ 
-        activeMenu: '{{ Request::segment(1) ?: 'dashboard' }}',
-        openSub: '{{ in_array(Request::segment(1), ['produk', 'kategori', 'transaksi', 'stok-opname']) ? Request::segment(1) : '' }}'
+        activeMenu: '{{ (Request::segment(1) === 'produk' && Request::segment(2) === 'kategori') || request()->routeIs('kategori.*') ? 'kategori' : (Request::segment(1) ?: 'dashboard') }}',
+        openSub: '{{ (Request::segment(1) === 'produk' && Request::segment(2) === 'kategori') || request()->routeIs('kategori.*') || Request::segment(1) === 'produk' ? 'produk' : (Request::segment(1) === 'stok-opname' ? 'stok-opname' : '') }}'
     }">
         <!-- Dashboard -->
         <a href="{{ route('dashboard.dashboard') }}" 

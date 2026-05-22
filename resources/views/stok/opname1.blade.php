@@ -4,6 +4,18 @@
 
 @section('content')
 <div class="space-y-8">
+    <!-- Flash Messages -->
+    @if(session('success'))
+        <div class="p-4 rounded-xl bg-emerald-50 text-emerald-700 text-sm font-semibold border border-emerald-200">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="p-4 rounded-xl bg-rose-50 text-rose-700 text-sm font-semibold border border-rose-200">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div class="bg-[#d35400] rounded-3xl p-8 text-white relative overflow-hidden shadow-xl shadow-orange-900/10">
         <div class="relative z-10 flex items-center gap-6">
             <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md">
@@ -24,7 +36,7 @@
     </div>
 
     <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden p-6">
-        <div class="mb-6">
+        <div class="mb-6 flex items-center justify-between">
             <button @click="showModal = true; modalType = 'add-period'" class="bg-[#2d46b9] hover:bg-blue-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-blue-200 transition-all">
                 <i class="fas fa-plus text-xs"></i>
                 Buat Periode
@@ -37,48 +49,77 @@
                     <tr class="bg-[#2d46b9] text-white text-[10px] font-black uppercase tracking-widest">
                         <th class="px-6 py-4 rounded-tl-xl">No</th>
                         <th class="px-6 py-4">Periode</th>
+                        <th class="px-6 py-4">Keterangan</th>
                         <th class="px-6 py-4 text-center">Jumlah Barang</th>
-                        <th class="px-6 py-4 text-center">Jumlah Sesuai Barang</th>
-                        <th class="px-6 py-4 text-center">Jumlah Selisih Barang</th>
+                        <th class="px-6 py-4 text-center">Jumlah Sesuai</th>
+                        <th class="px-6 py-4 text-center">Jumlah Selisih</th>
                         <th class="px-6 py-4 text-center">Status Kerja</th>
                         <th class="px-6 py-4 text-center">Status Pelaporan</th>
                         <th class="px-6 py-4 rounded-tr-xl text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
-                    @php
-                        $data = [
-                            ['no' => 1, 'period' => "1 Okt 2025 s/d 30 Okt 2025", 'qty' => 150, 'match' => 150, 'diff' => 0, 'work' => "Tidak Aktif", 'status' => "LENGKAP", 'class' => "bg-emerald-50 text-emerald-600"],
-                            ['no' => 2, 'period' => "01 Sep 2025 s/d 29 Sep 2025", 'qty' => 85, 'match' => 87, 'diff' => 2, 'work' => "Tidak Aktif", 'status' => "LENGKAP", 'class' => "bg-emerald-50 text-emerald-600"],
-                            ['no' => 3, 'period' => "01 Sep 2025 s/d 29 Sep 2025", 'qty' => 20, 'match' => 20, 'diff' => 0, 'work' => "Aktif", 'status' => "BELUM LENGKAP", 'class' => "bg-rose-50 text-rose-600"],
-                            ['no' => 4, 'period' => "01 Sep 2025 s/d 29 Sep 2025", 'qty' => 300, 'match' => 300, 'diff' => 0, 'work' => "Tidak Aktif", 'status' => "SELESAI", 'class' => "bg-slate-50 text-slate-400"]
-                        ];
-                    @endphp
-                    @foreach($data as $row)
+                    @forelse($periodes as $index => $row)
                     <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-6 py-5 text-sm text-slate-400 font-medium">{{ $row['no'] }}</td>
-                        <td class="px-6 py-5 text-sm font-extrabold text-[#2d46b9] leading-relaxed">{{ $row['period'] }}</td>
-                        <td class="px-6 py-5 text-sm font-medium text-slate-500 text-center">{{ $row['qty'] }}</td>
-                        <td class="px-6 py-5 text-sm font-black text-slate-800 text-center">{{ $row['match'] }}</td>
-                        <td class="px-6 py-5 text-sm font-medium text-slate-500 text-center">{{ $row['diff'] }}</td>
-                        <td class="px-6 py-5 text-sm font-medium text-slate-400 text-center">{{ $row['work'] }}</td>
-                        <td class="px-6 py-5 text-center">
-                            <span class="px-3 py-1 {{ $row['class'] }} text-[10px] font-black uppercase rounded-full">{{ $row['status'] }}</span>
+                        <td class="px-6 py-5 text-sm text-slate-400 font-medium">{{ str_pad($index + 1 + ($periodes->currentPage() - 1) * $periodes->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
+                        <td class="px-6 py-5 text-sm font-extrabold text-[#2d46b9] leading-relaxed">
+                            {{ $row->tanggal_mulai->format('d M Y') }} s/d {{ $row->tanggal_selesai->format('d M Y') }}
+                        </td>
+                        <td class="px-6 py-5 text-sm text-slate-600 font-semibold max-w-xs truncate">{{ $row->keterangan }}</td>
+                        <td class="px-6 py-5 text-sm font-medium text-slate-500 text-center">{{ $row->total_barang }}</td>
+                        <td class="px-6 py-5 text-sm font-black text-emerald-600 text-center">{{ $row->total_sesuai }}</td>
+                        <td class="px-6 py-5 text-sm font-bold text-rose-500 text-center">{{ $row->total_selisih }}</td>
+                        <td class="px-6 py-5 text-sm font-semibold text-center">
+                            @if($row->status_kerja === 'Aktif')
+                                <span class="px-2.5 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase rounded">{{ $row->status_kerja }}</span>
+                            @else
+                                <span class="px-2.5 py-1 bg-slate-50 text-slate-400 text-[9px] font-black uppercase rounded">{{ $row->status_kerja }}</span>
+                            @endif
                         </td>
                         <td class="px-6 py-5 text-center">
-                            <button class="text-slate-300 hover:text-slate-600"><i class="fas fa-ellipsis-v"></i></button>
+                            @if($row->status_pelaporan === 'LENGKAP' || $row->status_pelaporan === 'SELESAI')
+                                <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase rounded-full">{{ $row->status_pelaporan }}</span>
+                            @else
+                                <span class="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black uppercase rounded-full">{{ $row->status_pelaporan }}</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-5 text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                <a href="{{ route('stok.opname2', ['periode_id' => $row->id]) }}" class="p-1.5 text-blue-500 hover:text-blue-700 transition-colors" title="Input Stok Fisik">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{{ route('stok.opname3', ['periode_id' => $row->id]) }}" class="p-1.5 text-emerald-500 hover:text-emerald-700 transition-colors" title="Lihat Laporan">
+                                    <i class="fas fa-chart-line"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="9" class="px-6 py-8 text-center text-slate-400 font-medium">Belum ada periode stok opname.</td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
 
+        <!-- Pagination -->
         <div class="mt-8 flex items-center justify-between">
-            <p class="text-xs text-slate-400 font-medium tracking-tight">Menampilkan 1-4 dari 1,290 transaksi</p>
+            <p class="text-xs text-slate-400 font-medium tracking-tight">
+                Menampilkan {{ $periodes->firstItem() ?? 0 }}-{{ $periodes->lastItem() ?? 0 }} dari {{ $periodes->total() }} Periode
+            </p>
             <div class="flex items-center gap-2">
-                <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#2d46b9] text-white text-xs font-bold shadow-md">1</button>
-                <button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 text-xs font-bold transition-all">2</button>
+                @if ($periodes->onFirstPage())
+                    <span class="px-4 py-2 border border-slate-100 rounded-xl text-xs font-bold text-slate-300 cursor-not-allowed">Sebelumnya</span>
+                @else
+                    <a href="{{ $periodes->previousPageUrl() }}" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all">Sebelumnya</a>
+                @endif
+
+                @if ($periodes->hasMorePages())
+                    <a href="{{ $periodes->nextPageUrl() }}" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all">Selanjutnya</a>
+                @else
+                    <span class="px-4 py-2 border border-slate-100 rounded-xl text-xs font-bold text-slate-300 cursor-not-allowed">Selanjutnya</span>
+                @endif
             </div>
         </div>
     </div>
@@ -88,20 +129,21 @@
 @section('modal-content')
 <div x-show="modalType === 'add-period'">
     <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Buat Periode Opname</h2>
-    <form class="space-y-5">
+    <form action="{{ route('stok.storePeriode') }}" method="POST" class="space-y-5">
+        @csrf
         <div class="grid grid-cols-2 gap-5">
             <div class="space-y-2">
                 <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Tanggal Mulai</label>
-                <input type="date" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                <input type="date" name="tanggal_mulai" required value="{{ date('Y-m-d') }}" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
             </div>
             <div class="space-y-2">
                 <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Tanggal Selesai</label>
-                <input type="date" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                <input type="date" name="tanggal_selesai" required value="{{ date('Y-m-d', strtotime('+30 days')) }}" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
             </div>
         </div>
         <div class="space-y-2">
             <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Keterangan Periode</label>
-            <textarea placeholder="Contoh: Stok Opname Gudang A - Akhir Tahun" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none" rows="2"></textarea>
+            <textarea name="keterangan" required placeholder="Contoh: Stok Opname Gudang A - Akhir Tahun" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none" rows="2"></textarea>
         </div>
         <div class="flex justify-end gap-3 pt-4">
             <button type="button" @click="showModal = false" class="px-8 py-2.5 bg-slate-100 text-slate-800 rounded-xl text-sm font-bold hover:bg-slate-200 transition-all">Batal</button>

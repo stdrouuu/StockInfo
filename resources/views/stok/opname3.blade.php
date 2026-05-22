@@ -27,30 +27,35 @@
         <div class="grid grid-cols-12 gap-8 items-center">
             <div class="col-span-7 space-y-4">
                 <div class="space-y-2">
-                    <p class="text-xl font-bold text-slate-800">Periode : 01 Sep 2025 s/d 30 Sep 2025</p>
-                    <div class="space-y-1 text-slate-600 font-semibold">
-                        <p>Jumlah Barang : 10</p>
-                        <p>Jumlah Barang Sesuai : 7</p>
-                        <p>Jumlah Barang Selisih : 3</p>
-                        <p>Status Kerja : Tidak Aktif</p>
-                        <p>Pelaporan Stok : Selesai</p>
+                    <p class="text-xl font-bold text-slate-800">Periode : {{ $periode->tanggal_mulai->format('d M Y') }} s/d {{ $periode->tanggal_selesai->format('d M Y') }}</p>
+                    <div class="space-y-1.5 text-slate-600 font-semibold">
+                        <p>Jumlah Barang : {{ $totalItems }}</p>
+                        <p>Jumlah Barang Sesuai : {{ $totalSesuai }}</p>
+                        <p>Jumlah Barang Selisih : {{ $totalSelisih }}</p>
+                        <p>Status Kerja : {{ $periode->status_kerja }}</p>
+                        <p>Pelaporan Stok : {{ $periode->status_pelaporan }}</p>
                     </div>
                 </div>
             </div>
 
             <div class="col-span-5 flex flex-col items-center">
-                <div class="relative w-48 h-48 rounded-full border-[16px] border-emerald-500 border-l-rose-500 flex items-center justify-center transform -rotate-45">
-                    <div class="absolute top-4 right-4 transform rotate-45 text-[10px] font-bold text-emerald-600">70.0%</div>
-                    <div class="absolute top-4 left-4 transform rotate-45 text-[10px] font-bold text-rose-600">30.0%</div>
+                <!-- Premium Dynamic Pie Chart using CSS conic-gradient -->
+                <div class="relative w-48 h-48 rounded-full flex items-center justify-center shadow-md border-4 border-white" 
+                     style="background: conic-gradient(#10b981 0% {{ $sesuaiPercent }}%, #ef4444 {{ $sesuaiPercent }}% 100%)">
+                    <!-- Innermost circle for donut hole aesthetic -->
+                    <div class="w-32 h-32 rounded-full bg-white flex flex-col items-center justify-center shadow-inner">
+                        <span class="text-2xl font-black text-slate-800">{{ $sesuaiPercent }}%</span>
+                        <span class="text-[9px] font-black uppercase text-slate-400 tracking-wider">Akurasi</span>
+                    </div>
                 </div>
                 <div class="mt-6 flex gap-6 text-[10px] font-bold uppercase tracking-widest">
                     <div class="flex items-center gap-2">
                         <span class="w-3 h-3 bg-emerald-500 rounded-full"></span>
-                        <span class="text-slate-500">Sesuai</span>
+                        <span class="text-slate-500">Sesuai ({{ $sesuaiPercent }}%)</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="w-3 h-3 bg-rose-500 rounded-full"></span>
-                        <span class="text-slate-500">Selisih</span>
+                        <span class="text-slate-500">Selisih ({{ $selisihPercent }}%)</span>
                     </div>
                 </div>
             </div>
@@ -62,44 +67,62 @@
                     <tr class="bg-[#2d46b9] text-white text-[10px] font-black uppercase tracking-widest">
                         <th class="px-6 py-4">No</th>
                         <th class="px-6 py-4">Nomor SKU</th>
-                        <th class="px-6 py-4 text-center">Produk</th>
-                        <th class="px-6 py-4 text-center">Stock</th>
+                        <th class="px-6 py-4">Produk</th>
+                        <th class="px-6 py-4 text-center">Stok Sistem</th>
                         <th class="px-6 py-4 text-center">Terlapor</th>
+                        <th class="px-6 py-4 text-center">Selisih</th>
                         <th class="px-6 py-4 text-center">Status</th>
                         <th class="px-6 py-4">Keterangan</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
+                    @forelse($items as $index => $item)
                     <tr class="text-sm hover:bg-slate-50/50">
-                        <td class="px-6 py-5 text-slate-400 font-medium tracking-tight">1</td>
-                        <td class="px-6 py-5 font-bold text-blue-600 tracking-tighter">SKU09238231</td>
-                        <td class="px-6 py-5 font-medium text-slate-600 text-center">Baja Ringan</td>
-                        <td class="px-6 py-5 font-black text-slate-800 text-center tracking-tighter">150</td>
-                        <td class="px-6 py-5 font-medium text-slate-500 text-center tracking-tighter">150</td>
-                        <td class="px-6 py-5 text-center">
-                            <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-full uppercase">Sesuai</span>
+                        <td class="px-6 py-5 text-slate-400 font-medium tracking-tight">{{ str_pad($index + 1 + ($items->currentPage() - 1) * $items->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
+                        <td class="px-6 py-5 font-bold text-blue-600 tracking-tighter">{{ $item->produk->sku }}</td>
+                        <td class="px-6 py-5 font-semibold text-slate-700">{{ $item->produk->nama }}</td>
+                        <td class="px-6 py-5 font-black text-slate-800 text-center tracking-tighter">{{ $item->stok_sistem }}</td>
+                        <td class="px-6 py-5 font-medium text-slate-500 text-center tracking-tighter">{{ $item->stok_fisik }}</td>
+                        <td class="px-6 py-5 font-bold text-center tracking-tighter {{ $item->selisih < 0 ? 'text-rose-500' : ($item->selisih > 0 ? 'text-emerald-500' : 'text-slate-600') }}">
+                            {{ $item->selisih > 0 ? '+' : '' }}{{ $item->selisih }}
                         </td>
-                        <td class="px-6 py-5 text-slate-500 font-medium italic">lengkap</td>
-                    </tr>
-                    <tr class="text-sm hover:bg-slate-50/50">
-                        <td class="px-6 py-5 text-slate-400 font-medium tracking-tight">2</td>
-                        <td class="px-6 py-5 font-bold text-blue-600 tracking-tighter">SKU09238232</td>
-                        <td class="px-6 py-5 font-medium text-slate-600 text-center">Cat</td>
-                        <td class="px-6 py-5 font-black text-slate-800 text-center tracking-tighter">20</td>
-                        <td class="px-6 py-5 font-medium text-slate-500 text-center tracking-tighter">13</td>
                         <td class="px-6 py-5 text-center">
-                            <span class="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black rounded-full uppercase">Selisih</span>
+                            @if($item->catatan === 'belum dilaporkan')
+                                <span class="px-3 py-1 bg-amber-50 text-amber-600 text-[10px] font-black rounded-full uppercase">BELUM</span>
+                            @elseif($item->selisih === 0)
+                                <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-full uppercase font-black">Sesuai</span>
+                            @else
+                                <span class="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black rounded-full uppercase font-black font-black">Selisih</span>
+                            @endif
                         </td>
-                        <td class="px-6 py-5 text-slate-500 font-medium italic">barang rusak</td>
+                        <td class="px-6 py-5 text-slate-500 font-medium italic">{{ $item->catatan }}</td>
                     </tr>
+                    @empty
+                    <tr>
+                        <td colspan="8" class="px-6 py-8 text-center text-slate-400 font-medium">Tidak ada barang dalam laporan stok opname ini.</td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
 
+        <!-- Pagination -->
         <div class="mt-8 flex items-center justify-between">
-            <p class="text-xs text-slate-400 font-medium">Menampilkan 1-2 dari 1,290 transaksi</p>
+            <p class="text-xs text-slate-400 font-medium">
+                Menampilkan {{ $items->firstItem() ?? 0 }}-{{ $items->lastItem() ?? 0 }} dari {{ $items->total() }} Produk
+            </p>
             <div class="flex items-center gap-2">
-                <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#2d46b9] text-white text-xs font-bold shadow-lg shadow-blue-200 transition-all">1</button>
+                @if ($items->onFirstPage())
+                    <span class="px-4 py-2 border border-slate-100 rounded-xl text-xs font-bold text-slate-300 cursor-not-allowed">Sebelumnya</span>
+                @else
+                    <a href="{{ $items->appends(request()->query())->previousPageUrl() }}" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all">Sebelumnya</a>
+                @endif
+
+                @if ($items->hasMorePages())
+                    <a href="{{ $items->appends(request()->query())->nextPageUrl() }}" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all">Selanjutnya</a>
+                @else
+                    <span class="px-4 py-2 border border-slate-100 rounded-xl text-xs font-bold text-slate-300 cursor-not-allowed">Selanjutnya</span>
+                @endif
             </div>
         </div>
     </div>

@@ -146,9 +146,6 @@
                         <label class="block text-sm font-bold text-slate-700 uppercase tracking-wider" for="password">
                             Kata Sandi
                         </label>
-                        <a class="text-sm font-semibold text-blue-600 hover:underline" href="#">
-                            Lupa Sandi?
-                        </a>
                     </div>
                     <div class="relative">
                         <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
@@ -173,20 +170,6 @@
                     @enderror
                 </div>
 
-                <!-- Remember Me -->
-                <div class="flex items-center">
-                    <input
-                        class="w-5 h-5 rounded border-slate-300 text-blue-600 focus:ring-blue-600 cursor-pointer"
-                        id="remember"
-                        name="remember"
-                        type="checkbox"
-                        {{ old('remember') ? 'checked' : '' }}
-                    />
-                    <label class="ml-3 text-sm font-medium text-slate-500 cursor-pointer select-none" for="remember">
-                        Ingat saya di perangkat ini
-                    </label>
-                </div>
-
                 <!-- Login Button -->
                 <button
                     class="w-full py-4 bg-blue-600 text-white font-bold text-lg rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
@@ -204,27 +187,12 @@
                     © {{ date('Y') }} StockInfo Sistem.
                 </p>
                 <div class="flex gap-6">
-                    <a class="text-sm font-bold text-slate-400 hover:text-blue-600 transition-colors" href="#">
-                        Bantuan
-                    </a>
-                    <a class="text-sm font-bold text-slate-400 hover:text-blue-600 transition-colors" href="#">
-                        Privasi
-                    </a>
                 </div>
             </div>
         </div>
     </section>
 </main>
 
-<!-- Support Bubble -->
-<div class="fixed bottom-6 right-6">
-    <button
-        class="bg-surface-container-lowest text-primary p-4 rounded-full shadow-xl flex items-center justify-center hover:bg-primary hover:text-white transition-all active:scale-90 border border-outline-variant/20"
-        id="support-bubble"
-    >
-        <span class="material-symbols-outlined">support_agent</span>
-    </button>
-</div>
 @endsection
 
 @push('scripts')
