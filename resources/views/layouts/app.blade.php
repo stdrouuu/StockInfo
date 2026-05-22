@@ -105,7 +105,8 @@
          x-transition:leave-end="opacity-0">
         
         <div @click.away="showModal = false" 
-             class="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
+             :class="modalType === 'add-transaction' ? 'max-w-6xl' : 'max-w-2xl'"
+             class="bg-white w-full rounded-[32px] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden transition-all duration-300"
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="opacity-0 scale-95"
              x-transition:enter-end="opacity-100 scale-100"

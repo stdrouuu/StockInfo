@@ -17,6 +17,7 @@ class ProdukController extends Controller
     {
         $search = $request->input('search');
         $filter = $request->input('filter'); // 'tinggi_rendah', 'rendah_tinggi', 'kritis'
+        $kategori_id = $request->input('kategori_id');
 
         $query = Produk::with('kategori');
 
@@ -26,6 +27,11 @@ class ProdukController extends Controller
                 $q->where('nama', 'like', '%' . $search . '%')
                   ->orWhere('sku', 'like', '%' . $search . '%');
             });
+        }
+
+        // Filter category functionality
+        if ($kategori_id) {
+            $query->where('kategori_id', $kategori_id);
         }
 
         // Filter stock functionality
@@ -54,6 +60,9 @@ class ProdukController extends Controller
         // Load categories for dropdown in modal
         $kategoris = Kategori::all();
 
+        // Load all existing SKUs for duplicate validation in the frontend modal
+        $existingSkus = Produk::select('id', 'sku')->get();
+
         return view('produk.produk', compact(
             'produks',
             'totalSKU',
@@ -62,7 +71,9 @@ class ProdukController extends Controller
             'invValue',
             'kategoris',
             'search',
-            'filter'
+            'filter',
+            'kategori_id',
+            'existingSkus'
         ));
     }
 

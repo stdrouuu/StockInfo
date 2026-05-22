@@ -181,11 +181,6 @@
             <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mb-1">Pencatatan Transaksi</h2>
             <h3 class="text-2xl font-extrabold text-slate-800">Tambah Transaksi Baru</h3>
         </div>
-        <div class="flex gap-1.5">
-            <template x-for="i in 2">
-                <div :class="step >= i ? 'bg-blue-600 w-8' : 'bg-slate-200 w-3'" class="h-1.5 rounded-full transition-all duration-500"></div>
-            </template>
-        </div>
     </div>
 
     <form action="{{ route('transaksi.store') }}" method="POST" class="space-y-8">
@@ -268,29 +263,123 @@
                 </button>
             </div>
 
-            <div class="max-h-[300px] overflow-y-auto pr-2 space-y-4 custom-scrollbar">
+            <div class="space-y-4">
                 <template x-for="(item, index) in items" :key="item.id">
-                    <div class="p-5 rounded-2xl border border-slate-100 bg-slate-50/50 flex flex-wrap md:flex-nowrap items-end gap-4 relative group">
-                        <div class="flex-1 min-w-[200px] space-y-2">
-                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block ml-1">Nama Barang</label>
-                            <select :name="'items[' + index + '][produk_id]'" x-model="item.produk_id" @change="updatePrice(item)" required class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="">Pilih Barang...</option>
-                                @foreach($produks as $produk)
-                                    <option value="{{ $produk->id }}">{{ $produk->nama }} (Stok: {{ $produk->stok }})</option>
-                                @endforeach
-                            </select>
+                    <div class="p-5 rounded-2xl border border-slate-100 bg-slate-50/50 flex flex-col gap-4 relative group transition-all duration-300">
+                        
+                        <!-- Inputs Grid/Row -->
+                        <div class="flex flex-col md:flex-row items-stretch md:items-end gap-4 w-full">
+                            <!-- Searchable Dropdown -->
+                            <div class="flex-1 min-w-[200px] relative" 
+                                 x-data="{ 
+                                    searchQuery: '', 
+                                    openDropdown: false,
+                                    init() {
+                                        if (item.produk_id && productsList[item.produk_id]) {
+                                            this.searchQuery = productsList[item.produk_id].nama;
+                                        }
+                                        this.$watch('item.produk_id', value => {
+                                            if (!value) {
+                                                this.searchQuery = '';
+                                            }
+                                        });
+                                    },
+                                    get filteredProducts() {
+                                        const all = Object.values(productsList);
+                                        if (!this.searchQuery || (item.produk_id && productsList[item.produk_id] && this.searchQuery === productsList[item.produk_id].nama)) {
+                                            return all;
+                                        }
+                                        const query = this.searchQuery.toLowerCase();
+                                        return all.filter(p => p.nama.toLowerCase().includes(query));
+                                    }
+                                 }" 
+                                 @click.away="openDropdown = false; if (!item.produk_id) { searchQuery = '' }">
+                                 
+                                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block ml-1">Nama Barang</label>
+                                <input type="hidden" :name="'items[' + index + '][produk_id]'" x-model="item.produk_id" required>
+                                
+                                <div class="relative mt-2">
+                                    <input type="text" 
+                                           placeholder="Cari & Pilih Barang..." 
+                                           class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 pr-10 transition-all"
+                                           x-model="searchQuery"
+                                           @focus="openDropdown = true"
+                                           @input="openDropdown = true; item.produk_id = ''; item.price = 0"
+                                           @keydown.escape="openDropdown = false"
+                                           required>
+                                           
+                                    <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-slate-400">
+                                        <template x-if="item.produk_id">
+                                            <button type="button" @click="item.produk_id = ''; item.price = 0; searchQuery = ''; openDropdown = false" class="hover:text-rose-500 p-1 transition-colors">
+                                                <i class="fas fa-times text-xs"></i>
+                                            </button>
+                                        </template>
+                                        <template x-if="!item.produk_id">
+                                            <i class="fas fa-search text-xs"></i>
+                                        </template>
+                                    </div>
+                                </div>
+                                
+                                <!-- Floating Dropdown Results -->
+                                <div x-show="openDropdown" 
+                                     x-cloak 
+                                     class="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-60 overflow-y-auto py-1.5 custom-scrollbar">
+                                    <template x-for="p in filteredProducts" :key="p.id">
+                                        <button type="button" 
+                                                @click="item.produk_id = p.id; item.price = p.harga; searchQuery = p.nama; openDropdown = false; updatePrice(item)"
+                                                class="w-full text-left px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold flex items-center justify-between transition-colors border-b border-slate-50 last:border-0">
+                                            <div class="truncate mr-2 flex-1 min-w-0">
+                                                <span class="text-slate-800 font-bold block truncate" x-text="p.nama"></span>
+                                                <span class="text-[10px] text-slate-400 block font-normal mt-0.5" x-text="'Harga: Rp ' + new Intl.NumberFormat('id-ID').format(p.harga)"></span>
+                                            </div>
+                                            <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg shrink-0 ml-2" x-text="'Stok: ' + p.stok"></span>
+                                        </button>
+                                    </template>
+                                    <template x-if="filteredProducts.length === 0">
+                                        <div class="px-4 py-3 text-center text-slate-400 text-xs font-semibold">
+                                            Barang tidak ditemukan...
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            
+                            <!-- Qty -->
+                            <div class="w-full md:w-24 shrink-0 space-y-2">
+                                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block ml-1">Qty</label>
+                                <input type="number" 
+                                       :name="'items[' + index + '][qty]'" 
+                                       x-model="item.qty" 
+                                       required 
+                                       min="1" 
+                                       :class="type === 'Keluar' && item.produk_id && productsList[item.produk_id] && parseInt(item.qty || 0) > productsList[item.produk_id].stok ? 'border-rose-300 focus:ring-rose-500 focus:border-rose-400 bg-rose-50/20 text-rose-700' : 'border-slate-200 focus:ring-blue-500 focus:border-blue-400'"
+                                       class="w-full px-4 py-2.5 bg-white border rounded-xl text-sm font-semibold outline-none transition-all text-left md:text-center">
+                            </div>
+                            
+                            <!-- Harga Satuan -->
+                            <div class="w-full md:w-48 shrink-0 space-y-2">
+                                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block ml-1">Harga Satuan</label>
+                                <div class="relative">
+                                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">Rp</span>
+                                    <input type="number" :name="'items[' + index + '][harga_satuan]'" x-model="item.price" required min="0" class="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                                </div>
+                            </div>
+                            
+                            <!-- Action / Trash Button -->
+                            <div class="flex items-center justify-end md:block shrink-0">
+                                <button type="button" @click="removeItem(index)" class="w-full md:w-10 h-10 flex items-center justify-center gap-2 md:gap-0 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-500 border border-slate-200 md:border-transparent hover:border-rose-100 transition-all shadow-sm px-4 md:px-0 py-2 md:py-0">
+                                    <i class="fas fa-trash-alt text-sm"></i>
+                                    <span class="text-xs font-bold md:hidden">Hapus Barang</span>
+                                </button>
+                            </div>
                         </div>
-                        <div class="w-24 space-y-2">
-                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block ml-1">Qty</label>
-                            <input type="number" :name="'items[' + index + '][qty]'" x-model="item.qty" required min="1" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div class="w-40 space-y-2">
-                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block ml-1">Harga Satuan</label>
-                            <input type="number" :name="'items[' + index + '][harga_satuan]'" x-model="item.price" required min="0" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <button type="button" @click="removeItem(index)" class="w-10 h-10 flex items-center justify-center rounded-xl text-slate-300 hover:text-red-500 transition-colors mb-0.5">
-                            <i class="fas fa-trash-alt text-sm"></i>
-                        </button>
+                        
+                        <!-- Real-time Stock Check Alert (Outbound transactions only, inline document flow to push content down) -->
+                        <template x-if="type === 'Keluar' && item.produk_id && productsList[item.produk_id] && parseInt(item.qty || 0) > productsList[item.produk_id].stok">
+                            <div class="text-xs text-rose-600 font-bold flex items-center gap-2 bg-rose-50 p-3.5 rounded-xl border border-rose-100 w-full transition-all duration-300">
+                                <i class="fas fa-exclamation-circle text-sm text-rose-500 shrink-0"></i>
+                                <span>Stok tidak cukup! Stok tersedia saat ini hanya <span class="font-black text-rose-700" x-text="productsList[item.produk_id].stok"></span> unit.</span>
+                            </div>
+                        </template>
                     </div>
                 </template>
             </div>
@@ -315,7 +404,13 @@
                     Lanjutkan
                     <i class="fas fa-arrow-right text-[10px]"></i>
                 </button>
-                <button type="submit" x-show="step === 2" class="px-10 py-4 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-black rounded-2xl shadow-xl shadow-emerald-100 transition-all">Simpan Transaksi</button>
+                <button type="submit" 
+                        x-show="step === 2" 
+                        :disabled="hasInvalidStock()"
+                        :class="hasInvalidStock() ? 'opacity-50 cursor-not-allowed bg-rose-400 hover:bg-rose-400 shadow-none' : 'bg-emerald-500 hover:bg-emerald-600 shadow-xl shadow-emerald-100'"
+                        class="px-10 py-4 text-white text-sm font-black rounded-2xl transition-all">
+                    Simpan Transaksi
+                </button>
             </div>
         </div>
     </form>
@@ -333,7 +428,7 @@
             tujuan: '',
             keterangan: '',
             items: [{id: 1, produk_id: '', qty: 1, price: 0}],
-            productsList: {!! $produks->mapWithKeys(fn($p) => [$p->id => ['id' => $p->id, 'nama' => $p->nama, 'harga' => (int)$p->harga]])->toJson() !!},
+            productsList: {!! $produks->mapWithKeys(fn($p) => [$p->id => ['id' => $p->id, 'nama' => $p->nama, 'harga' => (int)$p->harga, 'stok' => (int)$p->stok]])->toJson() !!},
             addItem() {
                 this.items.push({id: Date.now(), produk_id: '', qty: 1, price: 0});
             },
@@ -349,6 +444,13 @@
             },
             calculateTotal() {
                 return this.items.reduce((acc, curr) => acc + (parseInt(curr.qty || 0) * parseFloat(curr.price || 0)), 0);
+            },
+            hasInvalidStock() {
+                if (this.type !== 'Keluar') return false;
+                return this.items.some(item => {
+                    if (!item.produk_id || !this.productsList[item.produk_id]) return false;
+                    return parseInt(item.qty || 0) > this.productsList[item.produk_id].stok;
+                });
             },
             formatRupiah(number) {
                 return 'Rp ' + new Intl.NumberFormat('id-ID').format(number);

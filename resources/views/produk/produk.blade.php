@@ -80,8 +80,7 @@
             </div>
         </div>
     </div>
-
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden" x-data="{ openFilter: false }">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden" x-data="{ openFilter: false, openKategori: false }">
         <!-- Table Toolbar -->
         <div class="p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 flex-1 w-full">
@@ -89,6 +88,9 @@
                 <form method="GET" action="{{ route('produk.index') }}" class="flex flex-row items-center gap-2 flex-1 w-full sm:max-w-md">
                     @if(request('filter'))
                         <input type="hidden" name="filter" value="{{ request('filter') }}">
+                    @endif
+                    @if(request('kategori_id'))
+                        <input type="hidden" name="kategori_id" value="{{ request('kategori_id') }}">
                     @endif
                     <div class="relative flex-1">
                         <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
@@ -100,6 +102,30 @@
                     </button>
                 </form>
                 
+                <!-- Category Filter Dropdown -->
+                <div class="relative w-full sm:w-auto">
+                    <button @click="openKategori = !openKategori" class="w-full sm:w-auto px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold flex items-center justify-between sm:justify-start gap-2 hover:bg-slate-100 transition-all">
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-tags text-slate-400"></i>
+                            @php
+                                $selectedKategori = $kategoris->firstWhere('id', request('kategori_id'));
+                            @endphp
+                            @if($selectedKategori)
+                                Kategori: {{ $selectedKategori->nama }}
+                            @else
+                                Semua Kategori
+                            @endif
+                        </span>
+                        <i class="fas fa-chevron-down text-[10px] transition-transform" :class="openKategori ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="openKategori" @click.away="openKategori = false" x-cloak class="absolute left-0 mt-2 w-full sm:w-60 bg-white border border-slate-100 rounded-2xl shadow-xl z-30 overflow-hidden max-h-60 overflow-y-auto">
+                        <a href="{{ route('produk.index', ['search' => request('search'), 'filter' => request('filter')]) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors {{ !request('kategori_id') ? 'bg-blue-50 text-blue-600' : '' }}">Semua Kategori</a>
+                        @foreach($kategoris as $kat)
+                            <a href="{{ route('produk.index', ['search' => request('search'), 'filter' => request('filter'), 'kategori_id' => $kat->id]) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors {{ request('kategori_id') == $kat->id ? 'bg-blue-50 text-blue-600' : '' }}">{{ $kat->nama }}</a>
+                        @endforeach
+                    </div>
+                </div>
+
                 <!-- Filter Dropdown -->
                 <div class="relative w-full sm:w-auto">
                     <button @click="openFilter = !openFilter" class="w-full sm:w-auto px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold flex items-center justify-between sm:justify-start gap-2 hover:bg-slate-100 transition-all">
@@ -118,12 +144,12 @@
                         <i class="fas fa-chevron-down text-[10px] transition-transform" :class="openFilter ? 'rotate-180' : ''"></i>
                     </button>
                     <div x-show="openFilter" @click.away="openFilter = false" x-cloak class="absolute left-0 mt-2 w-full sm:w-56 bg-white border border-slate-100 rounded-2xl shadow-xl z-30 overflow-hidden">
-                        <a href="{{ route('produk.index', ['search' => request('search'), 'filter' => 'tinggi_rendah']) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">Tinggi ke Rendah</a>
-                        <a href="{{ route('produk.index', ['search' => request('search'), 'filter' => 'rendah_tinggi']) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">Rendah ke Tinggi</a>
-                        <a href="{{ route('produk.index', ['search' => request('search'), 'filter' => 'kritis']) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">Stok Kritis</a>
+                        <a href="{{ route('produk.index', ['search' => request('search'), 'kategori_id' => request('kategori_id'), 'filter' => 'tinggi_rendah']) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors {{ request('filter') === 'tinggi_rendah' ? 'bg-blue-50 text-blue-600' : '' }}">Tinggi ke Rendah</a>
+                        <a href="{{ route('produk.index', ['search' => request('search'), 'kategori_id' => request('kategori_id'), 'filter' => 'rendah_tinggi']) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors {{ request('filter') === 'rendah_tinggi' ? 'bg-blue-50 text-blue-600' : '' }}">Rendah ke Tinggi</a>
+                        <a href="{{ route('produk.index', ['search' => request('search'), 'kategori_id' => request('kategori_id'), 'filter' => 'kritis']) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors {{ request('filter') === 'kritis' ? 'bg-blue-50 text-blue-600' : '' }}">Stok Kritis</a>
                         @if(request('filter'))
                             <div class="border-t border-slate-100">
-                                <a href="{{ route('produk.index', ['search' => request('search')]) }}" class="block px-6 py-3 text-xs font-bold text-rose-500 hover:bg-rose-50 transition-colors">Reset Urutan</a>
+                                <a href="{{ route('produk.index', ['search' => request('search'), 'kategori_id' => request('kategori_id')]) }}" class="block px-6 py-3 text-xs font-bold text-rose-500 hover:bg-rose-50 transition-colors">Reset Urutan</a>
                             </div>
                         @endif
                     </div>
@@ -239,6 +265,7 @@
 <div x-show="modalType === 'add-product'" 
      x-data="{ 
         mode: 'add',
+        productId: '',
         nama: '',
         sku: '',
         kategori_id: '',
@@ -251,6 +278,16 @@
         previewUrl: '',
         useCamera: false,
         cameraStream: null,
+        existingSkus: window.existingSkus || [],
+
+        isSkuDup() {
+            if (!this.sku) return false;
+            const cleanSku = this.sku.trim().toLowerCase();
+            return this.existingSkus.some(item => 
+                item.sku.trim().toLowerCase() === cleanSku && 
+                item.id != this.productId
+            );
+        },
         
         async startCamera() {
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -317,6 +354,7 @@
         showModal = true;
         modalType = 'add-product';
         mode = $event.detail.mode;
+        productId = $event.detail.id || '';
         nama = $event.detail.nama || '';
         sku = $event.detail.sku || '';
         kategori_id = $event.detail.kategori_id || '';
@@ -348,7 +386,15 @@
             </div>
             <div class="space-y-2">
                 <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">No. SKU</label>
-                <input type="text" name="sku" x-model="sku" required placeholder="ST-BPN-10-001" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                <input type="text" name="sku" x-model="sku" required placeholder="ST-BPN-10-001" 
+                       :class="isSkuDup() ? 'border-rose-300 focus:ring-rose-500 focus:border-rose-400 bg-rose-50/20 text-rose-700' : 'border-slate-200 focus:ring-blue-500 focus:border-blue-400'"
+                       class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm text-slate-600 focus:outline-none transition-all">
+                <template x-if="isSkuDup()">
+                    <p class="text-xs text-rose-600 font-semibold flex items-center gap-1.5 mt-1.5 animate-pulse">
+                        <i class="fas fa-exclamation-circle text-rose-500"></i>
+                        <span>No. SKU ini sudah pernah digunakan oleh produk lain!</span>
+                    </p>
+                </template>
             </div>
 
             <div class="space-y-2">
@@ -460,8 +506,18 @@
 
         <div class="flex justify-end gap-3 pt-4">
             <button type="button" @click="showModal = false" class="px-8 py-2.5 bg-slate-100 text-slate-800 rounded-xl text-sm font-bold hover:bg-slate-200 transition-all">Batal</button>
-            <button type="submit" class="px-8 py-2.5 bg-[#2d46b9] text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 hover:bg-blue-800 transition-all">Simpan</button>
+            <button type="submit" 
+                    :disabled="isSkuDup()"
+                    :class="isSkuDup() ? 'opacity-50 cursor-not-allowed bg-rose-400 hover:bg-rose-400 shadow-none' : 'bg-[#2d46b9] hover:bg-blue-800 shadow-lg shadow-blue-200'"
+                    class="px-8 py-2.5 text-white rounded-xl text-sm font-bold transition-all">Simpan</button>
         </div>
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    window.existingSkus = {!! $existingSkus->toJson() !!};
+</script>
+@endpush
+
