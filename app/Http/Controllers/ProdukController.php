@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produk;
 use App\Models\Kategori;
+use App\Models\Produk;
+use App\Models\Proses;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ProdukController extends Controller
 {
@@ -24,8 +25,8 @@ class ProdukController extends Controller
         // Search functionality
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('nama', 'like', '%' . $search . '%')
-                  ->orWhere('sku', 'like', '%' . $search . '%');
+                $q->where('nama', 'like', '%'.$search.'%')
+                    ->orWhere('sku', 'like', '%'.$search.'%');
             });
         }
 
@@ -50,9 +51,9 @@ class ProdukController extends Controller
         // Calculate statistics cards
         $totalSKU = Produk::count();
         $stokRendahCount = Produk::whereColumn('stok', '<=', 'stok_minimum')->count();
-        
+
         // Dalam Transit: let's calculate active proses count
-        $dalamTransit = \App\Models\Proses::where('status', 'On-Going')->count();
+        $dalamTransit = Proses::where('status', 'On-Going')->count();
 
         // Inv. Value: Sum of stock * price
         $invValue = Produk::sum(DB::raw('stok * harga'));
@@ -111,7 +112,7 @@ class ProdukController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'sku' => 'required|string|max:255|unique:produks,sku,' . $produk->id,
+            'sku' => 'required|string|max:255|unique:produks,sku,'.$produk->id,
             'kategori_id' => 'required|exists:kategoris,id',
             'stok' => 'required|integer|min:0',
             'harga' => 'required|numeric|min:0',

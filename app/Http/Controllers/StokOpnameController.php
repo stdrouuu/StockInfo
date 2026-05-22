@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StokOpnamePeriode;
-use App\Models\StokOpnameItem;
 use App\Models\Produk;
+use App\Models\StokOpnameItem;
+use App\Models\StokOpnamePeriode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -64,11 +64,13 @@ class StokOpnameController extends Controller
             }
 
             DB::commit();
+
             return redirect()->route('stok.opname1')->with('success', 'Periode Stok Opname baru berhasil dibuat!');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withInput()->with('error', 'Gagal membuat periode: ' . $e->getMessage());
+
+            return redirect()->back()->withInput()->with('error', 'Gagal membuat periode: '.$e->getMessage());
         }
     }
 
@@ -82,11 +84,11 @@ class StokOpnameController extends Controller
         if ($periodeId) {
             $periode = StokOpnamePeriode::find($periodeId);
         } else {
-            $periode = StokOpnamePeriode::where('status_kerja', 'Aktif')->first() 
+            $periode = StokOpnamePeriode::where('status_kerja', 'Aktif')->first()
                 ?? StokOpnamePeriode::orderBy('id', 'desc')->first();
         }
 
-        if (!$periode) {
+        if (! $periode) {
             return redirect()->route('stok.opname1')->with('error', 'Silakan buat periode stok opname terlebih dahulu.');
         }
 
@@ -128,7 +130,7 @@ class StokOpnameController extends Controller
             $periode->update(['status_pelaporan' => 'BELUM LENGKAP']);
         }
 
-        return redirect()->back()->with('success', 'Stok fisik berhasil dilaporkan untuk ' . $item->produk->nama);
+        return redirect()->back()->with('success', 'Stok fisik berhasil dilaporkan untuk '.$item->produk->nama);
     }
 
     /**
@@ -141,11 +143,11 @@ class StokOpnameController extends Controller
         if ($periodeId) {
             $periode = StokOpnamePeriode::with('items.produk')->find($periodeId);
         } else {
-            $periode = StokOpnamePeriode::with('items.produk')->where('status_kerja', 'Aktif')->first() 
+            $periode = StokOpnamePeriode::with('items.produk')->where('status_kerja', 'Aktif')->first()
                 ?? StokOpnamePeriode::with('items.produk')->orderBy('id', 'desc')->first();
         }
 
-        if (!$periode) {
+        if (! $periode) {
             return redirect()->route('stok.opname1')->with('error', 'Tidak ada laporan stok opname tersedia.');
         }
 

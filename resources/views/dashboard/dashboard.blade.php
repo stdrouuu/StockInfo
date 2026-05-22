@@ -53,10 +53,26 @@
 
 <!-- Larapex Chart Integrated Container -->
 <div class="bg-white p-6 sm:p-10 rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm mb-10">
-    <div class="flex justify-between items-start mb-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
             <h4 class="font-extrabold text-xl text-slate-800 mb-1">Stock Movement Trends</h4>
-            <p class="text-xs font-medium text-slate-400">Volume harian material yang datang dan keluar.</p>
+            <p class="text-xs font-medium text-slate-400">Volume pergerakan material yang masuk dan keluar.</p>
+        </div>
+        
+        <!-- Premium Segmented Filter Control -->
+        <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200/50 self-end sm:self-auto shadow-inner">
+            <a href="{{ route('dashboard.dashboard', ['filter' => 'daily']) }}" 
+               class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 {{ $filter === 'daily' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400 hover:text-slate-600' }}">
+               Harian
+            </a>
+            <a href="{{ route('dashboard.dashboard', ['filter' => 'weekly']) }}" 
+               class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 {{ $filter === 'weekly' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400 hover:text-slate-600' }}">
+               Mingguan
+            </a>
+            <a href="{{ route('dashboard.dashboard', ['filter' => 'monthly']) }}" 
+               class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 {{ $filter === 'monthly' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400 hover:text-slate-600' }}">
+               Bulanan
+            </a>
         </div>
     </div>
     

@@ -1,16 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\KategoriController;
-use App\Http\Controllers\TransaksiController;
-use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\ProsesController;
-use App\Http\Controllers\StokOpnameController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PengaturanController;
+use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\ProsesController;
+use App\Http\Controllers\StokOpnameController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\TransaksiController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +51,7 @@ Route::middleware([])->group(function () {
         Route::get('/', [TransaksiController::class, 'index'])->name('transaksi.index');
         Route::post('/', [TransaksiController::class, 'store'])->name('transaksi.store');
         Route::delete('/{transaksi}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
-        
+
         Route::get('/input', function () {
             return redirect()->route('transaksi.index');
         })->name('transaksi.input');
@@ -77,10 +77,10 @@ Route::middleware([])->group(function () {
     Route::prefix('stok-opname')->group(function () {
         Route::get('/periode', [StokOpnameController::class, 'opname1'])->name('stok.opname1');
         Route::post('/periode', [StokOpnameController::class, 'storePeriode'])->name('stok.storePeriode');
-        
+
         Route::get('/input', [StokOpnameController::class, 'opname2'])->name('stok.opname2');
         Route::post('/item/{item}/report', [StokOpnameController::class, 'reportItem'])->name('stok.reportItem');
-        
+
         Route::get('/laporan', [StokOpnameController::class, 'opname3'])->name('stok.opname3');
     });
 

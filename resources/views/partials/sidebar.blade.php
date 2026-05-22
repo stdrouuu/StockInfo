@@ -16,8 +16,8 @@
     </div>
 
     <nav class="flex-1 px-4 space-y-1 mt-4 overflow-y-auto hide-scrollbar flex flex-col" x-data="{ 
-        activeMenu: '{{ Request::segment(1) ?: 'dashboard' }}',
-        openSub: '{{ in_array(Request::segment(1), ['produk', 'kategori', 'transaksi', 'stok-opname']) ? Request::segment(1) : '' }}'
+        activeMenu: '{{ (Request::segment(1) === 'produk' && Request::segment(2) === 'kategori') || request()->routeIs('kategori.*') ? 'kategori' : (Request::segment(1) ?: 'dashboard') }}',
+        openSub: '{{ (Request::segment(1) === 'produk' && Request::segment(2) === 'kategori') || request()->routeIs('kategori.*') || Request::segment(1) === 'produk' ? 'produk' : (Request::segment(1) === 'stok-opname' ? 'stok-opname' : '') }}'
     }">
         <!-- Dashboard -->
         <a href="{{ route('dashboard.dashboard') }}" 

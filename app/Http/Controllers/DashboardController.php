@@ -4,16 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Produk;
 use App\Models\TransaksiItem;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use ArielMejiaDev\LarapexCharts\LarapexChart;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     /**
      * Show the dashboard.
      */
-    public function index()
+    public function index(Request $request)
     {
         // 1. Jumlah Stok (Sum of all product stocks)
         $jumlahStok = Produk::sum('stok');
@@ -36,65 +36,90 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        // 6. Stock Movement Trends (Dummy / calculate daily transactions for current week)
-        $trends = [
-            'Mon' => ['in' => 120, 'out' => 80],
-            'Tue' => ['in' => 240, 'out' => 150],
-            'Wed' => ['in' => 450, 'out' => 300],
-            'Thu' => ['in' => 210, 'out' => 310],
-            'Fri' => ['in' => 380, 'out' => 220],
-            'Sat' => ['in' => 90, 'out' => 50],
-            'Sun' => ['in' => 150, 'out' => 110],
-        ];
+        // 6. Dynamic Chart Filtering (Daily, Weekly, Monthly)
+        $filter = $request->input('filter', 'weekly'); // default to weekly
+        $latestTrx = \App\Models\Transaksi::max('tanggal');
+        $baseDate = $latestTrx ? \Carbon\Carbon::parse($latestTrx) : now();
 
-        // Retrieve actual daily transactional totals if available
-        $days = ['Monday' => 'Mon', 'Tuesday' => 'Tue', 'Wednesday' => 'Wed', 'Thursday' => 'Thu', 'Friday' => 'Fri', 'Saturday' => 'Sat', 'Sunday' => 'Sun'];
-        foreach ($days as $fullName => $shortName) {
-            $in = TransaksiItem::whereHas('transaksi', function ($query) use ($fullName) {
-                $query->where('tipe', 'masuk')
-                      ->whereRaw("DAYNAME(tanggal) = ?", [$fullName]);
-            })->sum('qty');
+        $labels = [];
+        $inboundData = [];
+        $outboundData = [];
 
-            $out = TransaksiItem::whereHas('transaksi', function ($query) use ($fullName) {
-                $query->where('tipe', 'keluar')
-                      ->whereRaw("DAYNAME(tanggal) = ?", [$fullName]);
-            })->sum('qty');
+        if ($filter === 'daily') {
+            // Show last 7 days ending at $baseDate
+            for ($i = 6; $i >= 0; $i--) {
+                $date = (clone $baseDate)->subDays($i);
+                $labels[] = $date->locale('id')->isoFormat('D MMM'); // e.g. "20 Mei"
 
-            if ($in > 0 || $out > 0) {
-                $trends[$shortName] = [
-                    'in' => (int) $in,
-                    'out' => (int) $out
-                ];
+                $in = TransaksiItem::whereHas('transaksi', function ($query) use ($date) {
+                    $query->where('tipe', 'masuk')
+                          ->whereDate('tanggal', $date->toDateString());
+                })->sum('qty');
+
+                $out = TransaksiItem::whereHas('transaksi', function ($query) use ($date) {
+                    $query->where('tipe', 'keluar')
+                          ->whereDate('tanggal', $date->toDateString());
+                })->sum('qty');
+
+                $inboundData[] = (int) $in;
+                $outboundData[] = (int) $out;
+            }
+        } elseif ($filter === 'monthly') {
+            // Show last 6 months ending at $baseDate
+            for ($i = 5; $i >= 0; $i--) {
+                $monthDate = (clone $baseDate)->subMonths($i);
+                $labels[] = $monthDate->locale('id')->isoFormat('MMM YYYY'); // e.g. "Mei 2024"
+
+                $in = TransaksiItem::whereHas('transaksi', function ($query) use ($monthDate) {
+                    $query->where('tipe', 'masuk')
+                          ->whereMonth('tanggal', $monthDate->month)
+                          ->whereYear('tanggal', $monthDate->year);
+                })->sum('qty');
+
+                $out = TransaksiItem::whereHas('transaksi', function ($query) use ($monthDate) {
+                    $query->where('tipe', 'keluar')
+                          ->whereMonth('tanggal', $monthDate->month)
+                          ->whereYear('tanggal', $monthDate->year);
+                })->sum('qty');
+
+                $inboundData[] = (int) $in;
+                $outboundData[] = (int) $out;
+            }
+        } else {
+            // Default: 'weekly' (show last 4 weeks ending at $baseDate)
+            for ($i = 3; $i >= 0; $i--) {
+                $startOfWeek = (clone $baseDate)->subWeeks($i)->startOfWeek();
+                $endOfWeek = (clone $baseDate)->subWeeks($i)->endOfWeek();
+                
+                // Elegant range label e.g., "13/05-19/05"
+                $labels[] = $startOfWeek->format('d/m') . '-' . $endOfWeek->format('d/m');
+
+                $in = TransaksiItem::whereHas('transaksi', function ($query) use ($startOfWeek, $endOfWeek) {
+                    $query->where('tipe', 'masuk')
+                          ->whereBetween('tanggal', [$startOfWeek->toDateString(), $endOfWeek->toDateString()]);
+                })->sum('qty');
+
+                $out = TransaksiItem::whereHas('transaksi', function ($query) use ($startOfWeek, $endOfWeek) {
+                    $query->where('tipe', 'keluar')
+                          ->whereBetween('tanggal', [$startOfWeek->toDateString(), $endOfWeek->toDateString()]);
+                })->sum('qty');
+
+                $inboundData[] = (int) $in;
+                $outboundData[] = (int) $out;
             }
         }
 
         // Build Larapex Chart
         $chart = (new LarapexChart)->barChart()
-            ->setXAxis(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])
+            ->setXAxis($labels)
             ->setDataset([
                 [
                     'name' => 'Inbound',
-                    'data' => [
-                        $trends['Mon']['in'],
-                        $trends['Tue']['in'],
-                        $trends['Wed']['in'],
-                        $trends['Thu']['in'],
-                        $trends['Fri']['in'],
-                        $trends['Sat']['in'],
-                        $trends['Sun']['in'],
-                    ]
+                    'data' => $inboundData
                 ],
                 [
                     'name' => 'Outbound',
-                    'data' => [
-                        $trends['Mon']['out'],
-                        $trends['Tue']['out'],
-                        $trends['Wed']['out'],
-                        $trends['Thu']['out'],
-                        $trends['Fri']['out'],
-                        $trends['Sat']['out'],
-                        $trends['Sun']['out'],
-                    ]
+                    'data' => $outboundData
                 ]
             ])
             ->setColors(['#2563eb', '#cbd5e1']) // blue-600 and slate-300
@@ -106,7 +131,8 @@ class DashboardController extends Controller
             'stokMasuk',
             'inventoryValue',
             'lowStockProducts',
-            'chart'
+            'chart',
+            'filter'
         ));
     }
 }
