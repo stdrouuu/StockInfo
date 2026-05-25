@@ -7,6 +7,7 @@ use App\Models\TransaksiItem;
 use ArielMejiaDev\LarapexCharts\LarapexChart;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DashboardController extends Controller
 {
@@ -134,5 +135,63 @@ class DashboardController extends Controller
             'chart',
             'filter'
         ));
+    }
+
+    /**
+     * Export Inventory Data to PDF
+     */
+    public function exportPdf(Request $request)
+    {
+        $totalSKU = Produk::count();
+        $stokRendahCount = Produk::whereColumn('stok', '<=', 'stok_minimum')->count();
+        $invValue = Produk::sum(DB::raw('stok * harga'));
+        $produks = Produk::with('kategori')->orderBy('nama', 'asc')->get();
+
+        $pdf = Pdf::loadView('dashboard.pdf', compact('produks', 'totalSKU', 'stokRendahCount', 'invValue'));
+        
+        return $pdf->download('laporan-inventaris-stockinfo.pdf');
+    }
+
+    /**
+     * Export Inventory Data to Excel (CSV format for compatibility)
+     */
+    public function exportExcel(Request $request)
+    {
+        $produks = Produk::with('kategori')->orderBy('nama', 'asc')->get();
+
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=laporan-inventaris-stockinfo.csv",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $callback = function() use($produks) {
+            $file = fopen('php://output', 'w');
+            
+            // Add UTF-8 BOM for Excel compatibility on Windows
+            fputs($file, "\xEF\xBB\xBF");
+            
+            fputcsv($file, ['No', 'SKU', 'Nama Produk', 'Kategori', 'Stok Saat Ini', 'Stok Minimum', 'Harga Satuan (Rp)', 'Total Nilai (Rp)']);
+
+            $no = 1;
+            foreach ($produks as $produk) {
+                fputcsv($file, [
+                    $no++,
+                    $produk->sku,
+                    $produk->nama,
+                    $produk->kategori ? $produk->kategori->nama : 'Umum',
+                    $produk->stok,
+                    $produk->stok_minimum,
+                    $produk->harga,
+                    $produk->stok * $produk->harga
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->streamDownload($callback, 'laporan-inventaris-stockinfo.csv', $headers);
     }
 }

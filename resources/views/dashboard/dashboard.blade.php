@@ -8,9 +8,14 @@
         <p class="text-blue-500 font-bold text-[10px] uppercase tracking-[0.2em] mb-1">Dashboard</p>
         <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">Dashboard Control</h2>
     </div>
-    <button class="w-full md:w-auto bg-[#1e40af] text-white px-5 py-2.5 rounded-xl flex items-center justify-center gap-2.5 text-xs font-bold shadow-lg shadow-blue-100 hover:scale-105 transition-transform">
-        <i class="fas fa-download"></i> Export to Excel
-    </button>
+    <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+        <a href="{{ route('dashboard.export.pdf') }}" class="w-full sm:w-auto bg-rose-600 text-white px-5 py-2.5 rounded-xl flex items-center justify-center gap-2.5 text-xs font-bold shadow-lg shadow-rose-200 hover:bg-rose-700 hover:scale-105 transition-all">
+            <i class="fas fa-file-pdf text-sm"></i> Export to PDF
+        </a>
+        <a href="{{ route('dashboard.export.excel') }}" class="w-full sm:w-auto bg-[#1e40af] text-white px-5 py-2.5 rounded-xl flex items-center justify-center gap-2.5 text-xs font-bold shadow-lg shadow-blue-200 hover:bg-blue-800 hover:scale-105 transition-all">
+            <i class="fas fa-file-excel text-sm"></i> Export to Excel
+        </a>
+    </div>
 </div>
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">

@@ -32,6 +32,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware([])->group(function () {
     // Dashboard Route
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.dashboard');
+    Route::get('/dashboard/export/pdf', [DashboardController::class, 'exportPdf'])->name('dashboard.export.pdf');
+    Route::get('/dashboard/export/excel', [DashboardController::class, 'exportExcel'])->name('dashboard.export.excel');
 
     // Data Produk Routes
     Route::prefix('produk')->group(function () {
