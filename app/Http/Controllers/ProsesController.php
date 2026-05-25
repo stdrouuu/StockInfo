@@ -15,7 +15,7 @@ class ProsesController extends Controller
     {
         $search = $request->input('search');
 
-        $query = Proses::with('produk');
+        $query = Proses::with('produk.kategori');
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -29,7 +29,7 @@ class ProsesController extends Controller
         }
 
         $proses = $query->orderBy('id', 'desc')->paginate(10)->withQueryString();
-        $produks = Produk::orderBy('nama', 'asc')->get();
+        $produks = Produk::with('kategori')->orderBy('nama', 'asc')->get();
 
         return view('proses.proses', compact('proses', 'produks', 'search'));
     }
@@ -39,6 +39,14 @@ class ProsesController extends Controller
      */
     public function store(Request $request)
     {
+        // Automatically fetch and attach the product category name
+        if ($request->has('produk_id')) {
+            $produk = Produk::with('kategori')->find($request->produk_id);
+            if ($produk) {
+                $request->merge(['kategori_proses' => $produk->kategori->nama ?? 'Umum']);
+            }
+        }
+
         $request->validate([
             'produk_id' => 'required|exists:produks,id',
             'no_surat_jalan' => 'required|string|max:255',
@@ -57,6 +65,14 @@ class ProsesController extends Controller
      */
     public function update(Request $request, Proses $prose)
     {
+        // Automatically fetch and attach the product category name
+        if ($request->has('produk_id')) {
+            $produk = Produk::with('kategori')->find($request->produk_id);
+            if ($produk) {
+                $request->merge(['kategori_proses' => $produk->kategori->nama ?? 'Umum']);
+            }
+        }
+
         $request->validate([
             'produk_id' => 'required|exists:produks,id',
             'no_surat_jalan' => 'required|string|max:255',

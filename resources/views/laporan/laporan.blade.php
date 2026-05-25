@@ -34,7 +34,6 @@
                     </div>
                     <div>
                         <h3 class="font-extrabold text-slate-800 text-base">Data Produk</h3>
-                        <p class="text-[9px] font-black text-blue-500 uppercase tracking-widest mt-0.5">Product Data Catalog</p>
                     </div>
                 </div>
                 <p class="text-xs text-slate-400 mt-4 leading-relaxed font-medium">
@@ -51,7 +50,7 @@
 
             <!-- Export Action (Excel Only) -->
             <form method="GET" class="w-full">
-                <button type="submit" formaction="{{ route('laporan.produk.excel') }}" class="w-full py-3.5 bg-emerald-50 text-emerald-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-emerald-100 hover:text-emerald-800 transition-all duration-200">
+                <button type="submit" formaction="{{ route('laporan.produk.excel') }}" class="w-full py-3.5 bg-emerald-600/10 text-emerald-700 border border-emerald-200/50 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-emerald-600/20 transition-all duration-200">
                     <i class="fas fa-file-excel"></i>
                     <span>Ekspor Excel</span>
                 </button>
@@ -68,7 +67,6 @@
                         </div>
                         <div>
                             <h3 class="font-extrabold text-slate-800 text-base">Transaksi Masuk & Keluar</h3>
-                            <p class="text-[9px] font-black text-emerald-500 uppercase tracking-widest mt-0.5">Logistics & Transactions</p>
                         </div>
                     </div>
                     <p class="text-xs text-slate-400 mt-4 leading-relaxed font-medium">
@@ -100,11 +98,11 @@
 
                 <!-- Export Actions -->
                 <div class="flex gap-3">
-                    <button type="submit" formaction="{{ route('laporan.transaksi.pdf') }}" target="_blank" class="flex-1 py-3 bg-rose-50 text-rose-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-rose-100 hover:text-rose-800 transition-all duration-200">
+                    <button type="submit" formaction="{{ route('laporan.transaksi.pdf') }}" target="_blank" class="flex-1 py-3 bg-red-600/10 text-red-700 border border-red-200/50 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-red-600/20 transition-all duration-200">
                         <i class="fas fa-file-pdf"></i>
                         <span>Ekspor PDF</span>
                     </button>
-                    <button type="submit" formaction="{{ route('laporan.transaksi.excel') }}" class="flex-1 py-3 bg-emerald-50 text-emerald-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-emerald-100 hover:text-emerald-800 transition-all duration-200">
+                    <button type="submit" formaction="{{ route('laporan.transaksi.excel') }}" class="flex-1 py-3 bg-emerald-600/10 text-emerald-700 border border-emerald-200/50 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-emerald-600/20 transition-all duration-200">
                         <i class="fas fa-file-excel"></i>
                         <span>Ekspor Excel</span>
                     </button>
@@ -122,7 +120,6 @@
                         </div>
                         <div>
                             <h3 class="font-extrabold text-slate-800 text-base">Laporan Stok Opname</h3>
-                            <p class="text-[9px] font-black text-orange-500 uppercase tracking-widest mt-0.5">Stock Audits & Opname</p>
                         </div>
                     </div>
                     <p class="text-xs text-slate-400 mt-4 leading-relaxed font-medium">
@@ -146,11 +143,11 @@
 
                 <!-- Export Actions -->
                 <div class="flex gap-3">
-                    <button type="submit" formaction="{{ route('laporan.stok-opname.pdf') }}" target="_blank" class="flex-1 py-3 bg-rose-50 text-rose-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-rose-100 hover:text-rose-800 transition-all duration-200">
+                    <button type="submit" formaction="{{ route('laporan.stok-opname.pdf') }}" target="_blank" class="flex-1 py-3 bg-red-600/10 text-red-700 border border-red-200/50 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-red-600/20 transition-all duration-200">
                         <i class="fas fa-file-pdf"></i>
                         <span>Ekspor PDF</span>
                     </button>
-                    <button type="submit" formaction="{{ route('laporan.stok-opname.excel') }}" class="flex-1 py-3 bg-emerald-50 text-emerald-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-emerald-100 hover:text-emerald-800 transition-all duration-200">
+                    <button type="submit" formaction="{{ route('laporan.stok-opname.excel') }}" class="flex-1 py-3 bg-emerald-600/10 text-emerald-700 border border-emerald-200/50 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-emerald-600/20 transition-all duration-200">
                         <i class="fas fa-file-excel"></i>
                         <span>Ekspor Excel</span>
                     </button>
