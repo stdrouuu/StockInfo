@@ -50,8 +50,8 @@
 
             <!-- Export Action (Excel Only) -->
             <form method="GET" class="w-full">
-                <button type="submit" formaction="{{ route('laporan.produk.excel') }}" class="w-full py-3.5 bg-emerald-600/10 text-emerald-700 border border-emerald-200/50 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-emerald-600/20 transition-all duration-200">
-                    <i class="fas fa-file-excel"></i>
+                <button type="submit" formaction="{{ route('laporan.produk.excel') }}" class="w-full py-3.5 bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:shadow-sm transition-all duration-200">
+                    <i class="fas fa-file-excel text-emerald-600 text-sm"></i>
                     <span>Ekspor Excel</span>
                 </button>
             </form>
@@ -98,12 +98,12 @@
 
                 <!-- Export Actions -->
                 <div class="flex gap-3">
-                    <button type="submit" formaction="{{ route('laporan.transaksi.pdf') }}" target="_blank" class="flex-1 py-3 bg-red-600/10 text-red-700 border border-red-200/50 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-red-600/20 transition-all duration-200">
-                        <i class="fas fa-file-pdf"></i>
+                    <button type="submit" formaction="{{ route('laporan.transaksi.pdf') }}" target="_blank" class="flex-1 py-3 bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:shadow-sm transition-all duration-200">
+                        <i class="fas fa-file-pdf text-red-500 text-sm"></i>
                         <span>Ekspor PDF</span>
                     </button>
-                    <button type="submit" formaction="{{ route('laporan.transaksi.excel') }}" class="flex-1 py-3 bg-emerald-600/10 text-emerald-700 border border-emerald-200/50 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-emerald-600/20 transition-all duration-200">
-                        <i class="fas fa-file-excel"></i>
+                    <button type="submit" formaction="{{ route('laporan.transaksi.excel') }}" class="flex-1 py-3 bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:shadow-sm transition-all duration-200">
+                        <i class="fas fa-file-excel text-emerald-600 text-sm"></i>
                         <span>Ekspor Excel</span>
                     </button>
                 </div>
@@ -143,12 +143,12 @@
 
                 <!-- Export Actions -->
                 <div class="flex gap-3">
-                    <button type="submit" formaction="{{ route('laporan.stok-opname.pdf') }}" target="_blank" class="flex-1 py-3 bg-red-600/10 text-red-700 border border-red-200/50 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-red-600/20 transition-all duration-200">
-                        <i class="fas fa-file-pdf"></i>
+                    <button type="submit" formaction="{{ route('laporan.stok-opname.pdf') }}" target="_blank" class="flex-1 py-3 bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:shadow-sm transition-all duration-200">
+                        <i class="fas fa-file-pdf text-red-500 text-sm"></i>
                         <span>Ekspor PDF</span>
                     </button>
-                    <button type="submit" formaction="{{ route('laporan.stok-opname.excel') }}" class="flex-1 py-3 bg-emerald-600/10 text-emerald-700 border border-emerald-200/50 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-emerald-600/20 transition-all duration-200">
-                        <i class="fas fa-file-excel"></i>
+                    <button type="submit" formaction="{{ route('laporan.stok-opname.excel') }}" class="flex-1 py-3 bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:shadow-sm transition-all duration-200">
+                        <i class="fas fa-file-excel text-emerald-600 text-sm"></i>
                         <span>Ekspor Excel</span>
                     </button>
                 </div>
