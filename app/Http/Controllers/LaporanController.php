@@ -4,39 +4,40 @@ namespace App\Http\Controllers;
 
 use App\Models\Produk;
 use App\Models\Transaksi;
-use App\Models\TransaksiItem;
+use App\Models\Kategori;
+use App\Models\Supplier;
+use App\Models\StokOpnamePeriode;
+use App\Models\StokOpnameItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LaporanController extends Controller
 {
     /**
      * Display the dynamic reports dashboard.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // 1. Total SKU
-        $totalSKU = Produk::count();
+        // Load reference data for drop-down filters
+        $kategoris = Kategori::orderBy('nama', 'asc')->get();
+        $periodes = StokOpnamePeriode::orderBy('id', 'desc')->get();
 
-        // 2. Total Inventory Value
-        $invValue = Produk::sum(\DB::raw('stok * harga'));
-
-        // 3. Low Stock Alerts (products where stok <= stok_minimum)
-        $lowStockAlerts = Produk::where('stok', '<=', \DB::raw('stok_minimum'))
-            ->orderBy('stok', 'asc')
-            ->limit(5)
-            ->get();
-
-        // 4. Recent Inbound & Outbound Transactions
-        $recentTransactions = Transaksi::with(['items.produk', 'supplier'])
-            ->orderBy('id', 'desc')
-            ->limit(5)
-            ->get();
-
-        return view('laporan.laporan', compact(
-            'totalSKU',
-            'invValue',
-            'lowStockAlerts',
-            'recentTransactions'
-        ));
+        return view('laporan.laporan', compact('kategoris', 'periodes'));
     }
+
+    /**
+     * DUMMY EXPORT METHODS
+     * Note: These are styled and routed in the front-end, and can be fully implemented 
+     * by the development team (your friend) using their preferred export library later.
+     */
+    public function exportDashboardPdf() {}
+    public function exportDashboardExcel() {}
+    public function exportProdukPdf() {}
+    public function exportProdukExcel() {}
+    public function exportTransaksiPdf() {}
+    public function exportTransaksiExcel() {}
+    public function exportSupplierPdf() {}
+    public function exportSupplierExcel() {}
+    public function exportStokOpnamePdf() {}
+    public function exportStokOpnameExcel() {}
 }

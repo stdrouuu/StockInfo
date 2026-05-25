@@ -84,8 +84,25 @@ Route::middleware([])->group(function () {
         Route::get('/laporan', [StokOpnameController::class, 'opname3'])->name('stok.opname3');
     });
 
-    // Laporan Route
-    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    // Laporan Route Group
+    Route::prefix('laporan')->group(function () {
+        Route::get('/', [LaporanController::class, 'index'])->name('laporan.index');
+        
+        Route::get('/dashboard/pdf', [LaporanController::class, 'exportDashboardPdf'])->name('laporan.dashboard.pdf');
+        Route::get('/dashboard/excel', [LaporanController::class, 'exportDashboardExcel'])->name('laporan.dashboard.excel');
+        
+        Route::get('/produk/pdf', [LaporanController::class, 'exportProdukPdf'])->name('laporan.produk.pdf');
+        Route::get('/produk/excel', [LaporanController::class, 'exportProdukExcel'])->name('laporan.produk.excel');
+        
+        Route::get('/transaksi/pdf', [LaporanController::class, 'exportTransaksiPdf'])->name('laporan.transaksi.pdf');
+        Route::get('/transaksi/excel', [LaporanController::class, 'exportTransaksiExcel'])->name('laporan.transaksi.excel');
+        
+        Route::get('/supplier/pdf', [LaporanController::class, 'exportSupplierPdf'])->name('laporan.supplier.pdf');
+        Route::get('/supplier/excel', [LaporanController::class, 'exportSupplierExcel'])->name('laporan.supplier.excel');
+        
+        Route::get('/stok-opname/pdf', [LaporanController::class, 'exportStokOpnamePdf'])->name('laporan.stok-opname.pdf');
+        Route::get('/stok-opname/excel', [LaporanController::class, 'exportStokOpnameExcel'])->name('laporan.stok-opname.excel');
+    });
 
     // Pengaturan Route
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
