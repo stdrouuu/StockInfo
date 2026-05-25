@@ -70,17 +70,17 @@
                         <td class="px-6 py-5 text-sm font-black text-emerald-600 text-center">{{ $row->total_sesuai }}</td>
                         <td class="px-6 py-5 text-sm font-bold text-rose-500 text-center">{{ $row->total_selisih }}</td>
                         <td class="px-6 py-5 text-sm font-semibold text-center">
-                            @if($row->status_kerja === 'Aktif')
+                            @if($row->status_kerja === 'aktif')
                                 <span class="px-2.5 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase rounded">{{ $row->status_kerja }}</span>
                             @else
                                 <span class="px-2.5 py-1 bg-slate-50 text-slate-400 text-[9px] font-black uppercase rounded">{{ $row->status_kerja }}</span>
                             @endif
                         </td>
                         <td class="px-6 py-5 text-center">
-                            @if($row->status_pelaporan === 'LENGKAP' || $row->status_pelaporan === 'SELESAI')
-                                <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase rounded-full">{{ $row->status_pelaporan }}</span>
+                            @if($row->status_pelaporan === 'lengkap' || $row->status_pelaporan === 'selesai')
+                                <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase rounded-full">{{ str_replace('_', ' ', $row->status_pelaporan) }}</span>
                             @else
-                                <span class="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black uppercase rounded-full">{{ $row->status_pelaporan }}</span>
+                                <span class="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black uppercase rounded-full">{{ str_replace('_', ' ', $row->status_pelaporan) }}</span>
                             @endif
                         </td>
                         <td class="px-6 py-5 text-center">

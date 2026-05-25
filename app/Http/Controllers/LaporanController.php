@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Produk;
 use App\Models\Transaksi;
-use App\Models\TransaksiItem;
+use App\Models\StokOpnamePeriode;
 use Illuminate\Http\Request;
 
 class LaporanController extends Controller
@@ -14,29 +14,18 @@ class LaporanController extends Controller
      */
     public function index()
     {
-        // 1. Total SKU
-        $totalSKU = Produk::count();
+        // Fetch all stock opname periods dynamically from database (ordered by latest)
+        $periodes = StokOpnamePeriode::orderBy('id', 'desc')->get();
 
-        // 2. Total Inventory Value
-        $invValue = Produk::sum(\DB::raw('stok * harga'));
-
-        // 3. Low Stock Alerts (products where stok <= stok_minimum)
-        $lowStockAlerts = Produk::where('stok', '<=', \DB::raw('stok_minimum'))
-            ->orderBy('stok', 'asc')
-            ->limit(5)
-            ->get();
-
-        // 4. Recent Inbound & Outbound Transactions
-        $recentTransactions = Transaksi::with(['items.produk', 'supplier'])
-            ->orderBy('id', 'desc')
-            ->limit(5)
-            ->get();
-
-        return view('laporan.laporan', compact(
-            'totalSKU',
-            'invValue',
-            'lowStockAlerts',
-            'recentTransactions'
-        ));
+        return view('laporan.laporan', compact('periodes'));
     }
+
+    /**
+     * DUMMY EXPORT METHODS
+     */
+    public function exportProdukExcel() {}
+    public function exportTransaksiPdf() {}
+    public function exportTransaksiExcel() {}
+    public function exportStokOpnamePdf() {}
+    public function exportStokOpnameExcel() {}
 }

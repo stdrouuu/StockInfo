@@ -37,16 +37,16 @@ class StokOpnameController extends Controller
         try {
             DB::beginTransaction();
 
-            // Set all other periods to status_kerja = 'Tidak Aktif'
-            StokOpnamePeriode::query()->update(['status_kerja' => 'Tidak Aktif']);
+            // Set all other periods to status_kerja = 'tidak_aktif'
+            StokOpnamePeriode::query()->update(['status_kerja' => 'tidak_aktif']);
 
             // Create new active period
             $periode = StokOpnamePeriode::create([
                 'tanggal_mulai' => $request->tanggal_mulai,
                 'tanggal_selesai' => $request->tanggal_selesai,
                 'keterangan' => $request->keterangan,
-                'status_kerja' => 'Aktif',
-                'status_pelaporan' => 'BELUM LENGKAP',
+                'status_kerja' => 'aktif',
+                'status_pelaporan' => 'belum_lengkap',
                 'user_id' => Auth::id() ?? 1,
             ]);
 
@@ -84,7 +84,7 @@ class StokOpnameController extends Controller
         if ($periodeId) {
             $periode = StokOpnamePeriode::find($periodeId);
         } else {
-            $periode = StokOpnamePeriode::where('status_kerja', 'Aktif')->first()
+            $periode = StokOpnamePeriode::where('status_kerja', 'aktif')->first()
                 ?? StokOpnamePeriode::orderBy('id', 'desc')->first();
         }
 
@@ -125,9 +125,9 @@ class StokOpnameController extends Controller
             ->count();
 
         if ($unreported === 0) {
-            $periode->update(['status_pelaporan' => 'SELESAI']);
+            $periode->update(['status_pelaporan' => 'selesai']);
         } else {
-            $periode->update(['status_pelaporan' => 'BELUM LENGKAP']);
+            $periode->update(['status_pelaporan' => 'belum_lengkap']);
         }
 
         return redirect()->back()->with('success', 'Stok fisik berhasil dilaporkan untuk '.$item->produk->nama);
@@ -143,7 +143,7 @@ class StokOpnameController extends Controller
         if ($periodeId) {
             $periode = StokOpnamePeriode::with('items.produk')->find($periodeId);
         } else {
-            $periode = StokOpnamePeriode::with('items.produk')->where('status_kerja', 'Aktif')->first()
+            $periode = StokOpnamePeriode::with('items.produk')->where('status_kerja', 'aktif')->first()
                 ?? StokOpnamePeriode::with('items.produk')->orderBy('id', 'desc')->first();
         }
 

@@ -4,6 +4,7 @@
 
 @section('content')
 <div class="space-y-8">
+    <!-- Header Banner (Branded Red) -->
     <div class="bg-[#d32f2f] rounded-3xl p-8 text-white relative overflow-hidden shadow-xl shadow-red-900/10">
         <div class="relative z-10 flex items-center gap-6">
             <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md">
@@ -21,102 +22,139 @@
         <i class="fas fa-file-alt absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
     </div>
 
-    <div class="grid grid-cols-12 gap-6">
-        <div class="col-span-7 bg-white rounded-3xl border border-slate-100 shadow-sm p-8 flex justify-between items-center relative overflow-hidden">
-            <div class="relative z-10">
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Total Inventory Value</p>
-                <h3 class="text-4xl font-black text-slate-800">Rp {{ number_format($invValue, 0, ',', '.') }}</h3>
-                <p class="text-xs text-slate-400 mt-2 font-medium">Calculated across {{ number_format($totalSKU, 0, ',', '.') }} unique SKU entries.</p>
-            </div>
-            <i class="fas fa-wallet text-[120px] text-slate-50 absolute -right-4 -bottom-4"></i>
-        </div>
-        <div class="col-span-5 bg-white rounded-3xl border border-slate-100 shadow-sm p-8 flex flex-col justify-between">
+    <!-- Reports Hub Grid (3 Columns) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- 1. Data Produk (Blue Color Accent, Excel Only) -->
+        <div class="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-6 flex flex-col justify-between hover:-translate-y-1 hover:shadow-md transition-all duration-300">
             <div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Active SKUs</p>
-                <h3 class="text-4xl font-black text-slate-800">{{ number_format($totalSKU, 0, ',', '.') }}</h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-12 gap-6">
-        <div class="col-span-8 bg-white rounded-3xl border border-slate-200 shadow-sm p-8 space-y-6">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <i class="fas fa-exclamation-triangle text-red-500"></i>
-                    <h4 class="font-bold text-slate-800">Low Stock Alerts</h4>
-                </div>
-                <a href="{{ route('produk.index', ['filter' => 'kritis']) }}" class="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">View All Alerts</a>
-            </div>
-
-            <table class="w-full text-left">
-                <thead>
-                    <tr class="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50">
-                        <th class="pb-4">Item Description</th>
-                        <th class="pb-4">SKU</th>
-                        <th class="pb-4 text-center">Current</th>
-                        <th class="pb-4 text-center">Min. Level</th>
-                        <th class="pb-4 text-center">Status</th>
-                        <th class="pb-4 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-50">
-                    @forelse($lowStockAlerts as $alert)
-                    <tr class="text-sm group">
-                        <td class="py-4 font-bold text-slate-700">{{ $alert->nama }}</td>
-                        <td class="py-4 text-slate-400 font-medium">{{ $alert->sku }}</td>
-                        <td class="py-4 font-black text-red-500 text-center">{{ $alert->stok }}</td>
-                        <td class="py-4 text-slate-400 font-medium text-center">{{ $alert->stok_minimum }}</td>
-                        <td class="py-4 text-center">
-                            @if($alert->stok == 0)
-                                <span class="px-2 py-0.5 bg-rose-100 text-rose-700 text-[9px] font-black uppercase rounded">Empty</span>
-                            @elseif($alert->stok <= $alert->stok_minimum / 2)
-                                <span class="px-2 py-0.5 bg-red-50 text-red-600 text-[9px] font-black uppercase rounded">Critical</span>
-                            @else
-                                <span class="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[9px] font-black uppercase rounded">Low</span>
-                            @endif
-                        </td>
-                        <td class="py-4 text-right">
-                            <a href="{{ route('transaksi.index') }}" class="text-blue-600 font-bold text-xs hover:underline">Restock</a>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="py-6 text-center text-slate-400 font-semibold text-sm">Semua barang memiliki stok yang aman!</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        <div class="col-span-4 bg-white rounded-3xl border border-slate-200 shadow-sm p-8 flex flex-col">
-            <div class="mb-8">
-                <h4 class="font-bold text-slate-800">Riwayat Transaksi</h4>
-                <p class="text-[10px] text-slate-400 font-medium mt-1">Log aktivitas operasional gudang secara langsung</p>
-            </div>
-
-            <div class="flex-1 space-y-6">
-                @forelse($recentTransactions as $row)
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 {{ strtolower($row->tipe) === 'masuk' ? 'bg-green-50 text-green-600' : 'bg-rose-50 text-rose-600' }}">
-                        <i class="fas {{ strtolower($row->tipe) === 'masuk' ? 'fa-sign-in-alt' : 'fa-sign-out-alt' }}"></i>
+                <div class="flex items-center gap-4 border-b border-slate-100 pb-4">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shadow-inner">
+                        <i class="fas fa-box"></i>
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-bold text-slate-800 truncate">{{ $row->kode }}</p>
-                        <p class="text-[9px] font-black uppercase {{ strtolower($row->tipe) === 'masuk' ? 'text-green-500' : 'text-rose-500' }}">
-                            {{ strtolower($row->tipe) === 'masuk' ? 'Inbound' : 'Outbound' }}
-                        </p>
+                    <div>
+                        <h3 class="font-extrabold text-slate-800 text-base">Data Produk</h3>
                     </div>
-                    <span class="text-[10px] text-slate-300 font-bold uppercase">{{ $row->tanggal->format('d M') }}</span>
                 </div>
-                @empty
-                <div class="text-center py-6 text-slate-400 font-medium text-xs">Belum ada transaksi dicatat.</div>
-                @endforelse
+                <p class="text-xs text-slate-400 mt-4 leading-relaxed font-medium">
+                    Ekspor seluruh daftar data katalog produk terdaftar beserta detail stok fisik dan harga satuan saat ini langsung ke dalam berkas spreadsheet.
+                </p>
+
+                <!-- Column Info (Simple & Clean) -->
+                <p class="text-[11px] text-slate-400 font-semibold mt-4 flex items-center gap-1.5 bg-slate-50 border border-slate-100/75 rounded-2xl p-4 my-6">
+                    <i class="fas fa-info-circle text-blue-500"></i>
+                    <span>Mencakup kolom: SKU, Nama, Kategori, Stok, Harga, & Total Aset.</span>
+                </p>
+
             </div>
 
-            <a href="{{ route('transaksi.index') }}" class="w-full block bg-slate-50 text-slate-500 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest mt-8 hover:bg-slate-100 transition-all text-center">
-                Lihat Semua Transaksi
-            </a>
+            <!-- Export Action (Excel Only) -->
+            <form method="GET" class="w-full">
+                <button type="submit" formaction="{{ route('laporan.produk.excel') }}" class="w-full py-3.5 bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:shadow-sm transition-all duration-200">
+                    <i class="fas fa-file-excel text-emerald-600 text-sm"></i>
+                    <span>Ekspor Excel</span>
+                </button>
+            </form>
         </div>
+
+        <!-- 2. Transaksi Masuk & Keluar (Green Color Accent, PDF & Excel) -->
+        <div class="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-6 flex flex-col justify-between hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+            <form method="GET" class="flex flex-col h-full justify-between">
+                <div>
+                    <div class="flex items-center gap-4 border-b border-slate-100 pb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shadow-inner">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-slate-800 text-base">Transaksi Masuk & Keluar</h3>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-4 leading-relaxed font-medium">
+                        Ekspor log mutasi barang masuk (Inbound) dan barang keluar (Outbound) gudang lengkap dengan detail supplier, tujuan, qty, dan nilai nominal mutasi.
+                    </p>
+
+                    <!-- Filters Box -->
+                    <div class="bg-slate-50 border border-slate-100/70 rounded-2xl p-4 my-6 space-y-4">
+                        <div class="space-y-1">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Tipe Transaksi</label>
+                            <select name="tipe" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-100">
+                                <option value="all">Semua Tipe</option>
+                                <option value="masuk">Barang Masuk (Inbound)</option>
+                                <option value="keluar">Barang Keluar (Outbound)</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="space-y-1">
+                                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Tanggal Mulai</label>
+                                <input type="date" name="tanggal_mulai" class="w-full bg-white border border-slate-200 rounded-xl px-2 py-1.5 text-[10px] font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-100">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Tanggal Selesai</label>
+                                <input type="date" name="tanggal_selesai" class="w-full bg-white border border-slate-200 rounded-xl px-2 py-1.5 text-[10px] font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Actions -->
+                <div class="flex gap-3">
+                    <button type="submit" formaction="{{ route('laporan.transaksi.pdf') }}" target="_blank" class="flex-1 py-3 bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:shadow-sm transition-all duration-200">
+                        <i class="fas fa-file-pdf text-red-500 text-sm"></i>
+                        <span>Ekspor PDF</span>
+                    </button>
+                    <button type="submit" formaction="{{ route('laporan.transaksi.excel') }}" class="flex-1 py-3 bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:shadow-sm transition-all duration-200">
+                        <i class="fas fa-file-excel text-emerald-600 text-sm"></i>
+                        <span>Ekspor Excel</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 3. Laporan Stok Opname (Orange Color Accent, PDF & Excel) -->
+        <div class="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-6 flex flex-col justify-between hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+            <form method="GET" class="flex flex-col h-full justify-between">
+                <div>
+                    <div class="flex items-center gap-4 border-b border-slate-100 pb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center text-xl shadow-inner">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-slate-800 text-base">Laporan Stok Opname</h3>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-4 leading-relaxed font-medium">
+                        Ekspor laporan audit fisik penyesuaian persediaan barang gudang. Menampilkan data perbandingan stok aktual lapangan dengan catatan sistem.
+                    </p>
+
+                    <!-- Filters Box -->
+                    <div class="bg-slate-50 border border-slate-100/70 rounded-2xl p-4 my-6 space-y-4">
+                        <div class="space-y-1">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Periode Audit Stok Opname</label>
+                            <select name="periode_id" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-100">
+                                @forelse($periodes as $per)
+                                    <option value="{{ $per->id }}">{{ $per->keterangan }} ({{ $per->tanggal_mulai->format('d/m') }} - {{ $per->tanggal_selesai->format('d/m') }})</option>
+                                @empty
+                                    <option value="" disabled>Belum ada periode dibuat</option>
+                                @endforelse
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Actions -->
+                <div class="flex gap-3">
+                    <button type="submit" formaction="{{ route('laporan.stok-opname.pdf') }}" target="_blank" class="flex-1 py-3 bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:shadow-sm transition-all duration-200">
+                        <i class="fas fa-file-pdf text-red-500 text-sm"></i>
+                        <span>Ekspor PDF</span>
+                    </button>
+                    <button type="submit" formaction="{{ route('laporan.stok-opname.excel') }}" class="flex-1 py-3 bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 hover:shadow-sm transition-all duration-200">
+                        <i class="fas fa-file-excel text-emerald-600 text-sm"></i>
+                        <span>Ekspor Excel</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
     </div>
 </div>
 @endsection

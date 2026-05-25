@@ -32,8 +32,8 @@
                         <p>Jumlah Barang : {{ $totalItems }}</p>
                         <p>Jumlah Barang Sesuai : {{ $totalSesuai }}</p>
                         <p>Jumlah Barang Selisih : {{ $totalSelisih }}</p>
-                        <p>Status Kerja : {{ $periode->status_kerja }}</p>
-                        <p>Pelaporan Stok : {{ $periode->status_pelaporan }}</p>
+                        <p>Status Kerja : {{ str_replace('_', ' ', $periode->status_kerja) }}</p>
+                        <p>Pelaporan Stok : {{ str_replace('_', ' ', $periode->status_pelaporan) }}</p>
                     </div>
                 </div>
             </div>

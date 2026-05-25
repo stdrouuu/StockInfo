@@ -81,7 +81,7 @@
                             @endif
                         </td>
                         <td class="px-6 py-8 text-center">
-                            <span class="px-4 py-1.5 bg-[#f3e8ff] text-[#9333ea] text-[10px] font-black uppercase rounded-full">{{ $row->kategori_proses }}</span>
+                            <span class="px-4 py-1.5 bg-[#f3e8ff] text-[#9333ea] text-[10px] font-black uppercase rounded-full">{{ $row->produk->kategori->nama ?? 'Umum' }}</span>
                         </td>
                         <td class="px-6 py-8">
                             <div class="flex justify-center gap-3">
@@ -90,7 +90,7 @@
                                     produk_id: '{{ $row->produk_id }}',
                                     no_surat_jalan: '{{ $row->no_surat_jalan }}',
                                     status: '{{ $row->status }}',
-                                    kategori_proses: '{{ $row->kategori_proses }}',
+                                    kategori_proses: '{{ $row->produk->kategori->nama ?? 'Umum' }}',
                                     keterangan: '{{ $row->keterangan }}',
                                     action: '{{ route('proses.update', $row->id) }}'
                                 })" class="p-2 text-slate-400 hover:text-blue-600 transition-colors">
@@ -143,7 +143,33 @@
         status: 'On-Going',
         kategori_proses: '',
         keterangan: '',
-        action: '{{ route('proses.store') }}'
+        action: '{{ route('proses.store') }}',
+        searchQuery: '',
+        openDropdown: false,
+        productsList: {
+            @foreach($produks as $produk)
+                '{{ $produk->id }}': {
+                    id: '{{ $produk->id }}',
+                    nama: '{{ $produk->nama }}',
+                    kategori: '{{ $produk->kategori->nama ?? 'Umum' }}',
+                    stok: '{{ $produk->stok }}'
+                },
+            @endforeach
+        },
+        get filteredProducts() {
+            const all = Object.values(this.productsList);
+            if (!this.searchQuery) {
+                return all;
+            }
+            const query = this.searchQuery.toLowerCase();
+            return all.filter(p => p.nama.toLowerCase().includes(query));
+        },
+        selectProduct(id, nama) {
+            this.produk_id = id;
+            this.searchQuery = nama;
+            this.kategori_proses = this.productsList[id]?.kategori || 'Umum';
+            this.openDropdown = false;
+        }
      }"
      @open-proses-modal.window="
         showModal = true;
@@ -152,9 +178,18 @@
         produk_id = $event.detail.produk_id || '';
         no_surat_jalan = $event.detail.no_surat_jalan || '';
         status = $event.detail.status || 'On-Going';
-        kategori_proses = $event.detail.kategori_proses || '';
         keterangan = $event.detail.keterangan || '';
         action = $event.detail.action || '{{ route('proses.store') }}';
+        
+        $nextTick(() => {
+            if (produk_id && productsList[produk_id]) {
+                searchQuery = productsList[produk_id].nama;
+                kategori_proses = productsList[produk_id].kategori;
+            } else {
+                searchQuery = '';
+                kategori_proses = '';
+            }
+        });
      ">
     <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6" x-text="mode === 'add' ? 'Tambah Proses Baru' : 'Tambah & Edit Proses'"></h2>
     <form :action="action" method="POST" class="space-y-5">
@@ -164,18 +199,55 @@
         </template>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div class="space-y-2">
+            <div class="space-y-2 relative" @click.away="openDropdown = false; if (!produk_id) { searchQuery = '' }">
                 <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Nama Barang (Produk)</label>
+                <input type="hidden" name="produk_id" x-model="produk_id" required>
+                
                 <div class="relative">
-                    <select name="produk_id" x-model="produk_id" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Pilih Produk...</option>
-                        @foreach ($produks as $produk)
-                            <option value="{{ $produk->id }}">{{ $produk->nama }}</option>
-                        @endforeach
-                    </select>
-                    <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+                    <input type="text" 
+                           placeholder="Cari & Pilih Barang..." 
+                           class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 focus:bg-white pr-10 transition-all placeholder:text-slate-400"
+                           x-model="searchQuery"
+                           @focus="openDropdown = true"
+                           @input="openDropdown = true; produk_id = ''; kategori_proses = ''"
+                           @keydown.escape="openDropdown = false"
+                           required>
+                           
+                    <div class="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-slate-400">
+                        <template x-if="produk_id">
+                            <button type="button" @click="produk_id = ''; searchQuery = ''; kategori_proses = ''; openDropdown = false" class="hover:text-rose-500 p-1 transition-colors">
+                                <i class="fas fa-times text-xs"></i>
+                            </button>
+                        </template>
+                        <template x-if="!produk_id">
+                            <i class="fas fa-search text-xs"></i>
+                        </template>
+                    </div>
+                </div>
+                
+                <!-- Floating Dropdown Results -->
+                <div x-show="openDropdown" 
+                     x-cloak 
+                     class="absolute left-0 right-0 z-50 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-60 overflow-y-auto py-1.5 custom-scrollbar">
+                    <template x-for="p in filteredProducts" :key="p.id">
+                        <button type="button" 
+                                @click="selectProduct(p.id, p.nama)"
+                                class="w-full text-left px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold flex items-center justify-between transition-colors border-b border-slate-50 last:border-0">
+                            <div class="truncate mr-2 flex-1 min-w-0">
+                                <span class="text-slate-800 font-bold block truncate" x-text="p.nama"></span>
+                                <span class="text-[10px] text-slate-400 block font-normal mt-0.5" x-text="'Stok: ' + p.stok"></span>
+                            </div>
+                            <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg shrink-0 ml-2" x-text="p.kategori"></span>
+                        </button>
+                    </template>
+                    <template x-if="filteredProducts.length === 0">
+                        <div class="px-4 py-3 text-center text-slate-400 text-xs font-semibold">
+                            Barang tidak ditemukan...
+                        </div>
+                    </template>
                 </div>
             </div>
+            
             <div class="space-y-2">
                 <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">No. Surat Jalan</label>
                 <input type="text" name="no_surat_jalan" x-model="no_surat_jalan" required placeholder="DO/2025/001" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
@@ -192,8 +264,8 @@
                 </div>
             </div>
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Kategori Proses</label>
-                <input type="text" name="kategori_proses" x-model="kategori_proses" required placeholder="Contoh: Construction" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Kategori (Otomatis Sesuai Produk)</label>
+                <input type="text" name="kategori_proses" x-model="kategori_proses" readonly placeholder="Pilih produk..." class="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-400 font-bold outline-none cursor-not-allowed">
             </div>
         </div>
         <div class="space-y-2">
