@@ -30,7 +30,9 @@
     showDeleteModal: false,
     deleteTarget: '',
     deleteAction: '',
-    sidebarOpen: false
+    sidebarOpen: false,
+    showProfileModal: false,
+    showEmail: false
 }">
 
     <div class="flex min-h-screen relative overflow-x-hidden">
@@ -60,7 +62,7 @@
                     </button>
                     <span class="font-extrabold text-slate-800 tracking-tight text-base">StockInfo</span>
                 </div>
-                <div class="flex items-center gap-3">
+                <div @click="showProfileModal = true; showEmail = false" class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
                     <img src="https://ui-avatars.com/api/?name={{ urlencode(session('user.name', 'Administrator')) }}&background=1e40af&color=fff" class="w-8 h-8 rounded-lg shadow-sm border border-white">
                 </div>
             </div>
@@ -75,16 +77,12 @@
                     </h2>
                 </div>
                 <div class="flex items-center gap-8">
-                    <div class="relative cursor-pointer group">
-                        <i class="far fa-bell text-xl text-slate-400 group-hover:text-slate-600 transition-colors"></i>
-                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                    </div>
-                    <div class="flex items-center gap-3 pl-6 border-l border-slate-100">
+                    <div @click="showProfileModal = true; showEmail = false" class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
                         <div class="text-right">
                             <p class="text-sm font-extrabold text-slate-800">{{ session('user.name', 'Administrator') }}</p>
                             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tight">Admin</p>
                         </div>
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode(session('user.name', 'Administrator')) }}&background=1e40af&color=fff" class="w-10 h-10 rounded-xl shadow-md cursor-pointer border-2 border-white">
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(session('user.name', 'Administrator')) }}&background=1e40af&color=fff" class="w-10 h-10 rounded-xl shadow-md border-2 border-white">
                     </div>
                 </div>
             </div>
@@ -159,6 +157,87 @@
                     @method('DELETE')
                     <button type="submit" class="w-full py-3 bg-rose-500 text-white rounded-xl font-bold hover:bg-rose-600 shadow-lg shadow-rose-100 transition-all">Hapus</button>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Info Modal -->
+    <div x-show="showProfileModal" 
+         x-cloak
+         class="fixed inset-0 bg-slate-950/50 backdrop-blur-sm z-[55] flex items-center justify-center p-4"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0">
+         
+        <div @click.away="showProfileModal = false" 
+             class="bg-white/95 backdrop-blur-md w-full max-w-md rounded-[2.5rem] shadow-[0_25px_60px_-15px_rgba(30,64,175,0.15)] border border-slate-100/80 overflow-hidden transition-all duration-300 relative"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95">
+             
+            <!-- Close Button -->
+            <button @click="showProfileModal = false" class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 hover:text-slate-600 hover:bg-slate-200 transition-colors">
+                <i class="fas fa-times text-sm"></i>
+            </button>
+            
+            <!-- Modal Body -->
+            <div class="p-8 text-center">
+                <!-- Avatar & Header info -->
+                <div class="relative inline-block mb-4 mt-4">
+                    <div class="w-24 h-24 bg-[#1e40af] rounded-[2rem] flex items-center justify-center text-white text-3xl font-extrabold shadow-lg shadow-blue-200/50 uppercase">
+                        {{ substr(session('user.name', 'Administrator'), 0, 2) }}
+                    </div>
+                    <span class="absolute bottom-0 right-0 w-5 h-5 bg-emerald-500 rounded-full border-4 border-white"></span>
+                </div>
+                
+                <h3 class="text-2xl font-extrabold text-slate-800">{{ session('user.name', 'Administrator') }}</h3>
+                <div class="flex items-center justify-center gap-2 mt-1.5">
+                    <span class="text-xs text-slate-400 font-extrabold uppercase tracking-widest">{{ session('user.role', 'admin') }}</span>
+                    <span class="text-slate-300 text-xs">•</span>
+                    <span class="text-[9px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md font-extrabold uppercase tracking-wider">Akun Aktif</span>
+                </div>
+                
+                <!-- Information Fields -->
+                <div class="mt-8 space-y-4 text-left">
+                    <div class="bg-slate-50/60 p-4 rounded-2xl border border-slate-100/50">
+                        <label class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest block mb-1">Nama Lengkap</label>
+                        <p class="text-sm font-bold text-slate-700">{{ session('user.name', 'Administrator') }}</p>
+                    </div>
+                    
+                    <div class="bg-slate-50/60 p-4 rounded-2xl border border-slate-100/50 flex justify-between items-center">
+                        <div class="flex-1">
+                            <label class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest block mb-1">Alamat Email</label>
+                            <p class="text-sm font-bold text-slate-700 select-none tracking-wide" x-text="showEmail ? '{{ session('user.email', 'admin@stockinfo.com') }}' : '•••••••••••••••••'"></p>
+                        </div>
+                        <button @click="showEmail = !showEmail" class="w-8 h-8 rounded-xl bg-white border border-slate-100 shadow-sm flex items-center justify-center hover:bg-slate-50 transition-colors">
+                            <i class="far text-xs text-slate-400 transition-colors" :class="showEmail ? 'fa-eye-slash text-slate-600' : 'fa-eye'"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="bg-slate-50/60 p-4 rounded-2xl border border-slate-100/50">
+                        <label class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest block mb-1">Hak Akses</label>
+                        <p class="text-sm font-bold text-slate-700 capitalize">{{ session('user.role', 'admin') }}</p>
+                    </div>
+                </div>
+                
+                <!-- Footer / Sign Out Section -->
+                <div class="mt-8 pt-6 border-t border-slate-100 flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 bg-rose-50 rounded-xl flex items-center justify-center text-rose-500">
+                            <i class="fas fa-power-off text-sm"></i>
+                        </div>
+                        <span class="text-xs font-bold text-slate-600">Sesi Akun</span>
+                    </div>
+                    <button @click="showLogoutModal = true; showProfileModal = false" class="text-xs font-extrabold text-rose-500 hover:text-rose-600 hover:underline">
+                        Keluar Akun
+                    </button>
+                </div>
             </div>
         </div>
     </div>

@@ -101,12 +101,6 @@
         </a>
 
         <!-- Pengaturan -->
-        <a href="{{ route('pengaturan.index') }}" 
-           class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group mt-auto"
-           :class="activeMenu === 'pengaturan' ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-slate-400 hover:bg-slate-50'">
-            <i class="fas fa-cog w-5 text-lg" :class="activeMenu === 'pengaturan' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
-            <span class="text-sm font-bold" :class="activeMenu === 'pengaturan' ? '' : 'group-hover:text-slate-600'">Pengaturan</span>
-        </a>
     </nav>
 
     <div class="p-4 border-t border-slate-100">
