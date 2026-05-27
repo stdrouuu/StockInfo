@@ -28,7 +28,7 @@ class TransaksiExport extends StringValueBinder implements FromQuery, WithHeadin
     public function query()
     {
         $query = TransaksiItem::query()
-            ->with(['transaksi.supplier', 'transaksi.user', 'produk'])
+            ->with(['transaksi.supplier', 'produk'])
             ->join('transaksis', 'transaksi_items.transaksi_id', '=', 'transaksis.id')
             ->select('transaksi_items.*'); // Select only items to avoid column conflicts
 
@@ -55,7 +55,7 @@ class TransaksiExport extends StringValueBinder implements FromQuery, WithHeadin
             'Harga Satuan',
             'Subtotal',
             'Supplier / Tujuan',
-            'Pembuat (User)'
+            'Keterangan'
         ];
     }
 
@@ -78,7 +78,7 @@ class TransaksiExport extends StringValueBinder implements FromQuery, WithHeadin
             $item->harga_satuan,
             $item->subtotal,
             $supplier_tujuan,
-            $transaksi->user->name ?? '-'
+            $transaksi->keterangan ?? '-'
         ];
     }
 }

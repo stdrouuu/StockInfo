@@ -111,6 +111,7 @@
                         <th class="px-8 py-6 text-center">Total Item</th>
                         <th class="px-8 py-6">Total Nilai</th>
                         <th class="px-8 py-6">Tanggal</th>
+                        <th class="px-8 py-6">Keterangan</th>
                         <th class="px-8 py-6 text-center rounded-tr-2xl">Aksi</th>
                     </tr>
                 </thead>
@@ -133,6 +134,9 @@
                         <td class="px-8 py-7 text-center text-sm font-bold text-slate-800">{{ number_format($trx->total_qty, 0, ',', '.') }}</td>
                         <td class="px-8 py-7 text-sm font-black text-slate-800">Rp {{ number_format($trx->total_nilai, 0, ',', '.') }}</td>
                         <td class="px-8 py-7 text-sm font-medium text-slate-500">{{ $trx->tanggal->format('d M Y') }}</td>
+                        <td class="px-8 py-7 text-sm font-medium text-slate-500 max-w-xs truncate" title="{{ $trx->keterangan ?? '-' }}">
+                            {{ $trx->keterangan ?? '-' }}
+                        </td>
                         <td class="px-8 py-7">
                             <div class="flex items-center justify-center gap-3 transition-opacity">
                                 <button @click="showDeleteModal = true; deleteTarget = '{{ $trx->kode }}'; deleteAction = '{{ route('transaksi.destroy', $trx->id) }}'" class="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-red-600 hover:border-red-200 transition-all">
@@ -143,7 +147,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="px-8 py-8 text-center text-slate-400 font-medium">Tidak ada transaksi ditemukan.</td>
+                        <td colspan="9" class="px-8 py-8 text-center text-slate-400 font-medium">Tidak ada transaksi ditemukan.</td>
                     </tr>
                     @endforelse
                 </tbody>
