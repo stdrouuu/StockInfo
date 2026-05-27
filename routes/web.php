@@ -4,7 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LaporanController;
-
+use App\Http\Controllers\PengaturanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProsesController;
 use App\Http\Controllers\StokOpnameController;
@@ -97,5 +97,6 @@ Route::middleware([])->group(function () {
         Route::get('/stok-opname/excel', [LaporanController::class, 'exportStokOpnameExcel'])->name('laporan.stok-opname.excel');
     });
 
-
+    // Pengaturan Route
+    Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
 });
