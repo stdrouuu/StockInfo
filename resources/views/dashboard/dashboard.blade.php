@@ -3,14 +3,9 @@
 @section('title', 'StockInfo - Dashboard Control')
 
 @section('content')
-<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-    <div>
-        <p class="text-blue-500 font-bold text-[10px] uppercase tracking-[0.2em] mb-1">Dashboard</p>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">Dashboard Control</h2>
-    </div>
-    <button class="w-full md:w-auto bg-[#1e40af] text-white px-5 py-2.5 rounded-xl flex items-center justify-center gap-2.5 text-xs font-bold shadow-lg shadow-blue-100 hover:scale-105 transition-transform">
-        <i class="fas fa-download"></i> Export to Excel
-    </button>
+<div class="mb-8">
+    <p class="text-blue-500 font-bold text-[10px] uppercase tracking-[0.2em] mb-1">Dashboard</p>
+    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">Dashboard Control</h2>
 </div>
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
