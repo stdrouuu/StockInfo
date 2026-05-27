@@ -65,7 +65,7 @@ class TransaksiExport extends StringValueBinder implements FromQuery, WithHeadin
         $produk = $item->produk;
         
         $supplier_tujuan = $transaksi->tipe === 'masuk' 
-            ? ($transaksi->supplier->nama_supplier ?? '-') 
+            ? ($transaksi->supplier->nama ?? '-') 
             : ($transaksi->tujuan ?? '-');
 
         return [
@@ -73,7 +73,7 @@ class TransaksiExport extends StringValueBinder implements FromQuery, WithHeadin
             $transaksi->tanggal ? $transaksi->tanggal->format('Y-m-d') : '-',
             ucfirst($transaksi->tipe),
             $produk->sku ?? '-',
-            $produk->nama_produk ?? '-',
+            $produk->nama ?? '-',
             $item->qty,
             $item->harga_satuan,
             $item->subtotal,

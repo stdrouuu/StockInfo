@@ -30,8 +30,8 @@ class ProdukExport implements FromCollection, WithHeadings, WithMapping
     {
         return [
             $produk->sku,
-            $produk->nama_produk,
-            $produk->kategori->nama_kategori ?? '-',
+            $produk->nama,
+            $produk->kategori->nama ?? '-',
             $produk->stok,
             $produk->harga,
             $produk->stok * $produk->harga,

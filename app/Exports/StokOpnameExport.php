@@ -46,7 +46,7 @@ class StokOpnameExport implements FromQuery, WithHeadings, WithMapping, WithTitl
     {
         return [
             $item->produk->sku ?? '-',
-            $item->produk->nama_produk ?? '-',
+            $item->produk->nama ?? '-',
             $item->stok_sistem,
             $item->stok_fisik,
             $item->selisih,
