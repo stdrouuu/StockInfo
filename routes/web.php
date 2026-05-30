@@ -51,6 +51,7 @@ Route::middleware([])->group(function () {
         Route::get('/', [TransaksiController::class, 'index'])->name('transaksi.index');
         Route::post('/', [TransaksiController::class, 'store'])->name('transaksi.store');
         Route::delete('/{transaksi}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
+        Route::get('/{transaksi}/cetak-surat-jalan', [TransaksiController::class, 'cetakSuratJalan'])->name('transaksi.cetak-surat-jalan');
 
         Route::get('/input', function () {
             return redirect()->route('transaksi.index');

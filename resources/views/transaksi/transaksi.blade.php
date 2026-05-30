@@ -139,6 +139,11 @@
                         </td>
                         <td class="px-8 py-7">
                             <div class="flex items-center justify-center gap-3 transition-opacity">
+                                @if(strtolower($trx->tipe) === 'keluar')
+                                <a href="{{ route('transaksi.cetak-surat-jalan', $trx->id) }}" target="_blank" title="Cetak Surat Jalan & Kirim" class="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-emerald-600 hover:border-emerald-200 hover:scale-105 active:scale-95 transition-all shadow-sm">
+                                    <i class="fas fa-shipping-fast text-sm"></i>
+                                </a>
+                                @endif
                                 <button @click="showDeleteModal = true; deleteTarget = '{{ $trx->kode }}'; deleteAction = '{{ route('transaksi.destroy', $trx->id) }}'" class="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-red-600 hover:border-red-200 transition-all">
                                     <i class="far fa-trash-alt text-sm"></i>
                                 </button>
@@ -245,8 +250,11 @@
                     </div>
 
                     <!-- Destination Text Input if Keluar -->
-                    <div x-show="type === 'Keluar'">
+                    <div x-show="type === 'Keluar'" class="space-y-4">
                         <input type="text" name="tujuan" x-model="tujuan" :required="type === 'Keluar'" placeholder="Contoh: Proyek Bendungan A" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                        
+                        <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Alamat Penerima / Proyek</label>
+                        <textarea name="alamat" x-model="alamat" :required="type === 'Keluar'" placeholder="Masukkan alamat lengkap pengiriman..." rows="2" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"></textarea>
                     </div>
                 </div>
 
@@ -430,6 +438,7 @@
             tanggal: '{{ date("Y-m-d") }}',
             supplier_id: '',
             tujuan: '',
+            alamat: '',
             keterangan: '',
             items: [{id: 1, produk_id: '', qty: 1, price: 0}],
             productsList: {!! $produks->mapWithKeys(fn($p) => [$p->id => ['id' => $p->id, 'nama' => $p->nama, 'harga' => (int)$p->harga, 'stok' => (int)$p->stok]])->toJson() !!},

@@ -12,12 +12,21 @@ class Proses extends Model
     protected $table = 'proses';
 
     protected $fillable = [
+        'transaksi_id',
         'produk_id',
         'no_surat_jalan',
         'status',
         'kategori_proses',
         'keterangan',
     ];
+
+    /**
+     * Transaksi yang terkait dengan proses ini (opsional).
+     */
+    public function transaksi()
+    {
+        return $this->belongsTo(Transaksi::class);
+    }
 
     /**
      * Produk yang terkait dengan proses ini.
