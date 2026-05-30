@@ -123,18 +123,18 @@
                                     asal_tujuan: {{ json_encode($row->transaksi ? ($row->transaksi->tipe === 'masuk' ? ($row->transaksi->supplier->nama ?? '-') : $row->transaksi->tujuan) : '-') }},
                                     alamat: {{ json_encode($row->transaksi ? ($row->transaksi->alamat ?? '-') : '-') }},
                                     status: {{ json_encode($row->status) }},
-                                    keterangan: {{ json_encode($row->keterangan) }},
-                                    items: {{ json_encode($row->transaksi ? $row->transaksi->items->map(fn($item) => [
+                                    keterangan: {{ json_encode($row->keterangan ?? '') }},
+                                    items: {{ json_encode($row->transaksi && $row->transaksi->items ? $row->transaksi->items->map(fn($item) => [
                                         'sku' => $item->produk->sku ?? '-',
                                         'nama' => $item->produk->nama ?? 'Tidak Ada',
                                         'qty' => $item->qty,
                                         'kategori' => $item->produk->kategori->nama ?? 'Umum'
-                                    ]) : [[
+                                    ])->toArray() : ($row->produk ? [[
                                         'sku' => $row->produk->sku ?? '-',
                                         'nama' => $row->produk->nama ?? 'Tidak Ada',
                                         'qty' => 1,
-                                        'kategori' => $row->kategori_proses
-                                    ]]) }},
+                                        'kategori' => $row->kategori_proses ?? 'Umum'
+                                    ]] : [])) }},
                                     action: {{ json_encode(route('proses.update', $row->id)) }}
                                 } }))" class="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-blue-600 hover:border-blue-200 hover:scale-105 active:scale-95 transition-all shadow-sm">
                                     <i class="fas fa-eye text-sm"></i>

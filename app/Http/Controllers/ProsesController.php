@@ -18,7 +18,7 @@ class ProsesController extends Controller
         $search = $request->input('search');
 
         $query = Proses::with(['produk.kategori', 'transaksi.supplier', 'transaksi.user', 'transaksi.items.produk'])
-            ->select('no_surat_jalan', 'transaksi_id', 'status', 'keterangan', DB::raw('MAX(id) as id'))
+            ->select('no_surat_jalan', 'transaksi_id', 'status', 'keterangan', DB::raw('MAX(produk_id) as produk_id'), DB::raw('MAX(kategori_proses) as kategori_proses'), DB::raw('MAX(id) as id'))
             ->groupBy('no_surat_jalan', 'transaksi_id', 'status', 'keterangan');
 
         if ($search) {

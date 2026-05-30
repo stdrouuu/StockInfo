@@ -119,7 +119,7 @@
         <table class="header-table">
             <tr>
                 <td style="width: 50%; vertical-align: top;">
-                    <div class="company-name">STOCKINFO LOGISTICS</div>
+                    <div class="company-name">STOCKINFO</div>
                     <div class="company-address">Jl. Industri Pergudangan Utama No. 42, Jakarta</div>
                 </td>
                 <td style="width: 50%; vertical-align: bottom;">
@@ -220,17 +220,17 @@
         <table class="signature-table">
             <tr>
                 <td>
-                    <strong>Penerima / Pembeli</strong>
+                    <strong>Penerima </strong>
                     <div class="signature-space"></div>
                     <div>( ____________________ )</div>
                 </td>
                 <td>
-                    <strong>Bagian Pengiriman</strong>
+                    <strong>Pengirim</strong>
                     <div class="signature-space"></div>
                     <div>( ____________________ )</div>
                 </td>
                 <td>
-                    <strong>Petugas Gudang</strong>
+                    <strong>Pihak Toko</strong>
                     <div class="signature-space"></div>
                     <div>( ____________________ )</div>
                 </td>

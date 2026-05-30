@@ -210,7 +210,6 @@
                                 </div>
                                 <div>
                                     <p class="text-sm font-black text-slate-800">Barang Masuk</p>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tight">Stock Replenishment</p>
                                 </div>
                             </div>
                         </label>
@@ -222,7 +221,6 @@
                                 </div>
                                 <div>
                                     <p class="text-sm font-black text-slate-800">Barang Keluar</p>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tight">Stock Distribution</p>
                                 </div>
                             </div>
                         </label>
@@ -253,7 +251,7 @@
                     <div x-show="type === 'Keluar'" class="space-y-4">
                         <input type="text" name="tujuan" x-model="tujuan" :required="type === 'Keluar'" placeholder="Contoh: Proyek Bendungan A" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                         
-                        <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Alamat Penerima / Proyek</label>
+                        <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Alamat (Khusus Proyek) </label>
                         <textarea name="alamat" x-model="alamat" :required="type === 'Keluar'" placeholder="Masukkan alamat lengkap pengiriman..." rows="2" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"></textarea>
                     </div>
                 </div>
