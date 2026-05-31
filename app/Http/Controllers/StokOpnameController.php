@@ -165,4 +165,206 @@ class StokOpnameController extends Controller
 
         return view('stok.opname3', compact('periode', 'items', 'totalItems', 'totalSesuai', 'totalSelisih', 'sesuaiPercent', 'selisihPercent'));
     }
+
+    /**
+     * Terapkan dan sesuaikan stok produk sesuai dengan stok fisik hasil opname.
+     * Mencatat selisihnya sebagai kerugian/penyesuaian operasional.
+     */
+    public function adjustStock(Request $request, StokOpnamePeriode $periode)
+    {
+        // 1. Pastikan status_kerja adalah 'aktif'
+        if ($periode->status_kerja !== 'aktif') {
+            return redirect()->back()->with('error', 'Hanya periode stok opname yang aktif yang dapat disesuaikan stoknya.');
+        }
+
+        // 2. Pastikan belum pernah disesuaikan
+        if ($periode->is_adjusted) {
+            return redirect()->back()->with('error', 'Stok untuk periode ini sudah disesuaikan sebelumnya.');
+        }
+
+        // 3. (Penyesuaian dapat dilakukan kapan saja selama periode aktif)
+
+        try {
+            DB::beginTransaction();
+
+            $items = StokOpnameItem::with('produk')->where('periode_id', $periode->id)->get();
+            
+            $shortages = []; // selisih < 0 (stok_fisik < stok_sistem) -> kerugian
+            $surpluses = []; // selisih > 0 (stok_fisik > stok_sistem) -> surplus
+
+            foreach ($items as $item) {
+                $produk = $item->produk;
+                if (!$produk) {
+                    continue;
+                }
+
+                $selisih = $item->selisih;
+
+                if ($selisih < 0) {
+                    $shortages[] = [
+                        'produk' => $produk,
+                        'qty' => abs($selisih),
+                        'harga' => $produk->harga,
+                    ];
+                } elseif ($selisih > 0) {
+                    $surpluses[] = [
+                        'produk' => $produk,
+                        'qty' => $selisih,
+                        'harga' => $produk->harga,
+                    ];
+                }
+
+                // Jika item belum pernah dilaporkan, otomatis tandai sebagai sesuai
+                if ($item->catatan === 'belum dilaporkan') {
+                    $item->catatan = 'sesuai';
+                    $item->save();
+                }
+
+                // Perbarui stok produk utama di database
+                $produk->stok = $item->stok_fisik;
+                $produk->save();
+            }
+
+            $userId = Auth::id() ?? 1;
+            $tanggal = date('Y-m-d');
+            $datePrefix = date('Ymd');
+
+            // Catat transaksi KELUAR untuk kekurangan stok (Kerugian Operasional)
+            if (count($shortages) > 0) {
+                $pattern = "TRX-OUT-{$datePrefix}-%";
+                $lastTrx = \App\Models\Transaksi::where('kode', 'like', $pattern)
+                    ->orderBy('kode', 'desc')
+                    ->first();
+
+                $sequence = 1;
+                if ($lastTrx) {
+                    $lastCode = $lastTrx->kode;
+                    $parts = explode('-', $lastCode);
+                    $lastSeq = (int) end($parts);
+                    $sequence = $lastSeq + 1;
+                }
+                $kodeKeluar = "TRX-OUT-{$datePrefix}-" . str_pad($sequence, 3, '0', STR_PAD_LEFT);
+
+                $totalNilaiKeluar = 0;
+                foreach ($shortages as $s) {
+                    $totalNilaiKeluar += $s['qty'] * $s['harga'];
+                }
+
+                $transaksiKeluar = \App\Models\Transaksi::create([
+                    'kode' => $kodeKeluar,
+                    'tipe' => 'keluar',
+                    'tujuan' => 'Kerugian Operasional',
+                    'alamat' => 'Penyesuaian Stok Opname',
+                    'tanggal' => $tanggal,
+                    'keterangan' => "Kerugian Operasional Stok Opname - Periode: " . $periode->tanggal_mulai->format('d/m/Y') . " s/d " . $periode->tanggal_selesai->format('d/m/Y'),
+                    'status' => 'selesai',
+                    'total_nilai' => $totalNilaiKeluar,
+                    'user_id' => $userId,
+                ]);
+
+                foreach ($shortages as $s) {
+                    $transaksiKeluar->items()->create([
+                        'produk_id' => $s['produk']->id,
+                        'qty' => $s['qty'],
+                        'harga_satuan' => $s['harga'],
+                        'subtotal' => $s['qty'] * $s['harga'],
+                    ]);
+                }
+            }
+
+            // Catat transaksi MASUK untuk kelebihan stok (Surplus Penyesuaian)
+            if (count($surpluses) > 0) {
+                $pattern = "TRX-IN-{$datePrefix}-%";
+                $lastTrx = \App\Models\Transaksi::where('kode', 'like', $pattern)
+                    ->orderBy('kode', 'desc')
+                    ->first();
+
+                $sequence = 1;
+                if ($lastTrx) {
+                    $lastCode = $lastTrx->kode;
+                    $parts = explode('-', $lastCode);
+                    $lastSeq = (int) end($parts);
+                    $sequence = $lastSeq + 1;
+                }
+                $kodeMasuk = "TRX-IN-{$datePrefix}-" . str_pad($sequence, 3, '0', STR_PAD_LEFT);
+
+                $totalNilaiMasuk = 0;
+                foreach ($surpluses as $s) {
+                    $totalNilaiMasuk += $s['qty'] * $s['harga'];
+                }
+
+                $transaksiMasuk = \App\Models\Transaksi::create([
+                    'kode' => $kodeMasuk,
+                    'tipe' => 'masuk',
+                    'supplier_id' => null,
+                    'tanggal' => $tanggal,
+                    'keterangan' => "Penyesuaian Masuk Stok Opname - Periode: " . $periode->tanggal_mulai->format('d/m/Y') . " s/d " . $periode->tanggal_selesai->format('d/m/Y'),
+                    'status' => 'selesai',
+                    'total_nilai' => $totalNilaiMasuk,
+                    'user_id' => $userId,
+                ]);
+
+                foreach ($surpluses as $s) {
+                    $transaksiMasuk->items()->create([
+                        'produk_id' => $s['produk']->id,
+                        'qty' => $s['qty'],
+                        'harga_satuan' => $s['harga'],
+                        'subtotal' => $s['qty'] * $s['harga'],
+                    ]);
+                }
+            }
+
+            // Tandai periode opname sebagai sudah diselesaikan dan disesuaikan
+            $periode->status_pelaporan = 'selesai';
+            $periode->is_adjusted = true;
+            $periode->save();
+
+            DB::commit();
+
+            return redirect()->route('stok.opname1')->with('success', 'Stok produk utama berhasil disinkronkan dan selisihnya telah dicatat ke riwayat transaksi.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()->with('error', 'Gagal menyinkronkan stok: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Update the description of an opname period.
+     */
+    public function updatePeriode(Request $request, StokOpnamePeriode $periode)
+    {
+        $request->validate([
+            'keterangan' => 'required|string',
+        ]);
+
+        $periode->update([
+            'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()->route('stok.opname1')->with('success', 'Keterangan periode stok opname berhasil diperbarui!');
+    }
+
+    /**
+     * Delete an opname period and its associated items.
+     */
+    public function destroyPeriode(StokOpnamePeriode $periode)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Hapus periode (items akan terhapus otomatis melalui cascade on delete)
+            $periode->delete();
+
+            DB::commit();
+
+            return redirect()->route('stok.opname1')->with('success', 'Periode stok opname berhasil dihapus!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->route('stok.opname1')->with('error', 'Gagal menghapus periode: ' . $e->getMessage());
+        }
+    }
 }

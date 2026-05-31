@@ -25,8 +25,8 @@
 
     <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-8 mb-8">
         <div class="grid grid-cols-12 gap-8 items-center">
-            <div class="col-span-7 space-y-4">
-                <div class="space-y-2">
+            <div class="col-span-7 space-y-6">
+                <div class="space-y-2.5">
                     <p class="text-xl font-bold text-slate-800">Periode : {{ $periode->tanggal_mulai->format('d M Y') }} s/d {{ $periode->tanggal_selesai->format('d M Y') }}</p>
                     <div class="space-y-1.5 text-slate-600 font-semibold">
                         <p>Jumlah Barang : {{ $totalItems }}</p>
@@ -36,7 +36,46 @@
                         <p>Pelaporan Stok : {{ str_replace('_', ' ', $periode->status_pelaporan) }}</p>
                     </div>
                 </div>
-            </div>
+
+                @if($periode->status_pelaporan === 'selesai' || $periode->status_pelaporan === 'lengkap')
+                    @if($periode->is_adjusted)
+                        <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3 text-emerald-800">
+                            <div class="p-2 bg-emerald-500 text-white rounded-xl">
+                                <i class="fas fa-check-circle text-lg"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-sm">Stok Telah Sinkron</p>
+                                <p class="text-xs text-emerald-600 font-medium">Stok sistem telah diperbarui berdasarkan stok fisik periode opname ini.</p>
+                            </div>
+                        </div>
+                    @elseif($periode->status_kerja === 'aktif')
+                        <div class="p-4 bg-blue-50 border border-blue-100 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-blue-800">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 bg-[#2d46b9] text-white rounded-xl">
+                                    <i class="fas fa-exclamation-triangle text-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-sm">Sinkronisasi Stok Belum Dilakukan</p>
+                                    <p class="text-xs text-blue-600 font-medium">Jika pelaporan stok opname sudah selesai, silahkan sinkronkan stok opname dengan data produk utama.</p>
+                                </div>
+                            </div>
+                            <button type="button" @click="$dispatch('open-sync-modal', { action: '{{ route('stok.adjustStock', $periode->id) }}', message: 'Apakah Anda yakin ingin menyinkronkan stok untuk periode ini? Tindakan ini akan memperbarui stok produk utama dan mencatat selisihnya sebagai kerugian/penyesuaian operasional.' })" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#2d46b9] hover:bg-blue-800 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/10 hover:shadow-lg transition-all shrink-0">
+                                <i class="fas fa-sync-alt"></i> Terapkan & Sinkronkan Stok
+                            </button>
+                        </div>
+                    @else
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex items-center gap-3 text-slate-700">
+                            <div class="p-2 bg-slate-400 text-white rounded-xl">
+                                <i class="fas fa-lock text-lg"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-sm">Penyesuaian Terkunci</p>
+                                <p class="text-xs text-slate-500 font-medium">Periode ini tidak aktif, sehingga penyesuaian stok tidak dapat diterapkan lagi.</p>
+                            </div>
+                        </div>
+                    @endif
+                @endif
+                </div>
 
             <div class="col-span-5 flex flex-col items-center">
                 <!-- Premium Dynamic Pie Chart using CSS conic-gradient -->
@@ -126,5 +165,43 @@
             </div>
         </div>
     </div>
+
 </div>
 @endsection
+
+@push('modals')
+<!-- Local Sync Confirmation Modal -->
+<div x-data="{ show: false, action: '', message: '' }"
+     x-show="show" 
+     @open-sync-modal.window="show = true; action = $event.detail.action; message = $event.detail.message"
+     x-cloak
+     class="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[70] flex items-center justify-center p-4"
+     x-transition:enter="transition ease-out duration-300"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-200"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0">
+    <div @click.away="show = false" 
+         class="bg-white w-full max-w-md rounded-[32px] shadow-2xl overflow-hidden p-8 text-center"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-95">
+        <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-100">
+            <i class="fas fa-sync-alt text-[#2d46b9] text-3xl"></i>
+        </div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Sinkronkan Stok?</h3>
+        <p class="text-slate-500 text-sm mb-8" x-text="message"></p>
+        <div class="flex gap-3">
+            <button type="button" @click="show = false" class="flex-1 py-3 bg-slate-100 text-slate-800 rounded-xl font-bold hover:bg-slate-200 transition-all">Batal</button>
+            <form :action="action" method="POST" class="flex-1">
+                @csrf
+                <button type="submit" class="w-full py-3 bg-[#2d46b9] text-white rounded-xl font-bold hover:bg-blue-800 shadow-lg shadow-blue-100 transition-all">Sinkronkan</button>
+            </form>
+        </div>
+    </div>
+</div>
+@endpush

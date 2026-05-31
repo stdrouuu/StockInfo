@@ -17,6 +17,7 @@ class StokOpnamePeriode extends Model
         'keterangan',
         'status_kerja',
         'status_pelaporan',
+        'is_adjusted',
         'user_id',
     ];
 
@@ -25,6 +26,7 @@ class StokOpnamePeriode extends Model
         return [
             'tanggal_mulai' => 'date',
             'tanggal_selesai' => 'date',
+            'is_adjusted' => 'boolean',
         ];
     }
 
