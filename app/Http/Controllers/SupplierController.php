@@ -43,7 +43,15 @@ class SupplierController extends Controller
             'alamat' => 'required|string',
         ]);
 
-        Supplier::create($request->all());
+        $supplier = Supplier::create($request->all());
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Supplier berhasil ditambahkan!',
+                'data' => $supplier
+            ]);
+        }
 
         return redirect()->route('supplier.index')->with('success', 'Supplier berhasil ditambahkan!');
     }

@@ -52,6 +52,7 @@ class TransaksiController extends Controller
 
         $produks = Produk::orderBy('nama', 'asc')->get();
         $suppliers = Supplier::orderBy('nama', 'asc')->get();
+        $kategoris = \App\Models\Kategori::orderBy('nama', 'asc')->get();
 
         return view('transaksi.transaksi', compact(
             'transaksis',
@@ -59,6 +60,7 @@ class TransaksiController extends Controller
             'stockKeluarCount',
             'produks',
             'suppliers',
+            'kategoris',
             'search',
             'filter'
         ));

@@ -168,6 +168,7 @@
                 <thead>
                     <tr class="bg-[#1e40af] text-white text-[11px] font-bold uppercase tracking-widest text-left">
                         <th class="px-6 py-4">No</th>
+                        <th class="px-6 py-4">Gambar</th>
                         <th class="px-6 py-4">SKU</th>
                         <th class="px-6 py-4">Nama Produk</th>
                         <th class="px-6 py-4">Kategori</th>
@@ -178,23 +179,19 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse ($produks as $index => $produk)
-                    <tr class="hover:bg-slate-50/50 transition-colors">
+                     <tr class="hover:bg-slate-50/50 transition-colors">
                         <td class="px-6 py-5 text-slate-400 text-sm">{{ str_pad($index + 1 + ($produks->currentPage() - 1) * $produks->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
-                        <td class="px-6 py-5 font-bold text-slate-700 text-sm">{{ $produk->sku }}</td>
                         <td class="px-6 py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
-                                    @if ($produk->gambar)
-                                        <img src="{{ asset('storage/' . $produk->gambar) }}" class="w-full h-full object-cover">
-                                    @else
-                                        <i class="far fa-image text-slate-300"></i>
-                                    @endif
-                                </div>
-                                <div>
-                                    <p class="text-sm font-bold text-slate-800">{{ $produk->nama }}</p>
-                                </div>
+                            <div class="w-24 h-24 bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200 shadow-sm flex-shrink-0">
+                                @if ($produk->gambar)
+                                    <img src="{{ asset('storage/' . $produk->gambar) }}" class="w-full h-full object-cover">
+                                @else
+                                    <i class="far fa-image text-slate-300 text-xl"></i>
+                                @endif
                             </div>
                         </td>
+                        <td class="px-6 py-5 font-bold text-slate-700 text-sm">{{ $produk->sku }}</td>
+                        <td class="px-6 py-5 text-sm font-bold text-slate-800">{{ $produk->nama }}</td>
                         <td class="px-6 py-5 text-sm text-slate-600 font-medium">{{ $produk->kategori->nama ?? 'Umum' }}</td>
                         <td class="px-6 py-5">
                             @if ($produk->isLowStock())
@@ -231,7 +228,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-8 text-center text-slate-400 font-medium">Tidak ada produk ditemukan.</td>
+                        <td colspan="8" class="px-6 py-8 text-center text-slate-400 font-medium">Tidak ada produk ditemukan.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -279,6 +276,20 @@
         useCamera: false,
         cameraStream: null,
         existingSkus: window.existingSkus || [],
+
+        init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('open_add')) {
+                const prefilledNama = urlParams.get('nama') || '';
+                this.$nextTick(() => {
+                    this.$dispatch('open-product-modal', { 
+                        mode: 'add', 
+                        action: '{{ route('produk.store') }}',
+                        nama: prefilledNama 
+                    });
+                });
+            }
+        },
 
         isSkuDup() {
             if (!this.sku) return false;
@@ -358,7 +369,7 @@
         nama = $event.detail.nama || '';
         sku = $event.detail.sku || '';
         kategori_id = $event.detail.kategori_id || '';
-        stok = $event.detail.stok || '';
+        stok = $event.detail.mode === 'add' ? 0 : ($event.detail.stok || 0);
         harga = $event.detail.harga || '';
         stok_minimum = $event.detail.stok_minimum || '';
         action = $event.detail.action || '{{ route('produk.store') }}';
@@ -411,7 +422,7 @@
             </div>
             <div class="space-y-2">
                 <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Jumlah Produk (Stok)</label>
-                <input type="number" name="stok" x-model="stok" required placeholder="500" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                <input type="number" name="stok" x-model="stok" readonly class="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-400 cursor-not-allowed focus:outline-none transition-all">
             </div>
 
             <div class="space-y-2">

@@ -87,28 +87,30 @@
         <table class="w-full text-left min-w-[500px] sm:min-w-0">
         <thead>
             <tr class="bg-[#1e40af] text-white text-[10px] font-extrabold uppercase tracking-[0.2em]">
+                <th class="px-10 py-4">No</th>
+                <th class="px-10 py-4">Gambar</th>
+                <th class="px-10 py-4">SKU</th>
                 <th class="px-10 py-4">Nama Produk</th>
+                <th class="px-10 py-4">Kategori</th>
                 <th class="px-10 py-4 text-right">Stok</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-slate-50">
-            @forelse ($lowStockProducts as $produk)
+            @forelse ($lowStockProducts as $index => $produk)
             <tr class="hover:bg-slate-50 transition-colors">
+                <td class="px-10 py-6 text-sm font-bold text-slate-400">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</td>
                 <td class="px-10 py-6">
-                    <div class="flex items-center gap-5">
-                        <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center overflow-hidden">
-                            @if ($produk->gambar)
-                                <img src="{{ asset('storage/' . $produk->gambar) }}" class="w-full h-full object-cover">
-                            @else
-                                <i class="far fa-image text-slate-300"></i>
-                            @endif
-                        </div>
-                        <div>
-                            <p class="font-extrabold text-slate-800 text-base">{{ $produk->nama }}</p>
-                            <p class="text-[10px] text-slate-400 font-bold tracking-widest mt-1">{{ $produk->sku }}</p>
-                        </div>
+                    <div class="w-24 h-24 bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200 shadow-sm flex-shrink-0">
+                        @if ($produk->gambar)
+                            <img src="{{ asset('storage/' . $produk->gambar) }}" class="w-full h-full object-cover">
+                        @else
+                            <i class="far fa-image text-slate-300 text-xl"></i>
+                        @endif
                     </div>
                 </td>
+                <td class="px-10 py-6 text-sm font-bold text-slate-700">{{ $produk->sku }}</td>
+                <td class="px-10 py-6 text-base font-extrabold text-slate-800">{{ $produk->nama }}</td>
+                <td class="px-10 py-6 text-sm font-medium text-slate-600">{{ $produk->kategori->nama ?? 'Umum' }}</td>
                 <td class="px-10 py-6 text-right">
                     <span class="text-red-500 font-extrabold text-lg">{{ $produk->stok }}</span>
                     <span class="text-xs text-slate-400 font-semibold ml-1">/ Min: {{ $produk->stok_minimum }}</span>
@@ -116,7 +118,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="2" class="px-10 py-8 text-center text-slate-400 font-medium">Semua produk memiliki stok yang cukup.</td>
+                <td colspan="6" class="px-10 py-8 text-center text-slate-400 font-medium">Semua produk memiliki stok yang cukup.</td>
             </tr>
             @endforelse
         </tbody>

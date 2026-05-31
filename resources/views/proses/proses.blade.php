@@ -115,7 +115,7 @@
                             @endif
                         </td>
                         <td class="px-6 py-8">
-                            <div class="flex justify-center gap-3">
+                            <div class="flex justify-center gap-2">
                                 <button @click="showModal = true; modalType = 'detail-proses'; window.dispatchEvent(new CustomEvent('open-detail-modal', { detail: {
                                     id: {{ json_encode($row->id) }},
                                     no_surat_jalan: {{ json_encode($row->no_surat_jalan) }},
@@ -136,11 +136,11 @@
                                         'kategori' => $row->kategori_proses ?? 'Umum'
                                     ]] : [])) }},
                                     action: {{ json_encode(route('proses.update', $row->id)) }}
-                                } }))" class="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-blue-600 hover:border-blue-200 hover:scale-105 active:scale-95 transition-all shadow-sm">
-                                    <i class="fas fa-eye text-sm"></i>
+                                } }))" class="p-2 text-slate-400 hover:text-blue-600 transition-colors" title="Detail Proses">
+                                    <i class="fas fa-eye"></i>
                                 </button>
-                                <button @click="showDeleteModal = true; deleteTarget = '{{ $row->no_surat_jalan }}'; deleteAction = '{{ route('proses.destroy', $row->id) }}'" class="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-red-600 hover:border-red-200 hover:scale-105 active:scale-95 transition-all shadow-sm">
-                                    <i class="far fa-trash-alt text-sm"></i>
+                                <button @click="showDeleteModal = true; deleteTarget = '{{ $row->no_surat_jalan }}'; deleteAction = '{{ route('proses.destroy', $row->id) }}'" class="p-2 text-slate-400 hover:text-rose-600 transition-colors" title="Hapus Proses">
+                                    <i class="far fa-trash-alt"></i>
                                 </button>
                             </div>
                         </td>
