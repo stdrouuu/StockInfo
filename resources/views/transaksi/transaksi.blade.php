@@ -24,7 +24,7 @@
                     <i class="fas fa-exchange-alt text-3xl"></i>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-bold">Transaksi Keluar & Masuk</h2>
+                    <h2 class="text-2xl font-bold">Transaksi Masuk & Keluar</h2>
                     <p class="text-emerald-100 text-sm mt-1">Dashboard > Transaksi</p>
                 </div>
             </div>
@@ -38,7 +38,7 @@
         </div>
         
         <!-- Decorative Background Icon -->
-        <i class="fas fa-boxes-stacked absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12 pointer-events-none"></i>
+        <i class="fas fa-exchange-alt absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12 pointer-events-none"></i>
     </div>
 
     <!-- Stats Section -->
@@ -48,7 +48,7 @@
                 <i class="fas fa-arrow-down text-xl"></i>
             </div>
             <div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Stock Masuk</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Stok Masuk</p>
                 <h4 class="text-2xl font-black text-slate-800 mt-1">{{ number_format($stockMasukCount, 0, ',', '.') }} <span class="text-xs font-bold text-slate-400">Items</span></h4>
             </div>
         </div>
@@ -57,7 +57,7 @@
                 <i class="fas fa-arrow-up text-xl"></i>
             </div>
             <div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Stock Keluar</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Stok Keluar</p>
                 <h4 class="text-2xl font-black text-slate-800 mt-1">{{ number_format($stockKeluarCount, 0, ',', '.') }} <span class="text-xs font-bold text-slate-400">Items</span></h4>
             </div>
         </div>

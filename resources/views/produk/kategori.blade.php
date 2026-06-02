@@ -16,7 +16,7 @@
         </div>
     @endif
 
-    <div class="bg-[#3b59bc] rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-xl shadow-blue-900/10">
+    <div class="bg-[#1e40af] rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-xl shadow-blue-900/10">
         <div class="relative z-10 flex items-center gap-4 sm:gap-6">
             <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md">
                 <i class="fas fa-box text-3xl"></i>
@@ -32,7 +32,7 @@
                 </div>
             </div>
         </div>
-        <i class="fas fa-box-open absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
+        <i class="fas fa-box absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
     </div>
 
     <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">

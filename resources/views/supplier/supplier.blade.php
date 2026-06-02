@@ -19,7 +19,7 @@
     <div class="bg-[#a93cd4] rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-xl shadow-purple-900/10">
         <div class="relative z-10 flex items-center gap-4 sm:gap-6">
             <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md">
-                <i class="fas fa-truck text-3xl"></i>
+                <i class="fas fa-user-friends text-3xl"></i>
             </div>
             <div>
                 <h2 class="text-2xl font-bold">Supplier</h2>
@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <i class="fas fa-box-open absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
+        <i class="fas fa-user-friends absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
     </div>
 
     <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden p-6 space-y-6">

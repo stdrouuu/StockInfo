@@ -13,6 +13,7 @@
         <div class="relative z-10">
             <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest mb-2">Jumlah Stok</p>
             <h3 class="text-2xl font-extrabold">{{ number_format($jumlahStok, 0, ',', '.') }} unit</h3>
+            <p class="text-[11px] font-bold opacity-75 mt-1">{{ $jumlahSku }} SKU</p>
         </div>
         <div class="absolute top-6 right-6 bg-white/20 p-2.5 rounded-xl"><i class="fas fa-archive"></i></div>
         <i class="fas fa-box-open absolute -bottom-4 -right-2 text-7xl opacity-10"></i>
@@ -29,10 +30,20 @@
 
     <div class="bg-[#3da56b] p-7 rounded-[1.5rem] text-white relative overflow-hidden shadow-xl shadow-emerald-100">
         <div class="relative z-10">
-            <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest mb-2">Stok Masuk</p>
-            <h3 class="text-2xl font-extrabold">{{ number_format($stokMasuk, 0, ',', '.') }} unit</h3>
+            <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest mb-2">Transaksi</p>
+            <div class="flex items-center gap-4 mt-1">
+                <div>
+                    <span class="text-[9px] uppercase font-bold tracking-wider opacity-75 block mb-0.5">Masuk</span>
+                    <h3 class="text-xl font-extrabold">{{ number_format($stokMasuk, 0, ',', '.') }}</h3>
+                </div>
+                <div class="w-px h-8 bg-white/20 self-end"></div>
+                <div>
+                    <span class="text-[9px] uppercase font-bold tracking-wider opacity-75 block mb-0.5">Keluar</span>
+                    <h3 class="text-xl font-extrabold">{{ number_format($stokKeluar, 0, ',', '.') }}</h3>
+                </div>
+            </div>
         </div>
-        <div class="absolute top-6 right-6 bg-white/20 p-2.5 rounded-xl"><i class="fas fa-arrow-trend-up"></i></div>
+        <div class="absolute top-6 right-6 bg-white/20 p-2.5 rounded-xl"><i class="fas fa-exchange-alt"></i></div>
         <i class="fas fa-chart-line absolute -bottom-4 -right-2 text-7xl opacity-10"></i>
     </div>
 

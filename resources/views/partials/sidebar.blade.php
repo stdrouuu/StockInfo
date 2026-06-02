@@ -50,7 +50,7 @@
         <a href="{{ route('transaksi.index') }}" 
            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group"
            :class="activeMenu === 'transaksi' ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-slate-400 hover:bg-slate-50'">
-            <i class="fas fa-file-import w-5 text-lg" :class="activeMenu === 'transaksi' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
+            <i class="fas fa-exchange-alt w-5 text-lg" :class="activeMenu === 'transaksi' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
             <span class="text-sm font-bold" :class="activeMenu === 'transaksi' ? '' : 'group-hover:text-slate-600'">Transaksi</span>
         </a>
 
@@ -67,7 +67,7 @@
         <a href="{{ route('proses.index') }}" 
            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group"
            :class="activeMenu === 'proses' ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-slate-400 hover:bg-slate-50'">
-            <i class="fas fa-sync-alt w-5 text-lg" :class="activeMenu === 'proses' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
+            <i class="fas fa-truck w-5 text-lg" :class="activeMenu === 'proses' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
             <span class="text-sm font-bold" :class="activeMenu === 'proses' ? '' : 'group-hover:text-slate-600'">Proses</span>
         </a>
 

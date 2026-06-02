@@ -33,7 +33,7 @@
                 <span class="text-sm font-black">{{ $periode->tanggal_mulai->format('d M Y') }} - {{ $periode->tanggal_selesai->format('d M Y') }}</span>
             </div>
         </div>
-        <i class="fas fa-box absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
+        <i class="fas fa-clipboard-check absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
     </div>
 
     <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden p-6">

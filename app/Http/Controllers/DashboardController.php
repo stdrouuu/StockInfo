@@ -18,12 +18,20 @@ class DashboardController extends Controller
         // 1. Jumlah Stok (Sum of all product stocks)
         $jumlahStok = Produk::sum('stok');
 
+        // 1b. Jumlah SKU (Count of products)
+        $jumlahSku = Produk::count();
+
         // 2. Stok Rendah (Count of products where stock <= minimum stock)
         $stokRendah = Produk::whereColumn('stok', '<=', 'stok_minimum')->count();
 
         // 3. Stok Masuk (Sum of incoming transactions qty)
         $stokMasuk = TransaksiItem::whereHas('transaksi', function ($query) {
             $query->where('tipe', 'masuk');
+        })->sum('qty');
+
+        // 3b. Stok Keluar (Sum of outgoing transactions qty)
+        $stokKeluar = TransaksiItem::whereHas('transaksi', function ($query) {
+            $query->where('tipe', 'keluar');
         })->sum('qty');
 
         // 4. Inventory Value (Sum of stock * price)
@@ -127,8 +135,10 @@ class DashboardController extends Controller
 
         return view('dashboard.dashboard', compact(
             'jumlahStok',
+            'jumlahSku',
             'stokRendah',
             'stokMasuk',
+            'stokKeluar',
             'inventoryValue',
             'lowStockProducts',
             'chart',

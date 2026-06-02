@@ -38,7 +38,7 @@
             </div>
         </div>
         <!-- Decorative Background Icon -->
-        <i class="fas fa-box-open absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
+        <i class="fas fa-box absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
     </div>
 
     <!-- Stats Cards -->
@@ -439,13 +439,13 @@
         <div x-show="useCamera" class="relative bg-slate-900 rounded-2xl overflow-hidden p-2 flex flex-col items-center gap-3">
             <video x-ref="video" class="w-full h-48 bg-black rounded-xl object-cover" autoplay playsinline></video>
             <div class="flex gap-3">
-                <button type="button" @click="capturePhoto()" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg transition-all">
-                    <i class="fas fa-camera"></i>
-                    <span>Ambil Foto</span>
-                </button>
-                <button type="button" @click="stopCamera()" class="px-5 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-xs font-bold flex items-center gap-2 transition-all">
+                <button type="button" @click="stopCamera()" class="px-5 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-md text-xs font-bold flex items-center gap-2 transition-all">
                     <i class="fas fa-times"></i>
                     <span>Batal</span>
+                </button>
+                 <button type="button" @click="capturePhoto()" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md text-xs font-bold flex items-center gap-2 shadow-lg transition-all">
+                    <i class="fas fa-camera"></i>
+                    <span>Foto</span>
                 </button>
             </div>
         </div>
