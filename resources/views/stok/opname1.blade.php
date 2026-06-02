@@ -72,14 +72,9 @@
                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase rounded border border-emerald-100" title="Stok Telah Sinkron">
                                         <i class="fas fa-check-circle"></i> Sinkron
                                     </span>
-                                @elseif($row->status_kerja === 'aktif')
+                                @else
                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 text-blue-600 text-[9px] font-black uppercase rounded border border-blue-100" title="Siap Sinkron - Buka Form Input untuk Menyesuaikan">
                                         <i class="fas fa-exclamation-circle text-blue-500"></i> Siap Sinkron
-                                    </span>
-                                @else
-
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-500 text-[9px] font-bold uppercase rounded border border-slate-200" title="Periode Tidak Aktif - Tidak Dapat Disesuaikan">
-                                        <i class="fas fa-lock"></i> Terkunci
                                     </span>
                                 @endif
                             @endif

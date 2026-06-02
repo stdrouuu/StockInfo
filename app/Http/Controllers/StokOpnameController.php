@@ -120,6 +120,13 @@ class StokOpnameController extends Controller
 
         // Check if all items in this period have been checked
         $periode = $item->periode;
+
+        // Move active status to this period if it's not already active
+        if ($periode->status_kerja !== 'aktif') {
+            StokOpnamePeriode::query()->where('id', '!=', $periode->id)->update(['status_kerja' => 'tidak_aktif']);
+            $periode->update(['status_kerja' => 'aktif']);
+        }
+
         $unreported = StokOpnameItem::where('periode_id', $periode->id)
             ->where('catatan', 'belum dilaporkan')
             ->count();
@@ -172,17 +179,15 @@ class StokOpnameController extends Controller
      */
     public function adjustStock(Request $request, StokOpnamePeriode $periode)
     {
-        // 1. Pastikan status_kerja adalah 'aktif'
-        if ($periode->status_kerja !== 'aktif') {
-            return redirect()->back()->with('error', 'Hanya periode stok opname yang aktif yang dapat disesuaikan stoknya.');
-        }
-
-        // 2. Pastikan belum pernah disesuaikan
+        // 1. Pastikan belum pernah disesuaikan
         if ($periode->is_adjusted) {
             return redirect()->back()->with('error', 'Stok untuk periode ini sudah disesuaikan sebelumnya.');
         }
 
-        // 3. (Penyesuaian dapat dilakukan kapan saja selama periode aktif)
+        // 2. Pastikan status pelaporan sudah selesai atau lengkap
+        if ($periode->status_pelaporan !== 'selesai' && $periode->status_pelaporan !== 'lengkap') {
+            return redirect()->back()->with('error', 'Stok tidak dapat disinkronkan karena pelaporan belum lengkap.');
+        }
 
         try {
             DB::beginTransaction();

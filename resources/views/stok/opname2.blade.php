@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </div>
-        @elseif($periode->status_kerja === 'aktif')
+        @else
             <div class="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div class="flex items-center gap-3 text-blue-800">
                     <div class="p-2 bg-[#2d46b9] text-white rounded-xl">
@@ -63,18 +63,6 @@
                 <button type="button" @click="$dispatch('open-sync-modal', { action: '{{ route('stok.adjustStock', $periode->id) }}', message: 'Apakah Anda yakin ingin menyinkronkan stok untuk periode ini? Tindakan ini akan memperbarui stok produk utama dan mencatat selisihnya sebagai kerugian/penyesuaian operasional.' })" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#2d46b9] hover:bg-blue-800 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/10 hover:shadow-lg transition-all shrink-0">
                     <i class="fas fa-sync-alt"></i> Terapkan & Sinkronkan Stok
                 </button>
-            </div>
-        @else
-            <div class="mb-6 p-4 bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-between gap-4">
-                <div class="flex items-center gap-3 text-slate-700">
-                    <div class="p-2 bg-slate-400 text-white rounded-xl">
-                        <i class="fas fa-lock text-lg"></i>
-                    </div>
-                    <div>
-                        <p class="font-bold text-sm">Penyesuaian Terkunci</p>
-                        <p class="text-xs text-slate-500 font-medium">Periode ini tidak aktif, sehingga penyesuaian stok tidak dapat diterapkan lagi.</p>
-                    </div>
-                </div>
             </div>
         @endif
         <table class="w-full text-left">
