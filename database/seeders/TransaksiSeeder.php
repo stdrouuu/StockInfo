@@ -23,10 +23,10 @@ class TransaksiSeeder extends Seeder
 
         // Transaksi 1 - Masuk
         $trx1 = Transaksi::create([
-            'kode'        => 'TRX-IN-20240520-001',
+            'kode'        => 'TRX-IN-20260520-001',
             'tipe'        => 'masuk',
             'supplier_id' => $supplier1->id,
-            'tanggal'     => '2024-05-20',
+            'tanggal'     => '2026-05-20',
             'keterangan'  => 'Pengiriman rutin bulanan',
             'status'      => 'selesai',
             'total_nilai' => 9750000,
@@ -42,11 +42,11 @@ class TransaksiSeeder extends Seeder
 
         // Transaksi 2 - Keluar
         $trx2 = Transaksi::create([
-            'kode'        => 'TRX-OUT-20240519-042',
+            'kode'        => 'TRX-OUT-20260519-042',
             'tipe'        => 'keluar',
             'tujuan'      => 'Proyek Bendungan A',
             'alamat'      => 'Jl. Raya Bendungan No. 123, Bogor',
-            'tanggal'     => '2024-05-19',
+            'tanggal'     => '2026-05-19',
             'keterangan'  => 'Pengiriman ke proyek bendungan',
             'status'      => 'selesai',
             'total_nilai' => 12420000,
@@ -69,10 +69,10 @@ class TransaksiSeeder extends Seeder
 
         // Transaksi 3 - Masuk
         $trx3 = Transaksi::create([
-            'kode'        => 'TRX-IN-20240519-041',
+            'kode'        => 'TRX-IN-20260519-041',
             'tipe'        => 'masuk',
             'supplier_id' => $supplier2->id,
-            'tanggal'     => '2024-05-19',
+            'tanggal'     => '2026-05-19',
             'keterangan'  => 'Restok cat interior',
             'status'      => 'selesai',
             'total_nilai' => 4500000,
@@ -88,11 +88,11 @@ class TransaksiSeeder extends Seeder
 
         // Transaksi 4 - Keluar (Diproses)
         $trx4 = Transaksi::create([
-            'kode'        => 'TRX-OUT-20240518-012',
+            'kode'        => 'TRX-OUT-20260518-012',
             'tipe'        => 'keluar',
             'tujuan'      => 'Workshop Utama',
             'alamat'      => 'Jl. Workshop Industri Utama Blok B, Jakarta',
-            'tanggal'     => '2024-05-18',
+            'tanggal'     => '2026-05-18',
             'keterangan'  => 'Kebutuhan workshop mingguan',
             'status'      => 'diproses',
             'total_nilai' => 3200000,
@@ -108,10 +108,10 @@ class TransaksiSeeder extends Seeder
 
         // Transaksi 5 - Masuk
         $trx5 = Transaksi::create([
-            'kode'        => 'TRX-IN-20240518-011',
+            'kode'        => 'TRX-IN-20260518-011',
             'tipe'        => 'masuk',
             'supplier_id' => $supplier3->id,
-            'tanggal'     => '2024-05-18',
+            'tanggal'     => '2026-05-18',
             'keterangan'  => 'Pengiriman semen bulk',
             'status'      => 'selesai',
             'total_nilai' => 11000000,
