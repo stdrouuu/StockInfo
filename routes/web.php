@@ -51,6 +51,7 @@ Route::middleware([])->group(function () {
         Route::get('/', [TransaksiController::class, 'index'])->name('transaksi.index');
         Route::post('/', [TransaksiController::class, 'store'])->name('transaksi.store');
         Route::delete('/{transaksi}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
+        Route::get('/{transaksi}/cetak-surat-jalan', [TransaksiController::class, 'cetakSuratJalan'])->name('transaksi.cetak-surat-jalan');
 
         Route::get('/input', function () {
             return redirect()->route('transaksi.index');
@@ -77,11 +78,14 @@ Route::middleware([])->group(function () {
     Route::prefix('stok-opname')->group(function () {
         Route::get('/periode', [StokOpnameController::class, 'opname1'])->name('stok.opname1');
         Route::post('/periode', [StokOpnameController::class, 'storePeriode'])->name('stok.storePeriode');
+        Route::put('/periode/{periode}', [StokOpnameController::class, 'updatePeriode'])->name('stok.updatePeriode');
+        Route::delete('/periode/{periode}', [StokOpnameController::class, 'destroyPeriode'])->name('stok.destroyPeriode');
 
         Route::get('/input', [StokOpnameController::class, 'opname2'])->name('stok.opname2');
         Route::post('/item/{item}/report', [StokOpnameController::class, 'reportItem'])->name('stok.reportItem');
 
         Route::get('/laporan', [StokOpnameController::class, 'opname3'])->name('stok.opname3');
+        Route::post('/periode/{periode}/adjust', [StokOpnameController::class, 'adjustStock'])->name('stok.adjustStock');
     });
 
     // Laporan Route Group

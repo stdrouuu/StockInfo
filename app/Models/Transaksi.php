@@ -16,6 +16,7 @@ class Transaksi extends Model
         'tipe',
         'supplier_id',
         'tujuan',
+        'alamat',
         'tanggal',
         'keterangan',
         'status',
@@ -53,6 +54,14 @@ class Transaksi extends Model
     public function items()
     {
         return $this->hasMany(TransaksiItem::class);
+    }
+
+    /**
+     * Proses pengiriman/logistik terkait transaksi ini.
+     */
+    public function proses()
+    {
+        return $this->hasMany(Proses::class);
     }
 
     /**

@@ -1,15 +1,17 @@
 <?php
-
+ 
 namespace App\Http\Controllers;
-
+ 
 use App\Models\Transaksi;
 use App\Models\TransaksiItem;
 use App\Models\Produk;
 use App\Models\Supplier;
+use App\Models\Proses;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+ 
 class TransaksiController extends Controller
 {
     /**
@@ -50,6 +52,7 @@ class TransaksiController extends Controller
 
         $produks = Produk::orderBy('nama', 'asc')->get();
         $suppliers = Supplier::orderBy('nama', 'asc')->get();
+        $kategoris = \App\Models\Kategori::orderBy('nama', 'asc')->get();
 
         return view('transaksi.transaksi', compact(
             'transaksis',
@@ -57,6 +60,7 @@ class TransaksiController extends Controller
             'stockKeluarCount',
             'produks',
             'suppliers',
+            'kategoris',
             'search',
             'filter'
         ));
@@ -73,6 +77,7 @@ class TransaksiController extends Controller
             'keterangan' => 'nullable|string',
             'supplier_id' => 'required_if:tipe,Masuk|exists:suppliers,id|nullable',
             'tujuan' => 'required_if:tipe,Keluar|string|nullable',
+            'alamat' => 'required_if:tipe,Keluar|string|nullable',
             'items' => 'required|array|min:1',
             'items.*.produk_id' => 'required|exists:produks,id',
             'items.*.qty' => 'required|integer|min:1',
@@ -123,6 +128,7 @@ class TransaksiController extends Controller
                 'tipe' => $tipeLower,
                 'supplier_id' => $tipeLower === 'masuk' ? $request->supplier_id : null,
                 'tujuan' => $tipeLower === 'keluar' ? $request->tujuan : null,
+                'alamat' => $tipeLower === 'keluar' ? $request->alamat : null,
                 'tanggal' => $request->tanggal,
                 'keterangan' => $request->keterangan,
                 'status' => 'Selesai',
@@ -188,5 +194,48 @@ class TransaksiController extends Controller
             DB::rollBack();
             return redirect()->route('transaksi.index')->with('error', 'Gagal menghapus transaksi: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Cetak Surat Jalan dan generate otomatis data Proses jika belum ada (hanya tipe keluar).
+     */
+    public function cetakSuratJalan(Transaksi $transaksi)
+    {
+        // 1. Pastikan transaksi bertipe keluar
+        if (strtolower($transaksi->tipe) !== 'keluar') {
+            return redirect()->back()->with('error', 'Surat Jalan hanya dapat dicetak untuk Transaksi Keluar!');
+        }
+
+        // 2. Hubungkan data Proses secara otomatis jika belum dibuat
+        $existingProsesCount = Proses::where('transaksi_id', $transaksi->id)->count();
+        
+        if ($existingProsesCount === 0) {
+            $noSuratJalan = 'SJ-' . $transaksi->kode;
+            
+            foreach ($transaksi->items as $item) {
+                $produk = $item->produk;
+                $kategori = $produk->kategori->nama ?? 'Umum';
+                
+                Proses::create([
+                    'transaksi_id'    => $transaksi->id,
+                    'produk_id'       => $item->produk_id,
+                    'no_surat_jalan'  => $noSuratJalan,
+                    'status'          => 'On-Going',
+                    'kategori_proses' => $kategori,
+                    'keterangan'      => 'Pengiriman otomatis dari Transaksi Keluar ' . $transaksi->kode,
+                ]);
+            }
+        }
+
+        // 3. Ambil data proses yang telah terbuat untuk di-render di PDF
+        $prosesItems = Proses::with(['produk.kategori', 'transaksi.user'])
+            ->where('transaksi_id', $transaksi->id)
+            ->get();
+
+        // 4. Generate PDF menggunakan view khusus
+        $pdf = Pdf::loadView('laporan.pdf.surat_jalan', compact('transaksi', 'prosesItems'));
+        
+        // 5. Stream ke browser
+        return $pdf->stream('Surat_Jalan_' . $transaksi->kode . '.pdf');
     }
 }

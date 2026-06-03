@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Proses;
 use App\Models\Produk;
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProsesController extends Controller
 {
@@ -15,7 +17,9 @@ class ProsesController extends Controller
     {
         $search = $request->input('search');
 
-        $query = Proses::with('produk.kategori');
+        $query = Proses::with(['produk.kategori', 'transaksi.supplier', 'transaksi.user', 'transaksi.items.produk'])
+            ->select('no_surat_jalan', 'transaksi_id', 'status', 'keterangan', DB::raw('MAX(produk_id) as produk_id'), DB::raw('MAX(kategori_proses) as kategori_proses'), DB::raw('MAX(id) as id'))
+            ->groupBy('no_surat_jalan', 'transaksi_id', 'status', 'keterangan');
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -24,14 +28,19 @@ class ProsesController extends Controller
                   ->orWhere('kategori_proses', 'like', '%' . $search . '%')
                   ->orWhereHas('produk', function ($pq) use ($search) {
                       $pq->where('nama', 'like', '%' . $search . '%');
+                  })
+                  ->orWhereHas('transaksi', function ($tq) use ($search) {
+                      $tq->where('kode', 'like', '%' . $search . '%')
+                        ->orWhere('tujuan', 'like', '%' . $search . '%');
                   });
             });
         }
 
-        $proses = $query->orderBy('id', 'desc')->paginate(10)->withQueryString();
+        $proses = $query->orderBy(DB::raw('MAX(id)'), 'desc')->paginate(10)->withQueryString();
         $produks = Produk::with('kategori')->orderBy('nama', 'asc')->get();
+        $transaksis = Transaksi::with(['items.produk.kategori', 'supplier'])->orderBy('kode', 'desc')->get();
 
-        return view('proses.proses', compact('proses', 'produks', 'search'));
+        return view('proses.proses', compact('proses', 'produks', 'transaksis', 'search'));
     }
 
     /**
@@ -48,6 +57,7 @@ class ProsesController extends Controller
         }
 
         $request->validate([
+            'transaksi_id' => 'nullable|exists:transaksis,id',
             'produk_id' => 'required|exists:produks,id',
             'no_surat_jalan' => 'required|string|max:255',
             'status' => 'required|in:On-Going,Pending,Completed',
@@ -60,30 +70,16 @@ class ProsesController extends Controller
         return redirect()->route('proses.index')->with('success', 'Proses berhasil ditambahkan!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Proses $prose)
     {
-        // Automatically fetch and attach the product category name
-        if ($request->has('produk_id')) {
-            $produk = Produk::with('kategori')->find($request->produk_id);
-            if ($produk) {
-                $request->merge(['kategori_proses' => $produk->kategori->nama ?? 'Umum']);
-            }
-        }
-
         $request->validate([
-            'produk_id' => 'required|exists:produks,id',
-            'no_surat_jalan' => 'required|string|max:255',
             'status' => 'required|in:On-Going,Pending,Completed',
-            'kategori_proses' => 'required|string|max:255',
-            'keterangan' => 'nullable|string',
         ]);
 
-        $prose->update($request->all());
+        Proses::where('no_surat_jalan', $prose->no_surat_jalan)
+            ->update(['status' => $request->status]);
 
-        return redirect()->route('proses.index')->with('success', 'Proses berhasil diperbarui!');
+        return redirect()->route('proses.index')->with('success', 'Status Surat Jalan berhasil diperbarui!');
     }
 
     /**
@@ -91,8 +87,8 @@ class ProsesController extends Controller
      */
     public function destroy(Proses $prose)
     {
-        $prose->delete();
+        Proses::where('no_surat_jalan', $prose->no_surat_jalan)->delete();
 
-        return redirect()->route('proses.index')->with('success', 'Proses berhasil dihapus!');
+        return redirect()->route('proses.index')->with('success', 'Surat Jalan berhasil dihapus!');
     }
 }

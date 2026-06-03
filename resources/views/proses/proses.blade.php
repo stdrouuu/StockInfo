@@ -19,7 +19,7 @@
     <div class="bg-[#7c4335] rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-xl shadow-orange-900/10">
         <div class="relative z-10 flex items-center gap-4 sm:gap-6">
             <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md">
-                <i class="fas fa-archive text-3xl"></i>
+                <i class="fas fa-truck text-3xl"></i>
             </div>
             <div>
                 <h2 class="text-2xl font-bold">Proses</h2>
@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <i class="fas fa-file-alt absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
+        <i class="fas fa-truck absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
     </div>
 
     <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden p-6 space-y-6">
@@ -39,7 +39,7 @@
                 <!-- Search Form -->
                 <form method="GET" action="{{ route('proses.index') }}" class="flex gap-2 flex-1">
                     <div class="relative flex-1">
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Surat Jalan, Status, Kategori..." class="w-full px-5 py-3 bg-[#f1f5f9] border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Surat Jalan, Status..." class="w-full px-5 py-3 bg-[#f1f5f9] border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400">
                     </div>
                     <button type="submit" class="bg-[#2d46b9] hover:bg-blue-800 text-white px-5 sm:px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 transition-all">
                         <i class="fas fa-search"></i>
@@ -47,10 +47,6 @@
                     </button>
                 </form>
             </div>
-            <button @click="$dispatch('open-proses-modal', { mode: 'add', action: '{{ route('proses.store') }}' })" class="w-full sm:w-auto bg-[#2d46b9] hover:bg-blue-800 text-white px-8 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-3 shadow-lg shadow-blue-200 transition-all">
-                <i class="fas fa-plus"></i>
-                <span>Tambah</span>
-            </button>
         </div>
 
         <div class="overflow-x-auto">
@@ -58,10 +54,10 @@
                 <thead>
                     <tr class="bg-[#2d46b9] text-white text-[10px] font-black uppercase tracking-widest text-left">
                         <th class="px-6 py-4 rounded-tl-2xl">No</th>
-                        <th class="px-6 py-4 text-center">Nama Barang</th>
+                        <th class="px-6 py-4 text-center">Tipe</th>
                         <th class="px-6 py-4 text-center">No. Surat Jalan</th>
+                        <th class="px-6 py-4 text-center">Asal / Tujuan</th>
                         <th class="px-6 py-4 text-center">Status</th>
-                        <th class="px-6 py-4 text-center">Kategori</th>
                         <th class="px-6 py-4 text-center rounded-tr-2xl">Aksi</th>
                     </tr>
                 </thead>
@@ -69,8 +65,46 @@
                     @forelse($proses as $index => $row)
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-6 py-8 text-sm font-bold text-slate-800">{{ str_pad($index + 1 + ($proses->currentPage() - 1) * $proses->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
-                        <td class="px-6 py-8 text-sm text-slate-600 font-medium text-center">{{ $row->produk->nama ?? 'Tidak Ada' }}</td>
-                        <td class="px-6 py-8 text-sm text-slate-600 font-medium text-center uppercase tracking-tight">{{ $row->no_surat_jalan }}</td>
+                        <td class="px-6 py-8 text-center">
+                            @if($row->transaksi)
+                                @if(strtolower($row->transaksi->tipe) === 'masuk')
+                                    <span class="px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-wider inline-flex items-center justify-center gap-1 w-24 border border-emerald-100">
+                                        <i class="fas fa-arrow-down text-[8px]"></i> MASUK
+                                    </span>
+                                @else
+                                    <span class="px-3 py-1.5 bg-rose-50 text-rose-600 rounded-full text-[10px] font-black uppercase tracking-wider inline-flex items-center justify-center gap-1 w-24 border border-rose-100">
+                                        <i class="fas fa-arrow-up text-[8px]"></i> KELUAR
+                                    </span>
+                                @endif
+                            @else
+                                <span class="px-3 py-1.5 bg-slate-50 text-slate-500 rounded-full text-[10px] font-black uppercase tracking-wider inline-flex items-center justify-center w-24 border border-slate-100">
+                                    MANUAL
+                                </span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-8 text-sm text-slate-600 font-black text-center uppercase tracking-tight">{{ $row->no_surat_jalan }}</td>
+                        <td class="px-6 py-8 text-sm text-slate-600 font-medium text-center">
+                            <div class="flex flex-col items-center">
+                                <span class="text-sm font-black text-slate-800">
+                                    @if($row->transaksi)
+                                        {{ $row->transaksi->tipe === 'masuk' ? ($row->transaksi->supplier->nama ?? '-') : $row->transaksi->tujuan }}
+                                    @else
+                                        -
+                                    @endif
+                                </span>
+                                @if($row->transaksi)
+                                    <span class="text-[10px] text-slate-400 font-bold uppercase mt-1.5 text-center max-w-sm leading-relaxed" title="Nama Barang">
+                                        @foreach($row->transaksi->items as $item)
+                                            {{ $item->produk->nama ?? 'Tidak Ada' }} ({{ $item->qty }} unit){{ !$loop->last ? ', ' : '' }}
+                                        @endforeach
+                                    </span>
+                                @else
+                                    <span class="text-[10px] text-slate-400 font-bold uppercase mt-1.5">
+                                        {{ $row->produk->nama ?? '-' }}
+                                    </span>
+                                @endif
+                            </div>
+                        </td>
                         <td class="px-6 py-8 text-sm font-semibold text-center">
                             @if($row->status === 'Completed')
                                 <span class="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-bold uppercase">{{ $row->status }}</span>
@@ -80,24 +114,33 @@
                                 <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold uppercase">{{ $row->status }}</span>
                             @endif
                         </td>
-                        <td class="px-6 py-8 text-center">
-                            <span class="px-4 py-1.5 bg-[#f3e8ff] text-[#9333ea] text-[10px] font-black uppercase rounded-full">{{ $row->produk->kategori->nama ?? 'Umum' }}</span>
-                        </td>
                         <td class="px-6 py-8">
-                            <div class="flex justify-center gap-3">
-                                <button @click="$dispatch('open-proses-modal', {
-                                    mode: 'edit',
-                                    produk_id: '{{ $row->produk_id }}',
-                                    no_surat_jalan: '{{ $row->no_surat_jalan }}',
-                                    status: '{{ $row->status }}',
-                                    kategori_proses: '{{ $row->produk->kategori->nama ?? 'Umum' }}',
-                                    keterangan: '{{ $row->keterangan }}',
-                                    action: '{{ route('proses.update', $row->id) }}'
-                                })" class="p-2 text-slate-400 hover:text-blue-600 transition-colors">
-                                    <i class="far fa-edit text-sm"></i>
+                            <div class="flex justify-center gap-2">
+                                <button @click="showModal = true; modalType = 'detail-proses'; window.dispatchEvent(new CustomEvent('open-detail-modal', { detail: {
+                                    id: {{ json_encode($row->id) }},
+                                    no_surat_jalan: {{ json_encode($row->no_surat_jalan) }},
+                                    tipe: {{ json_encode($row->transaksi ? ($row->transaksi->tipe === 'masuk' ? 'Barang Masuk' : 'Barang Keluar') : 'Manual') }},
+                                    asal_tujuan: {{ json_encode($row->transaksi ? ($row->transaksi->tipe === 'masuk' ? ($row->transaksi->supplier->nama ?? '-') : $row->transaksi->tujuan) : '-') }},
+                                    alamat: {{ json_encode($row->transaksi ? ($row->transaksi->alamat ?? '-') : '-') }},
+                                    status: {{ json_encode($row->status) }},
+                                    keterangan: {{ json_encode($row->keterangan ?? '') }},
+                                    items: {{ json_encode($row->transaksi && $row->transaksi->items ? $row->transaksi->items->map(fn($item) => [
+                                        'sku' => $item->produk->sku ?? '-',
+                                        'nama' => $item->produk->nama ?? 'Tidak Ada',
+                                        'qty' => $item->qty,
+                                        'kategori' => $item->produk->kategori->nama ?? 'Umum'
+                                    ])->toArray() : ($row->produk ? [[
+                                        'sku' => $row->produk->sku ?? '-',
+                                        'nama' => $row->produk->nama ?? 'Tidak Ada',
+                                        'qty' => 1,
+                                        'kategori' => $row->kategori_proses ?? 'Umum'
+                                    ]] : [])) }},
+                                    action: {{ json_encode(route('proses.update', $row->id)) }}
+                                } }))" class="p-2 text-slate-400 hover:text-blue-600 transition-colors" title="Detail Proses">
+                                    <i class="fas fa-eye"></i>
                                 </button>
-                                <button @click="showDeleteModal = true; deleteTarget = '{{ $row->no_surat_jalan }}'; deleteAction = '{{ route('proses.destroy', $row->id) }}'" class="p-2 text-slate-400 hover:text-red-600 transition-colors">
-                                    <i class="far fa-trash-alt text-sm"></i>
+                                <button @click="showDeleteModal = true; deleteTarget = '{{ $row->no_surat_jalan }}'; deleteAction = '{{ route('proses.destroy', $row->id) }}'" class="p-2 text-slate-400 hover:text-rose-600 transition-colors" title="Hapus Proses">
+                                    <i class="far fa-trash-alt"></i>
                                 </button>
                             </div>
                         </td>
@@ -135,146 +178,109 @@
 @endsection
 
 @section('modal-content')
-<div x-show="modalType === 'add-proses'"
+<!-- Detail & Edit Status Modal -->
+<div x-show="modalType === 'detail-proses'"
      x-data="{ 
-        mode: 'add',
-        produk_id: '',
+        id: '',
         no_surat_jalan: '',
+        tipe: '',
+        asal_tujuan: '',
+        alamat: '',
         status: 'On-Going',
-        kategori_proses: '',
         keterangan: '',
-        action: '{{ route('proses.store') }}',
-        searchQuery: '',
-        openDropdown: false,
-        productsList: {
-            @foreach($produks as $produk)
-                '{{ $produk->id }}': {
-                    id: '{{ $produk->id }}',
-                    nama: '{{ $produk->nama }}',
-                    kategori: '{{ $produk->kategori->nama ?? 'Umum' }}',
-                    stok: '{{ $produk->stok }}'
-                },
-            @endforeach
-        },
-        get filteredProducts() {
-            const all = Object.values(this.productsList);
-            if (!this.searchQuery) {
-                return all;
-            }
-            const query = this.searchQuery.toLowerCase();
-            return all.filter(p => p.nama.toLowerCase().includes(query));
-        },
-        selectProduct(id, nama) {
-            this.produk_id = id;
-            this.searchQuery = nama;
-            this.kategori_proses = this.productsList[id]?.kategori || 'Umum';
-            this.openDropdown = false;
-        }
+        items: [],
+        action: ''
      }"
-     @open-proses-modal.window="
-        showModal = true;
-        modalType = 'add-proses';
-        mode = $event.detail.mode;
-        produk_id = $event.detail.produk_id || '';
+     @open-detail-modal.window="
+        id = $event.detail.id || '';
         no_surat_jalan = $event.detail.no_surat_jalan || '';
+        tipe = $event.detail.tipe || '';
+        asal_tujuan = $event.detail.asal_tujuan || '';
+        alamat = $event.detail.alamat || '';
         status = $event.detail.status || 'On-Going';
         keterangan = $event.detail.keterangan || '';
-        action = $event.detail.action || '{{ route('proses.store') }}';
-        
-        $nextTick(() => {
-            if (produk_id && productsList[produk_id]) {
-                searchQuery = productsList[produk_id].nama;
-                kategori_proses = productsList[produk_id].kategori;
-            } else {
-                searchQuery = '';
-                kategori_proses = '';
-            }
-        });
-     ">
-    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6" x-text="mode === 'add' ? 'Tambah Proses Baru' : 'Tambah & Edit Proses'"></h2>
-    <form :action="action" method="POST" class="space-y-5">
+        items = $event.detail.items || [];
+        action = $event.detail.action || '';
+     }">
+    
+    <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
+        <div>
+            <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Rincian Surat Jalan</h2>
+            <h3 class="text-xl font-extrabold text-slate-800" x-text="no_surat_jalan"></h3>
+        </div>
+        <div class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider border"
+             :class="tipe === 'Barang Masuk' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : (tipe === 'Barang Keluar' ? 'bg-rose-50 text-rose-600 border-rose-100' : 'bg-slate-50 text-slate-500 border-slate-100')"
+             x-text="tipe">
+        </div>
+    </div>
+
+    <!-- Metadata Details -->
+    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mb-6">
+        <div class="space-y-4">
+            <div>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Asal / Tujuan Pengiriman</p>
+                <p class="text-sm font-bold text-slate-800 mt-1" x-text="asal_tujuan"></p>
+            </div>
+            <div>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Alamat Pengiriman</p>
+                <p class="text-xs text-slate-600 font-bold mt-1" x-text="alamat"></p>
+            </div>
+        </div>
+        <div>
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Keterangan / Catatan</p>
+            <p class="text-sm text-slate-600 font-semibold mt-1" x-text="keterangan || '-'"></p>
+        </div>
+    </div>
+
+    <!-- Items Listing Table -->
+    <div class="space-y-3 mb-8">
+        <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Daftar Barang Bawaan</h4>
+        <div class="border border-slate-100 rounded-2xl overflow-hidden shadow-sm">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 text-slate-500 text-[9px] font-black uppercase tracking-wider border-b border-slate-100">
+                        <th class="px-4 py-3 text-center w-12">No</th>
+                        <th class="px-4 py-3">SKU</th>
+                        <th class="px-4 py-3">Nama Produk</th>
+                        <th class="px-4 py-3 text-center">Kategori</th>
+                        <th class="px-4 py-3 text-center w-24">Jumlah Qty</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50 text-xs">
+                    <template x-for="(item, idx) in items" :key="idx">
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="px-4 py-3.5 text-center font-bold text-slate-400" x-text="idx + 1"></td>
+                            <td class="px-4 py-3.5 font-mono text-slate-600 font-bold" x-text="item.sku"></td>
+                            <td class="px-4 py-3.5 font-extrabold text-slate-800" x-text="item.nama"></td>
+                            <td class="px-4 py-3.5 text-center font-semibold text-slate-500" x-text="item.kategori"></td>
+                            <td class="px-4 py-3.5 text-center font-black text-[#064e3b]" x-text="item.qty"></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Status Form Update -->
+    <form :action="action" method="POST" class="space-y-6 pt-4 border-t border-slate-100">
         @csrf
-        <template x-if="mode === 'edit'">
-            <input type="hidden" name="_method" value="PUT">
-        </template>
+        <input type="hidden" name="_method" value="PUT">
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div class="space-y-2 relative" @click.away="openDropdown = false; if (!produk_id) { searchQuery = '' }">
-                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Nama Barang (Produk)</label>
-                <input type="hidden" name="produk_id" x-model="produk_id" required>
-                
-                <div class="relative">
-                    <input type="text" 
-                           placeholder="Cari & Pilih Barang..." 
-                           class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 focus:bg-white pr-10 transition-all placeholder:text-slate-400"
-                           x-model="searchQuery"
-                           @focus="openDropdown = true"
-                           @input="openDropdown = true; produk_id = ''; kategori_proses = ''"
-                           @keydown.escape="openDropdown = false"
-                           required>
-                           
-                    <div class="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-slate-400">
-                        <template x-if="produk_id">
-                            <button type="button" @click="produk_id = ''; searchQuery = ''; kategori_proses = ''; openDropdown = false" class="hover:text-rose-500 p-1 transition-colors">
-                                <i class="fas fa-times text-xs"></i>
-                            </button>
-                        </template>
-                        <template x-if="!produk_id">
-                            <i class="fas fa-search text-xs"></i>
-                        </template>
-                    </div>
-                </div>
-                
-                <!-- Floating Dropdown Results -->
-                <div x-show="openDropdown" 
-                     x-cloak 
-                     class="absolute left-0 right-0 z-50 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-60 overflow-y-auto py-1.5 custom-scrollbar">
-                    <template x-for="p in filteredProducts" :key="p.id">
-                        <button type="button" 
-                                @click="selectProduct(p.id, p.nama)"
-                                class="w-full text-left px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold flex items-center justify-between transition-colors border-b border-slate-50 last:border-0">
-                            <div class="truncate mr-2 flex-1 min-w-0">
-                                <span class="text-slate-800 font-bold block truncate" x-text="p.nama"></span>
-                                <span class="text-[10px] text-slate-400 block font-normal mt-0.5" x-text="'Stok: ' + p.stok"></span>
-                            </div>
-                            <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg shrink-0 ml-2" x-text="p.kategori"></span>
-                        </button>
-                    </template>
-                    <template x-if="filteredProducts.length === 0">
-                        <div class="px-4 py-3 text-center text-slate-400 text-xs font-semibold">
-                            Barang tidak ditemukan...
-                        </div>
-                    </template>
-                </div>
-            </div>
-            
-            <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">No. Surat Jalan</label>
-                <input type="text" name="no_surat_jalan" x-model="no_surat_jalan" required placeholder="DO/2025/001" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-            </div>
-            <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Status</label>
-                <div class="relative">
-                    <select name="status" x-model="status" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="On-Going">On-Going</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Completed">Completed</option>
-                    </select>
-                    <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
-                </div>
-            </div>
-            <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Kategori (Otomatis Sesuai Produk)</label>
-                <input type="text" name="kategori_proses" x-model="kategori_proses" readonly placeholder="Pilih produk..." class="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-400 font-bold outline-none cursor-not-allowed">
-            </div>
-        </div>
         <div class="space-y-2">
-            <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Keterangan</label>
-            <textarea name="keterangan" x-model="keterangan" placeholder="Masukkan keterangan tambahan..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none" rows="3"></textarea>
+            <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider block">Perbarui Status Logistik</label>
+            <div class="relative max-w-xs">
+                <select name="status" x-model="status" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="On-Going">On-Going</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                </select>
+                <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+            </div>
         </div>
+
         <div class="flex justify-end gap-3 pt-4">
-            <button type="button" @click="showModal = false" class="px-8 py-2.5 bg-slate-100 text-slate-800 rounded-xl text-sm font-bold hover:bg-slate-200 transition-all">Batal</button>
-            <button type="submit" class="px-8 py-2.5 bg-[#2d46b9] text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 hover:bg-blue-800 transition-all">Simpan</button>
+            <button type="button" @click="showModal = false" class="px-8 py-3 bg-slate-100 text-slate-800 rounded-xl text-sm font-bold hover:bg-slate-200 transition-all">Batal / Tutup</button>
+            <button type="submit" class="px-8 py-3 bg-[#2d46b9] text-white rounded-xl text-sm font-black shadow-lg shadow-blue-200 hover:bg-blue-800 transition-all">Simpan Status</button>
         </div>
     </form>
 </div>

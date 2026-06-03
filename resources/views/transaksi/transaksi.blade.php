@@ -17,36 +17,32 @@
     @endif
 
     <!-- Header Section -->
-    <div class="bg-[#064e3b] rounded-3xl md:rounded-[40px] p-6 md:p-10 text-white relative overflow-hidden shadow-2xl shadow-emerald-900/20">
-        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8">
-                <div class="bg-white/10 p-4 sm:p-5 rounded-[20px] sm:rounded-[24px] backdrop-blur-xl border border-white/20 shadow-inner">
-                    <i class="fas fa-exchange-alt text-3xl sm:text-4xl"></i>
+    <div class="bg-[#064e3b] rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-xl shadow-emerald-900/10">
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div class="flex items-center gap-6">
+                <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md">
+                    <i class="fas fa-exchange-alt text-3xl"></i>
                 </div>
                 <div>
-                    <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Transaksi Keluar & Masuk</h2>
-                    <div class="flex items-center gap-3 text-emerald-100/80 text-[11px] font-bold mt-2 uppercase tracking-widest">
+                    <h2 class="text-2xl font-bold">Transaksi Masuk & Keluar</h2>
+                    <div class="flex items-center gap-2 text-emerald-100 text-xs mt-1">
                         <i class="fas fa-home"></i>
                         <i class="fas fa-chevron-right text-[8px]"></i>
-                        <span>Transaksi</span>
-                        <i class="fas fa-chevron-right text-[8px]"></i>
-                        <span class="text-white">Data Transaksi</span>
+                        <span class="font-bold text-white uppercase tracking-wider">Transaksi</span>
                     </div>
                 </div>
             </div>
             
             <div class="flex items-center gap-4 w-full lg:w-auto">
-                <button @click="showModal = true; modalType = 'add-transaction'" class="w-full lg:w-auto bg-emerald-500 hover:bg-emerald-400 text-white px-8 py-4 rounded-2xl text-sm font-black flex items-center justify-center gap-3 transition-all transform hover:scale-105 active:scale-95 shadow-xl shadow-emerald-900/40">
-                    <i class="fas fa-plus"></i>
+                <button @click="showModal = true; modalType = 'add-transaction'" class="w-full lg:w-auto bg-[#10b981] hover:bg-emerald-400 text-white px-6 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/20 transition-all">
+                    <i class="fas fa-plus text-xs"></i>
                     <span>TAMBAH TRANSAKSI</span>
                 </button>
             </div>
         </div>
         
-        <!-- Abstract Background Elements -->
-        <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 w-64 h-64 bg-emerald-400/10 rounded-full -ml-20 -mb-20 blur-3xl"></div>
-        <i class="fas fa-boxes-stacked absolute -right-12 -bottom-16 text-[240px] opacity-[0.03] -rotate-12 pointer-events-none"></i>
+        <!-- Decorative Background Icon -->
+        <i class="fas fa-exchange-alt absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12 pointer-events-none"></i>
     </div>
 
     <!-- Stats Section -->
@@ -56,7 +52,7 @@
                 <i class="fas fa-arrow-down text-xl"></i>
             </div>
             <div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Stock Masuk</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Stok Masuk</p>
                 <h4 class="text-2xl font-black text-slate-800 mt-1">{{ number_format($stockMasukCount, 0, ',', '.') }} <span class="text-xs font-bold text-slate-400">Items</span></h4>
             </div>
         </div>
@@ -65,7 +61,7 @@
                 <i class="fas fa-arrow-up text-xl"></i>
             </div>
             <div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Stock Keluar</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Stok Keluar</p>
                 <h4 class="text-2xl font-black text-slate-800 mt-1">{{ number_format($stockKeluarCount, 0, ',', '.') }} <span class="text-xs font-bold text-slate-400">Items</span></h4>
             </div>
         </div>
@@ -119,11 +115,8 @@
                     @forelse($transaksis as $index => $trx)
                     <tr class="hover:bg-slate-50/50 transition-colors group">
                         <td class="px-8 py-7 text-sm font-bold text-slate-400">{{ str_pad($index + 1 + ($transaksis->currentPage() - 1) * $transaksis->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
-                        <td class="px-8 py-7">
-                            <div class="flex flex-col">
-                                <span class="text-sm font-black text-slate-800 group-hover:text-blue-600 transition-colors">{{ $trx->kode }}</span>
-                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-tight mt-0.5">{{ $trx->status }}</span>
-                            </div>
+                        <td class="px-8 py-7 text-sm font-black text-slate-800 group-hover:text-blue-600 transition-colors">
+                            {{ $trx->kode }}
                         </td>
                         <td class="px-8 py-7 text-center">
                             <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest {{ strtolower($trx->tipe) === 'masuk' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600' }}">{{ $trx->tipe }}</span>
@@ -138,9 +131,16 @@
                             {{ $trx->keterangan ?? '-' }}
                         </td>
                         <td class="px-8 py-7">
-                            <div class="flex items-center justify-center gap-3 transition-opacity">
-                                <button @click="showDeleteModal = true; deleteTarget = '{{ $trx->kode }}'; deleteAction = '{{ route('transaksi.destroy', $trx->id) }}'" class="w-9 h-9 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-red-600 hover:border-red-200 transition-all">
-                                    <i class="far fa-trash-alt text-sm"></i>
+                            <div class="flex items-center justify-center gap-2">
+                                @if(strtolower($trx->tipe) === 'keluar')
+                                <a href="{{ route('transaksi.cetak-surat-jalan', $trx->id) }}" target="_blank" title="Cetak Surat Jalan & Kirim" class="p-2 text-slate-400 hover:text-emerald-600 transition-colors">
+                                    <i class="fas fa-shipping-fast"></i>
+                                </a>
+                                @else
+                                <div class="w-8"></div> <!-- Spacer to keep all delete icons perfectly aligned vertically -->
+                                @endif
+                                <button @click="showDeleteModal = true; deleteTarget = '{{ $trx->kode }}'; deleteAction = '{{ route('transaksi.destroy', $trx->id) }}'" class="p-2 text-slate-400 hover:text-rose-600 transition-colors" title="Hapus Transaksi">
+                                    <i class="far fa-trash-alt"></i>
                                 </button>
                             </div>
                         </td>
@@ -183,7 +183,7 @@
     <div class="flex items-center justify-between mb-10">
         <div>
             <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mb-1">Pencatatan Transaksi</h2>
-            <h3 class="text-2xl font-extrabold text-slate-800">Tambah Transaksi Baru</h3>
+            <h3 class="text-2xl font-extrabold text-slate-800" x-text="type === 'Masuk' ? 'Tambah Transaksi Masuk' : 'Tambah Transaksi Keluar'"></h3>
         </div>
     </div>
 
@@ -205,7 +205,6 @@
                                 </div>
                                 <div>
                                     <p class="text-sm font-black text-slate-800">Barang Masuk</p>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tight">Stock Replenishment</p>
                                 </div>
                             </div>
                         </label>
@@ -217,7 +216,6 @@
                                 </div>
                                 <div>
                                     <p class="text-sm font-black text-slate-800">Barang Keluar</p>
-                                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-tight">Stock Distribution</p>
                                 </div>
                             </div>
                         </label>
@@ -234,19 +232,27 @@
                     <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1" x-text="type === 'Masuk' ? 'Supplier / Pengirim' : 'Penerima / Proyek'"></label>
                     
                     <!-- Supplier select list if Masuk -->
-                    <div x-show="type === 'Masuk'" class="relative">
-                        <select name="supplier_id" x-model="supplier_id" :required="type === 'Masuk'" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none">
-                            <option value="">Pilih Supplier...</option>
-                            @foreach($suppliers as $supplier)
-                                <option value="{{ $supplier->id }}">{{ $supplier->nama }}</option>
-                            @endforeach
-                        </select>
-                        <i class="fas fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                    <div x-show="type === 'Masuk'" class="flex items-center gap-3">
+                        <div class="relative flex-1">
+                            <select name="supplier_id" id="supplier_select" x-model="supplier_id" :required="type === 'Masuk'" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none">
+                                <option value="">Pilih Supplier...</option>
+                                @foreach($suppliers as $sup)
+                                    <option value="{{ $sup->id }}">{{ $sup->nama }}</option>
+                                @endforeach
+                            </select>
+                            <i class="fas fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                        </div>
+                        <button type="button" @click="openQuickAddSupplierModal()" class="w-[52px] h-[52px] flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl transition-all shadow-md shadow-emerald-100 shrink-0" title="Tambah Supplier Baru">
+                            <i class="fas fa-plus text-sm"></i>
+                        </button>
                     </div>
 
                     <!-- Destination Text Input if Keluar -->
-                    <div x-show="type === 'Keluar'">
+                    <div x-show="type === 'Keluar'" class="space-y-4">
                         <input type="text" name="tujuan" x-model="tujuan" :required="type === 'Keluar'" placeholder="Contoh: Proyek Bendungan A" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                        
+                        <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Alamat (Khusus Proyek) </label>
+                        <textarea name="alamat" x-model="alamat" :required="type === 'Keluar'" placeholder="Masukkan alamat lengkap pengiriman..." rows="2" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"></textarea>
                     </div>
                 </div>
 
@@ -285,6 +291,8 @@
                                         this.$watch('item.produk_id', value => {
                                             if (!value) {
                                                 this.searchQuery = '';
+                                            } else if (productsList[value]) {
+                                                this.searchQuery = productsList[value].nama;
                                             }
                                         });
                                     },
@@ -418,6 +426,75 @@
             </div>
         </div>
     </form>
+
+    <!-- Quick Add Supplier Modal Overlay -->
+    <div x-show="showQuickSupplierModal" 
+         x-cloak
+         class="fixed inset-0 bg-slate-900/60 backdrop-blur-[3px] z-[80] flex items-center justify-center p-4"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0">
+        
+        <div @click.away="showQuickSupplierModal = false" 
+             class="bg-white w-full max-w-lg rounded-[28px] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden transition-all duration-300 border border-slate-100"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95">
+            
+            <div class="p-6 sm:p-8 overflow-y-auto hide-scrollbar">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Quick Add</h4>
+                        <h3 class="text-xl font-extrabold text-slate-800">Tambah Supplier Baru</h3>
+                    </div>
+                    <button type="button" @click="showQuickSupplierModal = false" class="text-slate-400 hover:text-slate-600 transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div x-show="quickSupplierError" x-cloak class="mb-4 p-3 bg-rose-50 border border-rose-100 text-rose-600 rounded-xl text-xs font-bold" x-text="quickSupplierError"></div>
+
+                <div class="space-y-4">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Nama Supplier</label>
+                        <input type="text" x-model="quickSupplier.nama" required placeholder="Contoh: PT. Semen Berdikari" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Kontak Person</label>
+                            <input type="text" x-model="quickSupplier.kontak_person" required placeholder="Contoh: Budi Santoso" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">No. Telepon</label>
+                            <input type="text" x-model="quickSupplier.telepon" required placeholder="Contoh: 08123456789" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Email</label>
+                        <input type="email" x-model="quickSupplier.email" required placeholder="Contoh: supplier@mail.com" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Alamat Lengkap</label>
+                        <textarea x-model="quickSupplier.alamat" required placeholder="Masukkan alamat lengkap..." rows="3" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all resize-none"></textarea>
+                    </div>
+
+                    <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-50">
+                        <button type="button" @click="showQuickSupplierModal = false" class="px-6 py-3 text-slate-400 hover:text-slate-600 text-xs font-bold transition-colors">Batal</button>
+                        <button type="button" @click="submitQuickSupplier()" :disabled="quickSupplierLoading" class="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-black rounded-xl shadow-lg shadow-emerald-100 transition-all">
+                            Simpan Supplier
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 @endsection
 
@@ -430,9 +507,71 @@
             tanggal: '{{ date("Y-m-d") }}',
             supplier_id: '',
             tujuan: '',
+            alamat: '',
             keterangan: '',
             items: [{id: 1, produk_id: '', qty: 1, price: 0}],
             productsList: {!! $produks->mapWithKeys(fn($p) => [$p->id => ['id' => $p->id, 'nama' => $p->nama, 'harga' => (int)$p->harga, 'stok' => (int)$p->stok]])->toJson() !!},
+            suppliersList: {!! $suppliers->map(fn($s) => ['id' => $s->id, 'nama' => $s->nama])->toJson() !!},
+            
+            showQuickSupplierModal: false,
+            
+            quickSupplier: {
+                nama: '',
+                kontak_person: '',
+                telepon: '',
+                email: '',
+                alamat: ''
+            },
+            quickSupplierLoading: false,
+            quickSupplierError: '',
+
+            openQuickAddSupplierModal() {
+                this.quickSupplier = { nama: '', kontak_person: '', telepon: '', email: '', alamat: '' };
+                this.quickSupplierError = '';
+                this.showQuickSupplierModal = true;
+            },
+
+            async submitQuickSupplier() {
+                this.quickSupplierLoading = true;
+                this.quickSupplierError = '';
+                try {
+                    const response = await fetch('{{ route("supplier.store") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify(this.quickSupplier)
+                    });
+                    const result = await response.json();
+                    if (response.ok && result.success) {
+                        this.suppliersList.unshift(result.data);
+                        
+                        // Append option to select tag programmatically
+                        const selectEl = document.getElementById('supplier_select');
+                        if (selectEl) {
+                            const opt = document.createElement('option');
+                            opt.value = result.data.id;
+                            opt.text = result.data.nama;
+                            selectEl.add(opt);
+                        }
+
+                        this.supplier_id = result.data.id;
+                        this.showQuickSupplierModal = false;
+                    } else {
+                        this.quickSupplierError = result.message || 'Gagal menambahkan supplier. Periksa inputan Anda.';
+                        if (result.errors) {
+                            this.quickSupplierError = Object.values(result.errors).flat().join(' ');
+                        }
+                    }
+                } catch (e) {
+                    this.quickSupplierError = 'Terjadi kesalahan sistem.';
+                } finally {
+                    this.quickSupplierLoading = false;
+                }
+            },
+
             addItem() {
                 this.items.push({id: Date.now(), produk_id: '', qty: 1, price: 0});
             },

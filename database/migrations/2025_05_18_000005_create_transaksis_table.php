@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('tipe', ['masuk', 'keluar']);
             $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('set null');
             $table->string('tujuan', 255)->nullable();
+            $table->text('alamat')->nullable();
             $table->date('tanggal');
             $table->text('keterangan')->nullable();
             $table->enum('status', ['diproses', 'selesai', 'dibatalkan'])->default('diproses');

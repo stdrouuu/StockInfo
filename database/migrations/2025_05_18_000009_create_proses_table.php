@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('proses', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('transaksi_id')->nullable()->constrained('transaksis')->onDelete('cascade');
             $table->foreignId('produk_id')->constrained('produks')->onDelete('cascade');
             $table->string('no_surat_jalan', 50);
             $table->enum('status', ['on-going', 'pending', 'completed'])->default('pending');

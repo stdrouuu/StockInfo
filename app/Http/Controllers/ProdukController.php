@@ -100,7 +100,17 @@ class ProdukController extends Controller
             $data['gambar'] = $path;
         }
 
-        Produk::create($data);
+        $produk = Produk::create($data);
+
+        if ($request->expectsJson() || $request->ajax()) {
+            // Load the category name so we can return it too if needed
+            $produk->load('kategori');
+            return response()->json([
+                'success' => true,
+                'message' => 'Produk berhasil ditambahkan!',
+                'data' => $produk
+            ]);
+        }
 
         return redirect()->route('produk.index')->with('success', 'Produk berhasil ditambahkan!');
     }

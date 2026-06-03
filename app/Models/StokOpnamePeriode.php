@@ -17,6 +17,7 @@ class StokOpnamePeriode extends Model
         'keterangan',
         'status_kerja',
         'status_pelaporan',
+        'is_adjusted',
         'user_id',
     ];
 
@@ -25,6 +26,7 @@ class StokOpnamePeriode extends Model
         return [
             'tanggal_mulai' => 'date',
             'tanggal_selesai' => 'date',
+            'is_adjusted' => 'boolean',
         ];
     }
 
@@ -53,18 +55,18 @@ class StokOpnamePeriode extends Model
     }
 
     /**
-     * Hitung total barang yang sesuai (selisih = 0).
+     * Hitung total barang yang sesuai (selisih = 0 dan sudah dilaporkan).
      */
     public function getTotalSesuaiAttribute(): int
     {
-        return $this->items->where('selisih', 0)->count();
+        return $this->items->where('catatan', '!=', 'belum dilaporkan')->where('selisih', 0)->count();
     }
 
     /**
-     * Hitung total barang yang selisih (selisih != 0).
+     * Hitung total barang yang selisih (selisih != 0 dan sudah dilaporkan).
      */
     public function getTotalSelisihAttribute(): int
     {
-        return $this->items->where('selisih', '!=', 0)->count();
+        return $this->items->where('catatan', '!=', 'belum dilaporkan')->where('selisih', '!=', 0)->count();
     }
 }

@@ -4,8 +4,8 @@
 
 @section('content')
 <div class="mb-8">
-    <p class="text-blue-500 font-bold text-[10px] uppercase tracking-[0.2em] mb-1">Dashboard</p>
-    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">Dashboard Control</h2>
+    <p class="text-blue-500 font-bold text-[10px] uppercase tracking-[0.2em] mb-1">Dashboard Control</p>
+    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">Halo, {{ session('user.name') }} !</h2>
 </div>
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
@@ -13,6 +13,7 @@
         <div class="relative z-10">
             <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest mb-2">Jumlah Stok</p>
             <h3 class="text-2xl font-extrabold">{{ number_format($jumlahStok, 0, ',', '.') }} unit</h3>
+            <p class="text-[11px] font-bold opacity-75 mt-1">{{ $jumlahSku }} SKU</p>
         </div>
         <div class="absolute top-6 right-6 bg-white/20 p-2.5 rounded-xl"><i class="fas fa-archive"></i></div>
         <i class="fas fa-box-open absolute -bottom-4 -right-2 text-7xl opacity-10"></i>
@@ -29,10 +30,20 @@
 
     <div class="bg-[#3da56b] p-7 rounded-[1.5rem] text-white relative overflow-hidden shadow-xl shadow-emerald-100">
         <div class="relative z-10">
-            <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest mb-2">Stok Masuk</p>
-            <h3 class="text-2xl font-extrabold">{{ number_format($stokMasuk, 0, ',', '.') }} unit</h3>
+            <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest mb-2">Transaksi</p>
+            <div class="flex items-center gap-4 mt-1">
+                <div>
+                    <span class="text-[9px] uppercase font-bold tracking-wider opacity-75 block mb-0.5">Masuk</span>
+                    <h3 class="text-xl font-extrabold">{{ number_format($stokMasuk, 0, ',', '.') }}</h3>
+                </div>
+                <div class="w-px h-8 bg-white/20 self-end"></div>
+                <div>
+                    <span class="text-[9px] uppercase font-bold tracking-wider opacity-75 block mb-0.5">Keluar</span>
+                    <h3 class="text-xl font-extrabold">{{ number_format($stokKeluar, 0, ',', '.') }}</h3>
+                </div>
+            </div>
         </div>
-        <div class="absolute top-6 right-6 bg-white/20 p-2.5 rounded-xl"><i class="fas fa-arrow-trend-up"></i></div>
+        <div class="absolute top-6 right-6 bg-white/20 p-2.5 rounded-xl"><i class="fas fa-exchange-alt"></i></div>
         <i class="fas fa-chart-line absolute -bottom-4 -right-2 text-7xl opacity-10"></i>
     </div>
 
@@ -50,7 +61,7 @@
 <div class="bg-white p-6 sm:p-10 rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm mb-10">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-            <h4 class="font-extrabold text-xl text-slate-800 mb-1">Stock Movement Trends</h4>
+            <h4 class="font-extrabold text-xl text-slate-800 mb-1">Tren Pergerakan Stok</h4>
             <p class="text-xs font-medium text-slate-400">Volume pergerakan material yang masuk dan keluar.</p>
         </div>
         
@@ -79,7 +90,7 @@
 <div class="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
     <div class="p-6 sm:p-8 border-b border-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h4 class="font-extrabold text-xl text-slate-800 mb-1">Low Stock Alert</h4>
+            <h4 class="font-extrabold text-xl text-slate-800 mb-1">Peringatan Stok Rendah</h4>
             <p class="text-xs font-medium text-slate-400">Daftar barang yang perlu dipesan segera</p>
         </div>
     </div>
@@ -87,28 +98,30 @@
         <table class="w-full text-left min-w-[500px] sm:min-w-0">
         <thead>
             <tr class="bg-[#1e40af] text-white text-[10px] font-extrabold uppercase tracking-[0.2em]">
+                <th class="px-10 py-4">No</th>
+                <th class="px-10 py-4">Gambar</th>
+                <th class="px-10 py-4">SKU</th>
                 <th class="px-10 py-4">Nama Produk</th>
+                <th class="px-10 py-4">Kategori</th>
                 <th class="px-10 py-4 text-right">Stok</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-slate-50">
-            @forelse ($lowStockProducts as $produk)
+            @forelse ($lowStockProducts as $index => $produk)
             <tr class="hover:bg-slate-50 transition-colors">
+                <td class="px-10 py-6 text-sm font-bold text-slate-400">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</td>
                 <td class="px-10 py-6">
-                    <div class="flex items-center gap-5">
-                        <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center overflow-hidden">
-                            @if ($produk->gambar)
-                                <img src="{{ asset('storage/' . $produk->gambar) }}" class="w-full h-full object-cover">
-                            @else
-                                <i class="far fa-image text-slate-300"></i>
-                            @endif
-                        </div>
-                        <div>
-                            <p class="font-extrabold text-slate-800 text-base">{{ $produk->nama }}</p>
-                            <p class="text-[10px] text-slate-400 font-bold tracking-widest mt-1">{{ $produk->sku }}</p>
-                        </div>
+                    <div class="w-24 h-24 bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200 shadow-sm flex-shrink-0">
+                        @if ($produk->gambar)
+                            <img src="{{ asset('storage/' . $produk->gambar) }}" class="w-full h-full object-cover">
+                        @else
+                            <i class="far fa-image text-slate-300 text-xl"></i>
+                        @endif
                     </div>
                 </td>
+                <td class="px-10 py-6 text-sm font-bold text-slate-700">{{ $produk->sku }}</td>
+                <td class="px-10 py-6 text-base font-extrabold text-slate-800">{{ $produk->nama }}</td>
+                <td class="px-10 py-6 text-sm font-medium text-slate-600">{{ $produk->kategori->nama ?? 'Umum' }}</td>
                 <td class="px-10 py-6 text-right">
                     <span class="text-red-500 font-extrabold text-lg">{{ $produk->stok }}</span>
                     <span class="text-xs text-slate-400 font-semibold ml-1">/ Min: {{ $produk->stok_minimum }}</span>
@@ -116,7 +129,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="2" class="px-10 py-8 text-center text-slate-400 font-medium">Semua produk memiliki stok yang cukup.</td>
+                <td colspan="6" class="px-10 py-8 text-center text-slate-400 font-medium">Semua produk memiliki stok yang cukup.</td>
             </tr>
             @endforelse
         </tbody>
