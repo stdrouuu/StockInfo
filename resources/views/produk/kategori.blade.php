@@ -26,9 +26,9 @@
                 <div class="flex items-center gap-2 text-blue-100 text-xs mt-1">
                     <i class="fas fa-home"></i>
                     <i class="fas fa-chevron-right text-[8px]"></i>
-                    <span>DATA PRODUK</span>
+                    <span class="font-bold uppercase tracking-wider">Produk</span>
                     <i class="fas fa-chevron-right text-[8px]"></i>
-                    <span class="font-bold text-white">KATEGORI</span>
+                    <span class="font-bold text-white uppercase tracking-wider">Kategori Produk</span>
                 </div>
             </div>
         </div>

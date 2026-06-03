@@ -4,8 +4,8 @@
 
 @section('content')
 <div class="mb-8">
-    <p class="text-blue-500 font-bold text-[10px] uppercase tracking-[0.2em] mb-1">Dashboard</p>
-    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">Dashboard Control</h2>
+    <p class="text-blue-500 font-bold text-[10px] uppercase tracking-[0.2em] mb-1">Dashboard Control</p>
+    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">Halo, {{ session('user.name') }} !</h2>
 </div>
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
@@ -61,7 +61,7 @@
 <div class="bg-white p-6 sm:p-10 rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm mb-10">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-            <h4 class="font-extrabold text-xl text-slate-800 mb-1">Stock Movement Trends</h4>
+            <h4 class="font-extrabold text-xl text-slate-800 mb-1">Tren Pergerakan Stok</h4>
             <p class="text-xs font-medium text-slate-400">Volume pergerakan material yang masuk dan keluar.</p>
         </div>
         
@@ -90,7 +90,7 @@
 <div class="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
     <div class="p-6 sm:p-8 border-b border-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h4 class="font-extrabold text-xl text-slate-800 mb-1">Low Stock Alert</h4>
+            <h4 class="font-extrabold text-xl text-slate-800 mb-1">Peringatan Stok Rendah</h4>
             <p class="text-xs font-medium text-slate-400">Daftar barang yang perlu dipesan segera</p>
         </div>
     </div>

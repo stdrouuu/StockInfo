@@ -18,5 +18,6 @@
 </head>
 <body class="bg-[#f8fafc] text-slate-700">
     @yield('content')
+    @stack('scripts')
 </body>
 </html>

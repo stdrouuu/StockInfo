@@ -25,7 +25,11 @@
                 </div>
                 <div>
                     <h2 class="text-2xl font-bold">Transaksi Masuk & Keluar</h2>
-                    <p class="text-emerald-100 text-sm mt-1">Dashboard > Transaksi</p>
+                    <div class="flex items-center gap-2 text-emerald-100 text-xs mt-1">
+                        <i class="fas fa-home"></i>
+                        <i class="fas fa-chevron-right text-[8px]"></i>
+                        <span class="font-bold text-white uppercase tracking-wider">Transaksi</span>
+                    </div>
                 </div>
             </div>
             

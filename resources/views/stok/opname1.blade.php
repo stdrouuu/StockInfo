@@ -28,7 +28,7 @@
                     <i class="fas fa-chevron-right text-[8px]"></i>
                     <span class="uppercase">STOK OPNAME</span>
                     <i class="fas fa-chevron-right text-[8px]"></i>
-                    <span class="text-white uppercase font-black tracking-widest">DATA</span>
+                    <span class="text-white uppercase font-black tracking-widest">PERIODE</span>
                 </div>
             </div>
         </div>

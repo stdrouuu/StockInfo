@@ -18,16 +18,23 @@
 
     <div class="bg-[#d35400] rounded-3xl p-8 text-white relative overflow-hidden shadow-xl shadow-orange-900/10">
         <div class="relative z-10 flex items-center justify-between gap-6">
-            <div>
-                <h2 class="text-2xl font-bold">Form Input Stok Opname</h2>
-                <div class="flex items-center gap-2 text-orange-100 text-[10px] mt-1 font-bold">
-                    <i class="fas fa-home"></i>
-                    <i class="fas fa-chevron-right text-[8px]"></i>
-                    <span class="uppercase">STOK OPNAME</span>
-                    <i class="fas fa-chevron-right text-[8px]"></i>
-                    <span class="text-white uppercase font-black tracking-widest">INPUT</span>
+            <div class="flex items-center gap-6">
+                <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md">
+                    <i class="fas fa-clipboard-check text-3xl"></i>
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-bold">Input Stok Opname</h2>
+                    <div class="flex items-center gap-2 text-orange-100 text-[10px] mt-1 font-bold">
+                        <i class="fas fa-home"></i>
+                        <i class="fas fa-chevron-right text-[8px]"></i>
+                        <span class="uppercase">STOK OPNAME</span>
+                        <i class="fas fa-chevron-right text-[8px]"></i>
+                        <span class="text-white uppercase font-black tracking-widest">INPUT</span>
+                    </div>
                 </div>
             </div>
+
             <div class="bg-white/10 px-5 py-3 rounded-2xl backdrop-blur-md text-right">
                 <span class="text-xs text-orange-100 font-bold block">Periode Aktif</span>
                 <span class="text-sm font-black">{{ $periode->tanggal_mulai->format('d M Y') }} - {{ $periode->tanggal_selesai->format('d M Y') }}</span>

@@ -34,7 +34,7 @@
                :class="activeMenu === 'produk' || activeMenu === 'kategori' ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-slate-400 hover:bg-slate-50'">
                 <div class="flex items-center gap-3">
                     <i class="fas fa-box w-5 text-lg" :class="activeMenu === 'produk' || activeMenu === 'kategori' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
-                    <span class="text-sm font-bold" :class="activeMenu === 'produk' || activeMenu === 'kategori' ? '' : 'group-hover:text-slate-600'">Data Produk</span>
+                    <span class="text-sm font-bold" :class="activeMenu === 'produk' || activeMenu === 'kategori' ? '' : 'group-hover:text-slate-600'">Produk</span>
                 </div>
                 <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="openSub === 'produk' ? 'rotate-180' : ''"></i>
             </button>

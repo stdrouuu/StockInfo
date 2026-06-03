@@ -10,7 +10,7 @@
         <img
             alt="Industrial Warehouse Background"
             class="absolute inset-0 object-cover w-full h-full mix-blend-overlay grayscale opacity-60"
-            src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+            src="{{ asset('storage/images/tokobangunan2.jpg') }}"
         />
         <div class="relative z-20 flex flex-col justify-end p-16 w-full text-white">
             <div class="mb-8">
@@ -19,26 +19,13 @@
                     <span class="font-bold tracking-tight text-blue-400">StockInfo</span>
                 </div>
                 <h1 class="text-5xl font-extrabold leading-tight mb-4 tracking-tighter">
-                    Solusi Manajemen <br />Material Terintegrasi.
+                    Kelola Stok <br /> Jadi Lebih Mudah
                 </h1>
                 <p class="text-blue-100 text-lg max-w-md font-medium leading-relaxed">
-                    Kelola inventaris, pantau mutasi stok, dan optimalkan operasional
-                    gudang Anda dengan presisi industrial.
+                    Atur inventaris, pantau keluar-masuk barang, dan buat operasional gudang jadi lebih efisien secara real-time.
                 </p>
             </div>
             <div class="flex gap-8 pt-8 border-t border-white/10">
-                <div>
-                    <div class="text-3xl font-bold">100%</div>
-                    <div class="text-sm text-blue-200 uppercase tracking-widest font-bold">
-                        Akurasi Stok
-                    </div>
-                </div>
-                <div>
-                    <div class="text-3xl font-bold">Real-time</div>
-                    <div class="text-sm text-blue-200 uppercase tracking-widest font-bold">
-                        Pelaporan
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -201,12 +188,16 @@
     document.getElementById('toggle-password')?.addEventListener('click', function() {
         const passwordInput = document.getElementById('password');
         const passwordIcon = document.getElementById('password-icon');
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            passwordIcon.textContent = 'visibility_off';
-        } else {
-            passwordInput.type = 'password';
-            passwordIcon.textContent = 'visibility';
+        if (passwordInput && passwordIcon) {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.classList.remove('fa-eye');
+                passwordIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.classList.remove('fa-eye-slash');
+                passwordIcon.classList.add('fa-eye');
+            }
         }
     });
 </script>

@@ -34,7 +34,13 @@
             </div>
             <div>
                 <h2 class="text-2xl font-bold">Data Produk</h2>
-                <p class="text-blue-100 text-sm mt-1">Dashboard > Data Produk</p>
+                <div class="flex items-center gap-2 text-blue-100 text-xs mt-1">
+                    <i class="fas fa-home"></i>
+                    <i class="fas fa-chevron-right text-[8px]"></i>
+                    <span class="font-bold uppercase tracking-wider">Produk</span>
+                    <i class="fas fa-chevron-right text-[8px]"></i>
+                    <span class="font-bold text-white uppercase tracking-wider">Data Produk</span>
+                </div>
             </div>
         </div>
         <!-- Decorative Background Icon -->
@@ -66,7 +72,7 @@
                 <i class="fas fa-truck text-xl"></i>
             </div>
             <div>
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Dalam Transit</p>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Dalam Proses</p>
                 <p class="text-2xl font-bold">{{ $dalamTransit }}</p>
             </div>
         </div>
@@ -75,7 +81,7 @@
                 <i class="fas fa-hand-holding-dollar text-xl"></i>
             </div>
             <div>
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Inv. Value</p>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nilai Inventaris</p>
                 <p class="text-2xl font-bold">Rp {{ number_format($invValue, 0, ',', '.') }}</p>
             </div>
         </div>
@@ -146,7 +152,7 @@
                     <div x-show="openFilter" @click.away="openFilter = false" x-cloak class="absolute left-0 mt-2 w-full sm:w-56 bg-white border border-slate-100 rounded-2xl shadow-xl z-30 overflow-hidden">
                         <a href="{{ route('produk.index', ['search' => request('search'), 'kategori_id' => request('kategori_id'), 'filter' => 'tinggi_rendah']) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors {{ request('filter') === 'tinggi_rendah' ? 'bg-blue-50 text-blue-600' : '' }}">Tinggi ke Rendah</a>
                         <a href="{{ route('produk.index', ['search' => request('search'), 'kategori_id' => request('kategori_id'), 'filter' => 'rendah_tinggi']) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors {{ request('filter') === 'rendah_tinggi' ? 'bg-blue-50 text-blue-600' : '' }}">Rendah ke Tinggi</a>
-                        <a href="{{ route('produk.index', ['search' => request('search'), 'kategori_id' => request('kategori_id'), 'filter' => 'kritis']) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors {{ request('filter') === 'kritis' ? 'bg-blue-50 text-blue-600' : '' }}">Stok Kritis</a>
+                        <a href="{{ route('produk.index', ['search' => request('search'), 'kategori_id' => request('kategori_id'), 'filter' => 'kritis']) }}" class="block px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors {{ request('filter') === 'kritis' ? 'bg-blue-50 text-blue-600' : '' }}">Stok Rendah</a>
                         @if(request('filter'))
                             <div class="border-t border-slate-100">
                                 <a href="{{ route('produk.index', ['search' => request('search'), 'kategori_id' => request('kategori_id')]) }}" class="block px-6 py-3 text-xs font-bold text-rose-500 hover:bg-rose-50 transition-colors">Reset Urutan</a>
@@ -196,11 +202,11 @@
                         <td class="px-6 py-5">
                             @if ($produk->isLowStock())
                                 <div class="flex items-center gap-2">
-                                    <span class="text-sm font-bold text-rose-600">{{ $produk->stok }}</span>
+                                    <span class="text-sm font-bold text-rose-600">{{ $produk->stok }} <span class="text-xs text-rose-400 font-semibold">{{ $produk->satuan }}</span></span>
                                     <span class="px-2 py-0.5 bg-rose-50 text-rose-600 text-[9px] font-bold uppercase rounded">Low</span>
                                 </div>
                             @else
-                                <span class="text-sm font-bold text-slate-700">{{ $produk->stok }}</span>
+                                <span class="text-sm font-bold text-slate-700">{{ $produk->stok }} <span class="text-xs text-slate-400 font-semibold">{{ $produk->satuan }}</span></span>
                             @endif
                         </td>
                         <td class="px-6 py-5 text-sm font-bold text-slate-700">Rp {{ number_format($produk->harga, 0, ',', '.') }}</td>
@@ -215,6 +221,7 @@
                                     stok: '{{ $produk->stok }}',
                                     harga: '{{ (int)$produk->harga }}',
                                     stok_minimum: '{{ $produk->stok_minimum }}',
+                                    satuan: '{{ $produk->satuan }}',
                                     gambar: '{{ $produk->gambar }}',
                                     action: '{{ route('produk.update', $produk->id) }}'
                                 })" class="p-2 text-slate-400 hover:text-blue-600 transition-colors">
@@ -269,6 +276,7 @@
         stok: '',
         harga: '',
         stok_minimum: '',
+        satuan: 'pcs',
         action: '{{ route('produk.store') }}',
         fileName: '',
         gambar: '',
@@ -372,6 +380,7 @@
         stok = $event.detail.mode === 'add' ? 0 : ($event.detail.stok || 0);
         harga = $event.detail.harga || '';
         stok_minimum = $event.detail.stok_minimum || '';
+        satuan = $event.detail.satuan || 'pcs';
         action = $event.detail.action || '{{ route('produk.store') }}';
         fileName = '';
         gambar = $event.detail.gambar || '';
@@ -432,6 +441,21 @@
             <div class="space-y-2">
                 <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Jumlah Minimum Produk</label>
                 <input type="number" name="stok_minimum" x-model="stok_minimum" required placeholder="50" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+            </div>
+            <div class="space-y-2">
+                <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Satuan</label>
+                <div class="relative">
+                    <select name="satuan" x-model="satuan" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="pcs">PCS</option>
+                        <option value="kg">KG</option>
+                        <option value="sak">SAK</option>
+                        <option value="batang">BATANG</option>
+                        <option value="lembar">LEMBAR</option>
+                        <option value="roll">ROLL</option>
+                        <option value="kaleng">KALENG</option>
+                    </select>
+                    <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+                </div>
             </div>
         </div>
 
