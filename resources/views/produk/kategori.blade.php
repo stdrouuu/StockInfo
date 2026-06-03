@@ -57,10 +57,10 @@
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
-                    <tr class="bg-[#0038a8] text-white text-[11px] font-bold uppercase tracking-widest text-left">
-                        <th class="px-8 py-4 w-20">No</th>
+                    <tr class="bg-[#0038a8] text-white text-[10px] font-black uppercase tracking-widest text-left">
+                        <th class="px-8 py-4 w-20 rounded-tl-2xl">No</th>
                         <th class="px-8 py-4 text-center">Nama Kategori</th>
-                        <th class="px-8 py-4 text-right w-32">Opsi</th>
+                        <th class="px-8 py-4 text-right w-32 rounded-tr-2xl">Opsi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">

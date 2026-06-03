@@ -27,7 +27,7 @@
         <div class="grid grid-cols-12 gap-8 items-center">
             <div class="col-span-7 space-y-6">
                 <div class="space-y-2.5">
-                    <p class="text-xl font-bold text-slate-800">Periode : {{ $periode->tanggal_mulai->format('d M Y') }} s/d {{ $periode->tanggal_selesai->format('d M Y') }}</p>
+                    <p class="text-xl font-bold text-slate-800">Periode : {{ $periode->tanggal_mulai->locale('id')->isoFormat('DD MMM YYYY') }} s/d {{ $periode->tanggal_selesai->locale('id')->isoFormat('DD MMM YYYY') }}</p>
                     <div class="space-y-1.5 text-slate-600 font-semibold">
                         <p>Jumlah Barang : {{ $totalItems }}</p>
                         <p>Jumlah Barang Sesuai : {{ $totalSesuai }}</p>

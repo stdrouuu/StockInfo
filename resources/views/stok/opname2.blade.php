@@ -37,7 +37,7 @@
 
             <div class="bg-white/10 px-5 py-3 rounded-2xl backdrop-blur-md text-right">
                 <span class="text-xs text-orange-100 font-bold block">Periode Aktif</span>
-                <span class="text-sm font-black">{{ $periode->tanggal_mulai->format('d M Y') }} - {{ $periode->tanggal_selesai->format('d M Y') }}</span>
+                <span class="text-sm font-black">{{ $periode->tanggal_mulai->locale('id')->isoFormat('DD MMM YYYY') }} - {{ $periode->tanggal_selesai->locale('id')->isoFormat('DD MMM YYYY') }}</span>
             </div>
         </div>
         <i class="fas fa-clipboard-check absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
@@ -170,7 +170,7 @@
         action = $event.detail.action;
      ">
     <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mb-8">Input Stok Opname</h2>
-    <form :action="action" method="POST" class="space-y-6">
+    <form :action="action" method="POST" class="space-y-6" onsubmit="sessionStorage.setItem('opname_scroll_pos', window.scrollY)">
         @csrf
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <div class="space-y-2">
@@ -237,4 +237,18 @@
         </div>
     </div>
 </div>
+
+{{-- agar saat tekan button laporkan pada page opname2, setelah refresh page tidak kembali keatas --}}
+@endpush
+
+@push('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const scrollPos = sessionStorage.getItem('opname_scroll_pos');
+        if (scrollPos) {
+            window.scrollTo(0, parseFloat(scrollPos));
+            sessionStorage.removeItem('opname_scroll_pos');
+        }
+    });
+</script>
 @endpush

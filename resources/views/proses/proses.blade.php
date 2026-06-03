@@ -91,18 +91,6 @@
                                     @else
                                         -
                                     @endif
-                                </span>
-                                @if($row->transaksi)
-                                    <span class="text-[10px] text-slate-400 font-bold uppercase mt-1.5 text-center max-w-sm leading-relaxed" title="Nama Barang">
-                                        @foreach($row->transaksi->items as $item)
-                                            {{ $item->produk->nama ?? 'Tidak Ada' }} ({{ $item->qty }} unit){{ !$loop->last ? ', ' : '' }}
-                                        @endforeach
-                                    </span>
-                                @else
-                                    <span class="text-[10px] text-slate-400 font-bold uppercase mt-1.5">
-                                        {{ $row->produk->nama ?? '-' }}
-                                    </span>
-                                @endif
                             </div>
                         </td>
                         <td class="px-6 py-8 text-sm font-semibold text-center">

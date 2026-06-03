@@ -97,13 +97,13 @@
     <div class="overflow-x-auto">
         <table class="w-full text-left min-w-[500px] sm:min-w-0">
         <thead>
-            <tr class="bg-[#1e40af] text-white text-[10px] font-extrabold uppercase tracking-[0.2em]">
-                <th class="px-10 py-4">No</th>
+            <tr class="bg-[#1e40af] text-white text-[10px] font-black uppercase tracking-widest text-left">
+                <th class="px-10 py-4 rounded-tl-2xl">No</th>
                 <th class="px-10 py-4">Gambar</th>
                 <th class="px-10 py-4">SKU</th>
                 <th class="px-10 py-4">Nama Produk</th>
                 <th class="px-10 py-4">Kategori</th>
-                <th class="px-10 py-4 text-right">Stok</th>
+                <th class="px-10 py-4 text-right rounded-tr-2xl">Stok</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-slate-50">

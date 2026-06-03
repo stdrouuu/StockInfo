@@ -159,7 +159,7 @@
                         <tr>
                             <td class="label">Tanggal</td>
                             <td>:</td>
-                            <td class="value">{{ $transaksi->tanggal->format('d F Y') }}</td>
+                            <td class="value">{{ $transaksi->tanggal->locale('id')->isoFormat('DD MMMM YYYY') }}</td>
                         </tr>
                     </table>
                 </td>

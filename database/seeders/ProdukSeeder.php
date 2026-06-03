@@ -165,6 +165,15 @@ class ProdukSeeder extends Seeder
                 'stok_minimum' => 10,
                 'gambar' => 'produk/listrik.jpg',
             ],
+            [
+                'sku' => 'LS-002-LMP',
+                'nama' => 'Lampu LED Philips 12W',
+                'kategori_id' => $listrik,
+                'stok' => 150,
+                'harga' => 45000,
+                'stok_minimum' => 20,
+                'gambar' => 'produk/lampu.jpg',
+            ],
         ];
 
         foreach ($produks as $produk) {

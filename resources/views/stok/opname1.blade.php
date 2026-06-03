@@ -63,7 +63,7 @@
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-6 py-5 text-sm text-slate-400 font-medium">{{ str_pad($index + 1 + ($periodes->currentPage() - 1) * $periodes->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
                         <td class="px-6 py-5 text-sm font-extrabold text-[#2d46b9] leading-relaxed">
-                            {{ $row->tanggal_mulai->format('d M Y') }} s/d {{ $row->tanggal_selesai->format('d M Y') }}
+                            {{ $row->tanggal_mulai->locale('id')->isoFormat('DD MMM YYYY') }} s/d {{ $row->tanggal_selesai->locale('id')->isoFormat('DD MMM YYYY') }}
                         </td>
                         <td class="px-6 py-5 text-sm text-slate-600 font-semibold max-w-xs">
                             <div class="truncate mb-1.5">{{ $row->keterangan }}</div>
@@ -107,7 +107,7 @@
                                  <button type="button" @click="$dispatch('open-edit-modal', { action: '{{ route('stok.updatePeriode', $row->id) }}', keterangan: '{{ addslashes($row->keterangan) }}' })" class="p-2 text-slate-400 hover:text-blue-600 transition-colors" title="Edit Keterangan">
                                      <i class="fas fa-pen text-xs"></i>
                                  </button>
-                                <button type="button" @click="showDeleteModal = true; deleteTarget = 'Periode Opname {{ $row->tanggal_mulai->format('d M Y') }} s/d {{ $row->tanggal_selesai->format('d M Y') }}'; deleteAction = '{{ route('stok.destroyPeriode', $row->id) }}'" class="p-2 text-slate-400 hover:text-rose-600 transition-colors" title="Hapus Periode">
+                                <button type="button" @click="showDeleteModal = true; deleteTarget = 'Periode Opname {{ $row->tanggal_mulai->locale('id')->isoFormat('DD MMM YYYY') }} s/d {{ $row->tanggal_selesai->locale('id')->isoFormat('DD MMM YYYY') }}'; deleteAction = '{{ route('stok.destroyPeriode', $row->id) }}'" class="p-2 text-slate-400 hover:text-rose-600 transition-colors" title="Hapus Periode">
                                     <i class="fas fa-trash-alt text-xs"></i>
                                 </button>
                             </div>

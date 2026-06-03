@@ -124,9 +124,38 @@
                         <td class="px-8 py-7 text-sm font-semibold text-slate-600">
                             {{ strtolower($trx->tipe) === 'masuk' ? ($trx->supplier->nama ?? '-') : $trx->tujuan }}
                         </td>
-                        <td class="px-8 py-7 text-center text-sm font-bold text-slate-800">{{ number_format($trx->total_qty, 0, ',', '.') }}</td>
+
+                        {{-- untuk menampilkan produk apa aja yang masuk dan keluar di kolom total item pada transaksi  --}}
+                        <td class="px-8 py-7 text-center text-sm">
+                            <div x-data="{ open: false }" class="relative inline-block text-center">
+                                <button @click="open = !open" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200/60 rounded-xl text-xs font-bold text-slate-700 transition-colors focus:outline-none">
+                                    <span>{{ number_format($trx->total_qty, 0, ',', '.') }}</span>
+                                    <i class="fas fa-info-circle text-slate-400 text-[10px]"></i>
+                                </button>
+                                <div x-show="open" 
+                                     @click.away="open = false" 
+                                     x-cloak 
+                                     x-transition 
+                                     class="absolute z-20 left-1/2 -translate-x-1/2 mt-2 w-72 bg-white border border-slate-200/80 rounded-2xl shadow-xl p-4 text-left">
+                                    <div class="max-h-48 overflow-y-auto space-y-2.5 divide-y divide-slate-100 custom-scrollbar pr-1">
+                                        @foreach($trx->items as $item)
+                                            <div class="flex items-start justify-between gap-3 text-xs pt-2 first:pt-0">
+                                                <div class="flex-1 min-w-0">
+                                                    <span class="text-slate-700 font-bold block truncate" title="{{ $item->produk->nama ?? 'Produk Terhapus' }}">{{ $item->produk->nama ?? 'Produk Terhapus' }}</span>
+                                                    <span class="text-[10px] text-slate-400 font-medium block mt-0.5">Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}</span>
+                                                </div>
+                                                <div class="text-right shrink-0">
+                                                    <span class="text-slate-800 font-black">{{ $item->qty }}</span>
+                                                    <span class="text-[10px] text-slate-400 font-medium block mt-0.5">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                         <td class="px-8 py-7 text-sm font-black text-slate-800">Rp {{ number_format($trx->total_nilai, 0, ',', '.') }}</td>
-                        <td class="px-8 py-7 text-sm font-medium text-slate-500">{{ $trx->tanggal->format('d M Y') }}</td>
+                        <td class="px-8 py-7 text-sm font-medium text-slate-500">{{ $trx->tanggal->locale('id')->isoFormat('DD MMM YYYY') }}</td>
                         <td class="px-8 py-7 text-sm font-medium text-slate-500 max-w-xs truncate" title="{{ $trx->keterangan ?? '-' }}">
                             {{ $trx->keterangan ?? '-' }}
                         </td>
@@ -389,7 +418,7 @@
                         <template x-if="type === 'Keluar' && item.produk_id && productsList[item.produk_id] && parseInt(item.qty || 0) > productsList[item.produk_id].stok">
                             <div class="text-xs text-rose-600 font-bold flex items-center gap-2 bg-rose-50 p-3.5 rounded-xl border border-rose-100 w-full transition-all duration-300">
                                 <i class="fas fa-exclamation-circle text-sm text-rose-500 shrink-0"></i>
-                                <span>Stok tidak cukup! Stok tersedia saat ini hanya <span class="font-black text-rose-700" x-text="productsList[item.produk_id].stok"></span> unit.</span>
+                                <span>Stok tidak cukup! Stok tersedia saat ini hanya <span class="font-black text-rose-700" x-text="productsList[item.produk_id].stok"></span>.</span>
                             </div>
                         </template>
                     </div>
