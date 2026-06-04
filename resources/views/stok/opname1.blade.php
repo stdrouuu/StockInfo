@@ -36,12 +36,14 @@
     </div>
 
     <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden p-6">
+        @if(auth()->user()->isAdmin())
         <div class="mb-6 flex items-center justify-between">
             <button @click="showModal = true; modalType = 'add-period'" class="bg-[#2d46b9] hover:bg-blue-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-blue-200 transition-all">
                 <i class="fas fa-plus text-xs"></i>
                 Buat Periode
             </button>
         </div>
+        @endif
 
         <div class="overflow-x-auto">
             <table class="w-full text-left">
@@ -104,12 +106,14 @@
                                 <a href="{{ route('stok.opname3', ['periode_id' => $row->id]) }}" class="p-2 text-slate-400 hover:text-emerald-600 transition-colors" title="Lihat Laporan">
                                     <i class="fas fa-chart-line text-sm"></i>
                                 </a>
+                                 @if(auth()->user()->isAdmin())
                                  <button type="button" @click="$dispatch('open-edit-modal', { action: '{{ route('stok.updatePeriode', $row->id) }}', keterangan: '{{ addslashes($row->keterangan) }}' })" class="p-2 text-slate-400 hover:text-blue-600 transition-colors" title="Edit Keterangan">
                                      <i class="fas fa-pen text-xs"></i>
                                  </button>
                                 <button type="button" @click="showDeleteModal = true; deleteTarget = 'Periode Opname {{ $row->tanggal_mulai->locale('id')->isoFormat('DD MMM YYYY') }} s/d {{ $row->tanggal_selesai->locale('id')->isoFormat('DD MMM YYYY') }}'; deleteAction = '{{ route('stok.destroyPeriode', $row->id) }}'" class="p-2 text-slate-400 hover:text-rose-600 transition-colors" title="Hapus Periode">
                                     <i class="fas fa-trash-alt text-xs"></i>
                                 </button>
+                                @endif
                             </div>
                         </td>
                     </tr>

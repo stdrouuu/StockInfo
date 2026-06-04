@@ -16,7 +16,7 @@ class StokOpnameStatusTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        $this->user = User::factory()->create(['role' => 'admin']);
     }
 
     private function createProduk($attributes = [])

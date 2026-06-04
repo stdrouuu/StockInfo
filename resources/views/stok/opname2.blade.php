@@ -67,9 +67,11 @@
                         <p class="text-xs text-blue-600 font-medium">Jika pelaporan stok opname sudah selesai, silahkan sinkronkan stok opname dengan data produk utama.</p>
                     </div>
                 </div>
+                @if(auth()->user()->isAdmin())
                 <button type="button" @click="$dispatch('open-sync-modal', { action: '{{ route('stok.adjustStock', $periode->id) }}', message: 'Apakah Anda yakin ingin menyinkronkan stok untuk periode ini? Tindakan ini akan memperbarui stok produk utama dan mencatat selisihnya sebagai kerugian/penyesuaian operasional.' })" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#2d46b9] hover:bg-blue-800 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/10 hover:shadow-lg transition-all shrink-0">
                     <i class="fas fa-sync-alt"></i> Terapkan & Sinkronkan Stok
                 </button>
+                @endif
             </div>
         @endif
         <table class="w-full text-left">

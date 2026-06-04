@@ -28,6 +28,10 @@ class StokOpnameController extends Controller
      */
     public function storePeriode(Request $request)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $request->validate([
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
@@ -179,6 +183,10 @@ class StokOpnameController extends Controller
      */
     public function adjustStock(Request $request, StokOpnamePeriode $periode)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         // 1. Pastikan belum pernah disesuaikan
         if ($periode->is_adjusted) {
             return redirect()->back()->with('error', 'Stok untuk periode ini sudah disesuaikan sebelumnya.');
@@ -340,6 +348,10 @@ class StokOpnameController extends Controller
      */
     public function updatePeriode(Request $request, StokOpnamePeriode $periode)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $request->validate([
             'keterangan' => 'required|string',
         ]);
@@ -356,6 +368,10 @@ class StokOpnameController extends Controller
      */
     public function destroyPeriode(StokOpnamePeriode $periode)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         try {
             DB::beginTransaction();
 

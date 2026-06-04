@@ -162,10 +162,12 @@
                 </div>
             </div>
             
+            @if(auth()->user()->isAdmin())
             <button @click="$dispatch('open-product-modal', { mode: 'add', action: '{{ route('produk.store') }}' })" class="w-full md:w-auto bg-[#1e40af] hover:bg-blue-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-200 transition-all">
                 <i class="fas fa-plus"></i>
                 <span>Produk Baru</span>
             </button>
+            @endif
         </div>
 
         <!-- Table -->
@@ -180,7 +182,11 @@
                         <th class="px-6 py-4">Kategori</th>
                         <th class="px-6 py-4">Stok</th>
                         <th class="px-6 py-4">Harga</th>
+                        @if(auth()->user()->isAdmin())
                         <th class="px-6 py-4 text-center rounded-tr-2xl">Aksi</th>
+                        @else
+                        <th class="rounded-tr-2xl"></th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -188,9 +194,16 @@
                      <tr class="hover:bg-slate-50/50 transition-colors">
                         <td class="px-6 py-5 text-slate-400 text-sm">{{ str_pad($index + 1 + ($produks->currentPage() - 1) * $produks->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
                         <td class="px-6 py-5">
-                            <div class="w-24 h-24 bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200 shadow-sm flex-shrink-0">
+                            <div class="w-24 h-24 bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200 rounded-2xl shadow-sm flex-shrink-0 group relative cursor-pointer"
+                                 @if ($produk->gambar)
+                                 @click="$dispatch('open-image-modal', { url: '{{ asset('storage/' . $produk->gambar) }}', title: '{{ $produk->nama }}' })"
+                                 title="Klik untuk memperbesar gambar"
+                                 @endif>
                                 @if ($produk->gambar)
-                                    <img src="{{ asset('storage/' . $produk->gambar) }}" class="w-full h-full object-cover">
+                                    <img src="{{ asset('storage/' . $produk->gambar) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200">
+                                    <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <i class="fas fa-search-plus text-white text-lg drop-shadow-md"></i>
+                                    </div>
                                 @else
                                     <i class="far fa-image text-slate-300 text-xl"></i>
                                 @endif
@@ -210,6 +223,7 @@
                             @endif
                         </td>
                         <td class="px-6 py-5 text-sm font-bold text-slate-700">Rp {{ number_format($produk->harga, 0, ',', '.') }}</td>
+                        @if(auth()->user()->isAdmin())
                         <td class="px-6 py-5">
                             <div class="flex justify-center gap-2">
                                 <button @click="$dispatch('open-product-modal', {
@@ -231,6 +245,9 @@
                                 </button>
                             </div>
                         </td>
+                        @else
+                        <td></td>
+                        @endif
                     </tr>
                     @empty
                     <tr>
@@ -530,6 +547,31 @@
                     class="px-8 py-2.5 text-white rounded-xl text-sm font-bold transition-all">Simpan</button>
         </div>
     </form>
+</div>
+
+<!-- Image Viewer Modal Popup -->
+<div x-show="modalType === 'view-image'" 
+     x-data="{ imageUrl: '', imageTitle: '' }"
+     @open-image-modal.window="
+        showModal = true;
+        modalType = 'view-image';
+        imageUrl = $event.detail.url;
+        imageTitle = $event.detail.title;
+     "
+     x-cloak
+     class="space-y-4">
+    <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="text-xs font-black text-slate-800 uppercase tracking-widest" x-text="imageTitle"></h3>
+        <button type="button" @click="showModal = false" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 hover:text-slate-600 hover:bg-slate-200 transition-colors">
+            <i class="fas fa-times text-sm"></i>
+        </button>
+    </div>
+    <div class="w-full flex items-center justify-center overflow-hidden bg-transparent">
+        <img :src="imageUrl" class="w-full max-h-[75vh] object-contain rounded-2xl shadow-xl">
+    </div>
+    <div class="flex justify-end pt-2">
+        <button type="button" @click="showModal = false" class="px-6 py-2 bg-slate-100 text-slate-800 rounded-xl text-xs font-bold hover:bg-slate-200 transition-all">Tutup</button>
+    </div>
 </div>
 @endsection
 

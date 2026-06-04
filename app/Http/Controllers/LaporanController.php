@@ -14,9 +14,21 @@ use App\Exports\ProdukExport;
 use App\Exports\TransaksiExport;
 use App\Exports\StokOpnameExport;
 use Carbon\Carbon;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class LaporanController extends Controller
+class LaporanController extends Controller implements HasMiddleware
 {
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('role:admin'),
+        ];
+    }
+
     /**
      * Display the dynamic reports dashboard.
      */

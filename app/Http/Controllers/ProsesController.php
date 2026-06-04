@@ -72,6 +72,10 @@ class ProsesController extends Controller
 
     public function update(Request $request, Proses $prose)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $request->validate([
             'status' => 'required|in:On-Going,Pending,Completed',
         ]);
@@ -87,6 +91,10 @@ class ProsesController extends Controller
      */
     public function destroy(Proses $prose)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         Proses::where('no_surat_jalan', $prose->no_surat_jalan)->delete();
 
         return redirect()->route('proses.index')->with('success', 'Surat Jalan berhasil dihapus!');

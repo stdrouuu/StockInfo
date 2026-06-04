@@ -168,9 +168,11 @@
                                 @else
                                 <div class="w-8"></div> <!-- Spacer to keep all delete icons perfectly aligned vertically -->
                                 @endif
+                                @if(auth()->user()->isAdmin())
                                 <button @click="showDeleteModal = true; deleteTarget = '{{ $trx->kode }}'; deleteAction = '{{ route('transaksi.destroy', $trx->id) }}'" class="p-2 text-slate-400 hover:text-rose-600 transition-colors" title="Hapus Transaksi">
                                     <i class="far fa-trash-alt"></i>
                                 </button>
+                                @endif
                             </div>
                         </td>
                     </tr>

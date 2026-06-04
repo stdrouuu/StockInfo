@@ -7,7 +7,7 @@
             </div>
             <div>
                 <h1 class="font-extrabold text-lg leading-tight tracking-tight text-slate-800">StockInfo</h1>
-                <p class="text-[10px] text-slate-400 uppercase tracking-[0.1em] font-bold">Admin</p>
+                <p class="text-[10px] text-slate-400 uppercase tracking-[0.1em] font-bold">{{ auth()->user()->role }}</p>
             </div>
         </div>
         <button @click="sidebarOpen = false" class="lg:hidden w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors">
@@ -92,15 +92,23 @@
             </div>
         </div>
 
+        @if(auth()->user()->isAdmin())
         <!-- Laporan -->
         <a href="{{ route('laporan.index') }}" 
            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group"
-           :class="activeMenu === 'laporan' ? 'bg-[#eff6ff] text-[#2563eb]' : 'text-slate-400 hover:bg-slate-50'">
+           :class="activeMenu === 'laporan' ? 'bg-[#eff6ff] text-[#2563eb] shadow-sm' : 'text-slate-400 hover:bg-slate-50'">
             <i class="fas fa-chart-bar w-5 text-lg" :class="activeMenu === 'laporan' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
             <span class="text-sm font-bold" :class="activeMenu === 'laporan' ? '' : 'group-hover:text-slate-600'">Laporan</span>
         </a>
 
-        <!-- Pengaturan -->
+        <!-- Manajemen User -->
+        <a href="{{ route('user.index') }}" 
+           class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group"
+           :class="activeMenu === 'user' ? 'bg-[#eff6ff] text-[#2563eb] shadow-sm' : 'text-slate-400 hover:bg-slate-50'">
+            <i class="fas fa-users w-5 text-lg" :class="activeMenu === 'user' ? 'text-[#2563eb]' : 'group-hover:text-slate-600'"></i>
+            <span class="text-sm font-bold" :class="activeMenu === 'user' ? '' : 'group-hover:text-slate-600'">Manajemen User</span>
+        </a>
+        @endif
     </nav>
 
     <div class="p-4 border-t border-slate-100">

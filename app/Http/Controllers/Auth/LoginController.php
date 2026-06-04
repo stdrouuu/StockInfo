@@ -36,25 +36,16 @@ class LoginController extends Controller
         $username = $request->input('username');
         $password = $request->input('password');
 
-        // Map hardcoded/historical credentials to emails
-        $email = $username;
-        if ($username === 'admin_utama') {
-            $email = 'admin@stockinfo.com';
-        } elseif ($username === 'staff_toko') {
-            $email = 'staff@stockinfo.com';
-        }
-
         // Attempt login using standard Laravel Auth
-        if (Auth::attempt(['email' => $email, 'password' => $password, 'role' => $role])) {
+        if (Auth::attempt(['username' => $username, 'password' => $password, 'role' => $role])) {
             $user = Auth::user();
             
             session([
                 'is_logged_in' => true,
                 'user' => [
                     'name' => $user->name,
-                    'email' => $user->email,
                     'role' => $user->role,
-                    'username' => explode('@', $user->email)[0]
+                    'username' => $user->username
                 ]
             ]);
 

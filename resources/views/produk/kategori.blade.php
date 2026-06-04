@@ -48,10 +48,12 @@
                     <span>Cari</span>
                 </button>
             </form>
+            @if(auth()->user()->isAdmin())
             <button @click="$dispatch('open-category-modal', { mode: 'add', action: '{{ route('kategori.store') }}' })" class="w-full sm:w-auto bg-[#1e40af] hover:bg-blue-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-200 transition-all">
                 <i class="fas fa-plus"></i>
                 <span>Kategori Baru</span>
             </button>
+            @endif
         </div>
 
         <div class="overflow-x-auto">
@@ -60,7 +62,11 @@
                     <tr class="bg-[#0038a8] text-white text-[10px] font-black uppercase tracking-widest text-left">
                         <th class="px-8 py-4 w-20 rounded-tl-2xl">No</th>
                         <th class="px-8 py-4 text-center">Nama Kategori</th>
+                        @if(auth()->user()->isAdmin())
                         <th class="px-8 py-4 text-right w-32 rounded-tr-2xl">Opsi</th>
+                        @else
+                        <th class="rounded-tr-2xl"></th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -68,6 +74,7 @@
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-8 py-5 text-slate-400 text-sm font-medium">{{ str_pad($index + 1 + ($kategoris->currentPage() - 1) * $kategoris->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
                         <td class="px-8 py-5 text-center font-bold text-slate-700 text-sm">{{ $category->nama }}</td>
+                        @if(auth()->user()->isAdmin())
                         <td class="px-8 py-5">
                             <div class="flex justify-end gap-2.5">
                                 <button @click="$dispatch('open-category-modal', {
@@ -82,6 +89,9 @@
                                 </button>
                             </div>
                         </td>
+                        @else
+                        <td></td>
+                        @endif
                     </tr>
                     @empty
                     <tr>

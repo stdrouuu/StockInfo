@@ -131,7 +131,7 @@
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
                         <label class="block text-sm font-bold text-slate-700 uppercase tracking-wider" for="password">
-                            Kata Sandi
+                            Password
                         </label>
                     </div>
                     <div class="relative">

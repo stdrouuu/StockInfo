@@ -47,6 +47,7 @@
         <i class="fas fa-chart-line absolute -bottom-4 -right-2 text-7xl opacity-10"></i>
     </div>
 
+    @if(auth()->user()->isAdmin())
     <div class="bg-[#e47d21] p-7 rounded-[1.5rem] text-white relative overflow-hidden shadow-xl shadow-orange-100">
         <div class="relative z-10">
             <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest mb-2">Nilai Inventaris</p>
@@ -55,6 +56,7 @@
         <div class="absolute top-6 right-6 bg-white/20 p-2.5 rounded-xl"><i class="fas fa-wallet"></i></div>
         <i class="fas fa-briefcase absolute -bottom-4 -right-2 text-7xl opacity-10"></i>
     </div>
+    @endif
 </div>
 
 <!-- Larapex Chart Integrated Container -->

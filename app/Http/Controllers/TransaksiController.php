@@ -168,6 +168,10 @@ class TransaksiController extends Controller
      */
     public function destroy(Transaksi $transaksi)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         try {
             DB::beginTransaction();
 

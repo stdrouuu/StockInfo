@@ -47,10 +47,12 @@
                     </button>
                 </form>
             </div>
+            @if(auth()->user()->isAdmin())
             <button @click="$dispatch('open-supplier-modal', { mode: 'add', action: '{{ route('supplier.store') }}' })" class="w-full sm:w-auto bg-[#1e40af] hover:bg-blue-800 text-white px-6 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-3 shadow-lg shadow-blue-200 transition-all">
                 <i class="fas fa-user-plus"></i>
                 <span>Supplier Baru</span>
             </button>
+            @endif
         </div>
 
         <div class="overflow-x-auto">
@@ -62,7 +64,11 @@
                         <th class="px-6 py-4 text-center">Kontak Person</th>
                         <th class="px-6 py-4">No. Telepon</th>
                         <th class="px-6 py-4">Alamat</th>
+                        @if(auth()->user()->isAdmin())
                         <th class="px-6 py-4 text-center rounded-tr-2xl">Aksi</th>
+                        @else
+                        <th class="rounded-tr-2xl"></th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
@@ -73,6 +79,7 @@
                         <td class="px-6 py-6 text-sm text-slate-600 font-medium text-center leading-relaxed">{!! nl2br(e($supplier->kontak_person)) !!}</td>
                         <td class="px-6 py-6 text-sm text-slate-600 font-medium leading-relaxed">{{ $supplier->telepon }}</td>
                         <td class="px-6 py-6 text-sm text-slate-500 font-medium max-w-xs truncate" title="{{ $supplier->alamat }}">{{ $supplier->alamat }}</td>
+                        @if(auth()->user()->isAdmin())
                         <td class="px-6 py-8">
                             <div class="flex justify-center gap-3">
                                 <button @click="$dispatch('open-supplier-modal', {
@@ -91,6 +98,9 @@
                                 </button>
                             </div>
                         </td>
+                        @else
+                        <td></td>
+                        @endif
                     </tr>
                     @empty
                     <tr>

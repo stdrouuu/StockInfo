@@ -118,9 +118,11 @@
                                 }); showModal = true; modalType = 'detail-proses';" class="p-2 text-slate-400 hover:text-blue-600 transition-colors" title="Detail Proses">
                                     <i class="fas fa-eye"></i>
                                 </button>
+                                @if(auth()->user()->isAdmin())
                                 <button @click="showDeleteModal = true; deleteTarget = '{{ $row->no_surat_jalan }}'; deleteAction = '{{ route('proses.destroy', $row->id) }}'" class="p-2 text-slate-400 hover:text-rose-600 transition-colors" title="Hapus Proses">
                                     <i class="far fa-trash-alt"></i>
                                 </button>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -201,7 +203,8 @@
         </div>
     </div>
 
-    <!-- Status Form Update -->
+    <!-- Status Form Update / View -->
+    @if(auth()->user()->isAdmin())
     <form :action="$store.prosesDetail.action" method="POST" class="space-y-6 pt-4 border-t border-slate-100">
         @csrf
         <input type="hidden" name="_method" value="PUT">
@@ -223,6 +226,17 @@
             <button type="submit" class="px-6 py-2.5 bg-[#2d46b9] text-white rounded-xl text-xs font-black shadow-lg shadow-blue-200 hover:bg-blue-800 transition-all">Simpan Status</button>
         </div>
     </form>
+    @else
+    <div class="space-y-6 pt-4 border-t border-slate-100 text-left">
+        <div class="space-y-2">
+            <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider block">Status Pengiriman</label>
+            <span class="inline-flex px-3.5 py-1.5 bg-blue-50 text-blue-600 rounded-full text-xs font-extrabold uppercase tracking-wide" x-text="$store.prosesDetail.status"></span>
+        </div>
+        <div class="flex justify-end pt-4">
+            <button type="button" @click="showModal = false" class="px-6 py-2.5 bg-slate-100 text-slate-800 rounded-xl text-xs font-bold hover:bg-slate-200 transition-all">Tutup</button>
+        </div>
+    </div>
+    @endif
 </div>
 @endsection
 
