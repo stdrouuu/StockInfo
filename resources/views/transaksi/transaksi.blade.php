@@ -161,7 +161,7 @@
                         </td>
                         <td class="px-8 py-7">
                             <div class="flex items-center justify-center gap-2">
-                                @if(strtolower($trx->tipe) === 'keluar')
+                                @if(strtolower($trx->tipe) === 'keluar' && $trx->tujuan !== 'Kerugian Operasional')
                                 <a href="{{ route('transaksi.cetak-surat-jalan', $trx->id) }}" target="_blank" title="Cetak Surat Jalan & Kirim" class="p-2 text-slate-400 hover:text-emerald-600 transition-colors">
                                     <i class="fas fa-shipping-fast"></i>
                                 </a>

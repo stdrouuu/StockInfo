@@ -199,9 +199,9 @@ class TransaksiController extends Controller
      */
     public function cetakSuratJalan(Transaksi $transaksi)
     {
-        // 1. Pastikan transaksi bertipe keluar
-        if (strtolower($transaksi->tipe) !== 'keluar') {
-            return redirect()->back()->with('error', 'Surat Jalan hanya dapat dicetak untuk Transaksi Keluar!');
+        // 1. Pastikan transaksi bertipe keluar dan bukan Kerugian Operasional (Hasil Stok Opname)
+        if (strtolower($transaksi->tipe) !== 'keluar' || $transaksi->tujuan === 'Kerugian Operasional') {
+            return redirect()->back()->with('error', 'Surat Jalan tidak dapat dicetak untuk tipe transaksi ini!');
         }
 
         // 2. Hubungkan data Proses secara otomatis jika belum dibuat
