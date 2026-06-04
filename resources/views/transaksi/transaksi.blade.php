@@ -255,7 +255,7 @@
 
                 <div class="space-y-2">
                     <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Tanggal Transaksi</label>
-                    <input type="date" name="tanggal" x-model="tanggal" required class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    <input type="date" name="tanggal" x-model="tanggal" :required="step === 1" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                 </div>
                 
                 <div class="space-y-2">
@@ -265,7 +265,7 @@
                     <!-- Supplier select list if Masuk -->
                     <div x-show="type === 'Masuk'" class="flex items-center gap-3">
                         <div class="relative flex-1">
-                            <select name="supplier_id" id="supplier_select" x-model="supplier_id" :required="type === 'Masuk'" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none">
+                            <select name="supplier_id" id="supplier_select" x-model="supplier_id" :required="type === 'Masuk' && step === 1" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none">
                                 <option value="">Pilih Supplier...</option>
                                 @foreach($suppliers as $sup)
                                     <option value="{{ $sup->id }}">{{ $sup->nama }}</option>
@@ -280,10 +280,10 @@
 
                     <!-- Destination Text Input if Keluar -->
                     <div x-show="type === 'Keluar'" class="space-y-4">
-                        <input type="text" name="tujuan" x-model="tujuan" :required="type === 'Keluar'" placeholder="Contoh: Proyek Bendungan A" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                        <input type="text" name="tujuan" x-model="tujuan" placeholder="Contoh: Proyek Bendungan A" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                         
                         <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest block ml-1">Alamat (Khusus Proyek) </label>
-                        <textarea name="alamat" x-model="alamat" :required="type === 'Keluar'" placeholder="Masukkan alamat lengkap pengiriman..." rows="2" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"></textarea>
+                        <textarea name="alamat" x-model="alamat" placeholder="Masukkan alamat lengkap pengiriman..." rows="2" class="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"></textarea>
                     </div>
                 </div>
 
@@ -339,7 +339,7 @@
                                  @click.away="openDropdown = false; if (!item.produk_id) { searchQuery = '' }">
                                  
                                 <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block ml-1">Nama Barang</label>
-                                <input type="hidden" :name="'items[' + index + '][produk_id]'" x-model="item.produk_id" required>
+                                <input type="hidden" :name="'items[' + index + '][produk_id]'" x-model="item.produk_id">
                                 
                                 <div class="relative mt-2">
                                     <input type="text" 
@@ -443,7 +443,7 @@
             <button type="button" @click="showModal = false" class="px-8 py-4 text-slate-400 hover:text-slate-600 text-sm font-bold transition-colors">Batal</button>
             <div class="flex gap-3">
                 <button type="button" x-show="step === 2" @click="step = 1" class="px-8 py-4 bg-slate-100 hover:bg-slate-200 text-slate-800 text-sm font-black rounded-2xl transition-all">Kembali</button>
-                <button type="button" x-show="step === 1" @click="step = 2" class="px-10 py-4 bg-[#2d46b9] hover:bg-blue-800 text-white text-sm font-black rounded-2xl shadow-xl shadow-blue-200 transition-all flex items-center gap-3">
+                <button type="button" x-show="step === 1" @click="if (validateStep1()) step = 2" class="px-10 py-4 bg-[#2d46b9] hover:bg-blue-800 text-white text-sm font-black rounded-2xl shadow-xl shadow-blue-200 transition-all flex items-center gap-3">
                     Lanjutkan
                     <i class="fas fa-arrow-right text-[10px]"></i>
                 </button>
@@ -601,6 +601,19 @@
                 } finally {
                     this.quickSupplierLoading = false;
                 }
+            },
+
+            validateStep1() {
+                // Ambil kontainer step 1
+                const dateEl = document.querySelector('input[name="tanggal"]');
+                const selectEl = document.getElementById('supplier_select');
+
+                if (dateEl && !dateEl.reportValidity()) return false;
+
+                if (this.type === 'Masuk') {
+                    if (selectEl && !selectEl.reportValidity()) return false;
+                }
+                return true;
             },
 
             addItem() {

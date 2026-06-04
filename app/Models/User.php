@@ -45,6 +45,10 @@ class User extends Authenticatable
 
     /**
      * Check if user is admin.
+     * 
+     * Digunakan untuk pengecekan cepat apakah user memiliki role 'admin'.
+     * Sangat berguna di Blade template (misal: @if(auth()->user()->isAdmin())) 
+     * atau di dalam Controller untuk proteksi logic/fitur tambahan.
      */
     public function isAdmin(): bool
     {

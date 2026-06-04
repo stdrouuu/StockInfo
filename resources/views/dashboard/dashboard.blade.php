@@ -47,6 +47,10 @@
         <i class="fas fa-chart-line absolute -bottom-4 -right-2 text-7xl opacity-10"></i>
     </div>
 
+    {{-- 
+        RBAC: Nilai Inventaris disembunyikan dari staff karena berisi data keuangan/aset yang sensitif.
+        Hanya role 'admin' yang dapat melihat nilai total aset toko.
+    --}}
     @if(auth()->user()->isAdmin())
     <div class="bg-[#e47d21] p-7 rounded-[1.5rem] text-white relative overflow-hidden shadow-xl shadow-orange-100">
         <div class="relative z-10">

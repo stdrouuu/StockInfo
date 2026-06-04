@@ -92,6 +92,10 @@
             </div>
         </div>
 
+        {{-- 
+            RBAC: Menu Laporan dan Manajemen User disembunyikan dari Staff.
+            Hanya user dengan role 'admin' yang bisa melihat dan mengakses menu-menu ini.
+        --}}
         @if(auth()->user()->isAdmin())
         <!-- Laporan -->
         <a href="{{ route('laporan.index') }}" 

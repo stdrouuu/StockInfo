@@ -163,7 +163,7 @@
             </div>
             
             @if(auth()->user()->isAdmin())
-            <button @click="$dispatch('open-product-modal', { mode: 'add', action: '{{ route('produk.store') }}' })" class="w-full md:w-auto bg-[#1e40af] hover:bg-blue-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-200 transition-all">
+            <button type="button" @click="$dispatch('open-product-modal', { mode: 'add', action: '{{ route('produk.store') }}' })" class="w-full md:w-auto bg-[#1e40af] hover:bg-blue-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-200 transition-all relative z-10">
                 <i class="fas fa-plus"></i>
                 <span>Produk Baru</span>
             </button>
@@ -364,16 +364,9 @@
             const ctx = canvas.getContext('2d');
             ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
             
-            canvas.toBlob((blob) => {
+            canvas.toBlob(async (blob) => {
                 const file = new File([blob], 'camera_capture_' + Date.now() + '.jpg', { type: 'image/jpeg' });
-                
-                const inputEl = document.getElementById('file-upload');
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                inputEl.files = dataTransfer.files;
-                
-                this.fileName = file.name;
-                this.previewUrl = URL.createObjectURL(file);
+                await this.handleImageUpload(file);
                 this.stopCamera();
             }, 'image/jpeg', 0.9);
         },
@@ -382,6 +375,87 @@
             if (inputEl) inputEl.value = '';
             this.fileName = '';
             this.previewUrl = '';
+        },
+        async handleImageUpload(file) {
+            if (!file) return;
+            try {
+                this.fileName = 'Mengompres...';
+                // Panggil fungsi kompresi gambar
+                const compressedFile = await this.compressImageFile(file);
+                
+                // Masukkan file hasil kompresi ke input file (#file-upload)
+                const inputEl = document.getElementById('file-upload');
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(compressedFile);
+                inputEl.files = dataTransfer.files;
+                
+                this.fileName = compressedFile.name;
+                this.previewUrl = URL.createObjectURL(compressedFile);
+            } catch (err) {
+                console.error('Gagal mengompres gambar, menggunakan file asli:', err);
+                
+                // Fallback: Jika kompresi gagal, tetap gunakan file asli agar user tetap bisa upload
+                const inputEl = document.getElementById('file-upload');
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                inputEl.files = dataTransfer.files;
+                
+                this.fileName = file.name;
+                this.previewUrl = URL.createObjectURL(file);
+            }
+        },
+        
+        // Fungsi utama untuk melakukan resize dan kompresi gambar menggunakan HTML5 Canvas
+        compressImageFile(file, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                // Membaca file gambar sebagai DataURL
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        // Algoritma menghitung dimensi baru secara proporsional (aspect ratio dipertahankan)
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = Math.round((height * maxWidth) / width);
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = Math.round((width * maxHeight) / height);
+                                height = maxHeight;
+                            }
+                        }
+
+                        // Menggambar ulang gambar ke Canvas dengan dimensi baru yang lebih kecil
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Konversi gambar di Canvas menjadi Blob JPEG dengan kualitas yang dioptimalkan (70%)
+                        canvas.toBlob((blob) => {
+                            if (blob) {
+                                // Bungkus kembali blob menjadi objek File siap upload
+                                const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, '') + '_compressed.jpg', {
+                                    type: 'image/jpeg',
+                                    lastModified: Date.now()
+                                });
+                                resolve(compressedFile);
+                            } else {
+                                reject(new Error('Konversi canvas ke blob gagal'));
+                            }
+                        }, 'image/jpeg', quality);
+                    };
+                    img.onerror = (err) => reject(err);
+                };
+                reader.onerror = (err) => reject(err);
+            });
         }
      }"
      @open-product-modal.window="
@@ -485,8 +559,7 @@
                            @change="
                                const file = $event.target.files[0];
                                if (file) {
-                                   fileName = file.name;
-                                   previewUrl = URL.createObjectURL(file);
+                                   handleImageUpload(file);
                                } else {
                                    fileName = '';
                                    previewUrl = gambar ? '/storage/' + gambar : '';
@@ -497,13 +570,7 @@
                            @change="
                                const file = $event.target.files[0];
                                if (file) {
-                                   fileName = file.name;
-                                   previewUrl = URL.createObjectURL(file);
-                                   
-                                   const inputEl = document.getElementById('file-upload');
-                                   const dataTransfer = new DataTransfer();
-                                   dataTransfer.items.add(file);
-                                   inputEl.files = dataTransfer.files;
+                                   handleImageUpload(file);
                                }
                            ">
                     <label for="file-upload" class="w-full h-24 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50 flex items-center justify-center flex-col gap-2 hover:bg-slate-100 transition-all cursor-pointer group">

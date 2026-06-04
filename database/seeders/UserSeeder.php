@@ -13,6 +13,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        // RBAC Role: Admin
         User::create([
             'name'     => 'Administrator',
             'username' => 'admin_utama',
@@ -20,6 +21,7 @@ class UserSeeder extends Seeder
             'role'     => 'admin',
         ]);
 
+        // RBAC Role: Staff
         User::create([
             'name'     => 'Staff Toko 1',
             'username' => 'staff_toko',
