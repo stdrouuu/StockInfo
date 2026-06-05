@@ -105,7 +105,9 @@
                         <th class="px-8 py-6 text-center">Tipe</th>
                         <th class="px-8 py-6">Asal / Tujuan</th>
                         <th class="px-8 py-6 text-center">Total Item</th>
+                        @if(auth()->user()->isAdmin())
                         <th class="px-8 py-6">Total Nilai</th>
+                        @endif
                         <th class="px-8 py-6">Tanggal</th>
                         <th class="px-8 py-6">Keterangan</th>
                         <th class="px-8 py-6 text-center rounded-tr-2xl">Aksi</th>
@@ -142,11 +144,15 @@
                                             <div class="flex items-start justify-between gap-3 text-xs pt-2 first:pt-0">
                                                 <div class="flex-1 min-w-0">
                                                     <span class="text-slate-700 font-bold block truncate" title="{{ $item->produk->nama ?? 'Produk Terhapus' }}">{{ $item->produk->nama ?? 'Produk Terhapus' }}</span>
+                                                    @if(auth()->user()->isAdmin())
                                                     <span class="text-[10px] text-slate-400 font-medium block mt-0.5">Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}</span>
+                                                    @endif
                                                 </div>
                                                 <div class="text-right shrink-0">
                                                     <span class="text-slate-800 font-black">{{ $item->qty }}</span>
+                                                    @if(auth()->user()->isAdmin())
                                                     <span class="text-[10px] text-slate-400 font-medium block mt-0.5">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>
+                                                    @endif
                                                 </div>
                                             </div>
                                         @endforeach
@@ -154,7 +160,9 @@
                                 </div>
                             </div>
                         </td>
+                        @if(auth()->user()->isAdmin())
                         <td class="px-8 py-7 text-sm font-black text-slate-800">Rp {{ number_format($trx->total_nilai, 0, ',', '.') }}</td>
+                        @endif
                         <td class="px-8 py-7 text-sm font-medium text-slate-500">{{ $trx->tanggal->locale('id')->isoFormat('DD MMM YYYY') }}</td>
                         <td class="px-8 py-7 text-sm font-medium text-slate-500 max-w-xs truncate" title="{{ $trx->keterangan ?? '-' }}">
                             {{ $trx->keterangan ?? '-' }}
@@ -178,7 +186,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" class="px-8 py-8 text-center text-slate-400 font-medium">Tidak ada transaksi ditemukan.</td>
+                        <td colspan="{{ auth()->user()->isAdmin() ? 9 : 8 }}" class="px-8 py-8 text-center text-slate-400 font-medium">Tidak ada transaksi ditemukan.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -399,6 +407,7 @@
                             </div>
                             
                             <!-- Harga Satuan -->
+                            @if(auth()->user()->isAdmin())
                             <div class="w-full md:w-48 shrink-0 space-y-2">
                                 <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest block ml-1">Harga Satuan</label>
                                 <div class="relative">
@@ -406,6 +415,9 @@
                                     <input type="number" :name="'items[' + index + '][harga_satuan]'" x-model="item.price" required min="0" class="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                                 </div>
                             </div>
+                            @else
+                            <input type="hidden" :name="'items[' + index + '][harga_satuan]'" x-model="item.price">
+                            @endif
                             
                             <!-- Action / Trash Button -->
                             <div class="flex items-center justify-end md:block shrink-0">
@@ -429,8 +441,10 @@
 
             <div class="p-6 bg-blue-50 rounded-2xl flex items-center justify-between">
                 <div>
+                    @if(auth()->user()->isAdmin())
                     <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Estimasi Total</p>
                     <p class="text-xl font-black text-blue-600" x-text="formatRupiah(calculateTotal())"></p>
+                    @endif
                 </div>
                 <div class="text-right">
                     <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Total Qty</p>
