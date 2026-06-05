@@ -48,7 +48,7 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 {{ auth()->user()->isAdmin() ? 'xl:grid-cols-4' : 'xl:grid-cols-3' }} gap-4 md:gap-6">
         <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-5">
             <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
                 <i class="fas fa-boxes-stacked text-xl"></i>
@@ -76,6 +76,7 @@
                 <p class="text-2xl font-bold">{{ $dalamTransit }}</p>
             </div>
         </div>
+        @if(auth()->user()->isAdmin())
         <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-5">
             <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
                 <i class="fas fa-hand-holding-dollar text-xl"></i>
@@ -85,6 +86,7 @@
                 <p class="text-2xl font-bold">Rp {{ number_format($invValue, 0, ',', '.') }}</p>
             </div>
         </div>
+        @endif
     </div>
     <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden" x-data="{ openFilter: false, openKategori: false }">
         <!-- Table Toolbar -->
