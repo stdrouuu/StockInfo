@@ -24,8 +24,8 @@
     </div>
 
     <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-8 mb-8">
-        <div class="grid grid-cols-12 gap-8 items-center">
-            <div class="col-span-7 space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-7 space-y-6">
                 <div class="space-y-2.5">
                     <p class="text-xl font-bold text-slate-800">Periode : {{ $periode->tanggal_mulai->locale('id')->isoFormat('DD MMM YYYY') }} s/d {{ $periode->tanggal_selesai->locale('id')->isoFormat('DD MMM YYYY') }}</p>
                     <div class="space-y-1.5 text-slate-600 font-semibold">
@@ -69,7 +69,7 @@
                 @endif
                 </div>
 
-            <div class="col-span-5 flex flex-col items-center">
+            <div class="lg:col-span-5 flex flex-col items-center">
                 <!-- Premium Dynamic Pie Chart using CSS conic-gradient -->
                 <div class="relative w-48 h-48 rounded-full flex items-center justify-center shadow-md border-4 border-white" 
                      style="background: conic-gradient(#10b981 0% {{ $sesuaiPercent }}%, #ef4444 {{ $sesuaiPercent }}% 100%)">
@@ -92,32 +92,32 @@
             </div>
         </div>
 
-        <div class="mt-12 overflow-hidden border border-slate-100 rounded-2xl">
-            <table class="w-full text-left">
+        <div class="mt-12 overflow-x-auto border border-slate-100 rounded-2xl">
+            <table class="w-full text-left min-w-[900px]">
                 <thead>
                     <tr class="bg-[#2d46b9] text-white text-[10px] font-black uppercase tracking-widest">
-                        <th class="px-6 py-4">No</th>
-                        <th class="px-6 py-4">Nomor SKU</th>
-                        <th class="px-6 py-4">Produk</th>
-                        <th class="px-6 py-4 text-center">Stok Sistem</th>
-                        <th class="px-6 py-4 text-center">Terlapor</th>
-                        <th class="px-6 py-4 text-center">Selisih</th>
-                        <th class="px-6 py-4 text-center">Status</th>
-                        <th class="px-6 py-4">Keterangan</th>
+                        <th class="px-6 py-4 whitespace-nowrap">No</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Nomor SKU</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Produk</th>
+                        <th class="px-6 py-4 text-center whitespace-nowrap">Stok Sistem</th>
+                        <th class="px-6 py-4 text-center whitespace-nowrap">Terlapor</th>
+                        <th class="px-6 py-4 text-center whitespace-nowrap">Selisih</th>
+                        <th class="px-6 py-4 text-center whitespace-nowrap">Status</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Keterangan</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
                     @forelse($items as $index => $item)
                     <tr class="text-sm hover:bg-slate-50/50">
-                        <td class="px-6 py-5 text-slate-400 font-medium tracking-tight">{{ str_pad($index + 1 + ($items->currentPage() - 1) * $items->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
-                        <td class="px-6 py-5 font-bold text-blue-600 tracking-tighter">{{ $item->produk->sku }}</td>
-                        <td class="px-6 py-5 font-semibold text-slate-700">{{ $item->produk->nama }}</td>
-                        <td class="px-6 py-5 font-black text-slate-800 text-center tracking-tighter">{{ $item->stok_sistem }}</td>
-                        <td class="px-6 py-5 font-medium text-slate-500 text-center tracking-tighter">{{ $item->stok_fisik }}</td>
-                        <td class="px-6 py-5 font-bold text-center tracking-tighter {{ $item->selisih < 0 ? 'text-rose-500' : ($item->selisih > 0 ? 'text-emerald-500' : 'text-slate-600') }}">
+                        <td class="px-6 py-5 text-slate-400 font-medium tracking-tight whitespace-nowrap">{{ str_pad($index + 1 + ($items->currentPage() - 1) * $items->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
+                        <td class="px-6 py-5 font-bold text-blue-600 tracking-tighter whitespace-nowrap">{{ $item->produk->sku }}</td>
+                        <td class="px-6 py-5 font-semibold text-slate-700 whitespace-nowrap">{{ $item->produk->nama }}</td>
+                        <td class="px-6 py-5 font-black text-slate-800 text-center tracking-tighter whitespace-nowrap">{{ $item->stok_sistem }}</td>
+                        <td class="px-6 py-5 font-medium text-slate-500 text-center tracking-tighter whitespace-nowrap">{{ $item->stok_fisik }}</td>
+                        <td class="px-6 py-5 font-bold text-center tracking-tighter whitespace-nowrap {{ $item->selisih < 0 ? 'text-rose-500' : ($item->selisih > 0 ? 'text-emerald-500' : 'text-slate-600') }}">
                             {{ $item->selisih > 0 ? '+' : '' }}{{ $item->selisih }}
                         </td>
-                        <td class="px-6 py-5 text-center">
+                        <td class="px-6 py-5 text-center whitespace-nowrap">
                             @if($item->catatan === 'belum dilaporkan')
                                 <span class="px-3 py-1 bg-amber-50 text-amber-600 text-[10px] font-black rounded-full uppercase">BELUM</span>
                             @elseif($item->selisih === 0)
@@ -126,7 +126,7 @@
                                 <span class="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black rounded-full uppercase font-black font-black">Selisih</span>
                             @endif
                         </td>
-                        <td class="px-6 py-5 text-slate-500 font-medium italic">{{ $item->catatan }}</td>
+                        <td class="px-6 py-5 text-slate-500 font-medium italic whitespace-nowrap">{{ $item->catatan }}</td>
                     </tr>
                     @empty
                     <tr>

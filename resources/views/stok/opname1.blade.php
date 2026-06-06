@@ -45,7 +45,7 @@
         </div>
         @endif
 
-        <div class="overflow-x-auto">
+        <div class="w-full overflow-x-auto" style="-webkit-overflow-scrolling: touch;">
             <table class="w-full text-left">
                 <thead>
                     <tr class="bg-[#2d46b9] text-white text-[10px] font-black uppercase tracking-widest">

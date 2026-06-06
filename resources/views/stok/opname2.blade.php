@@ -74,59 +74,61 @@
                 @endif
             </div>
         @endif
-        <table class="w-full text-left">
-            <thead>
-                <tr class="bg-[#1e40af] text-white text-[10px] font-black uppercase tracking-widest">
-                    <th class="px-6 py-4 rounded-tl-2xl">No</th>
-                    <th class="px-6 py-4">Nomor SKU</th>
-                    <th class="px-6 py-4">Produk</th>
-                    <th class="px-6 py-4 text-center">Stok Sistem</th>
-                    <th class="px-6 py-4 text-center">Stok Fisik Terlapor</th>
-                    <th class="px-6 py-4 text-center">Selisih</th>
-                    <th class="px-6 py-4 text-center">Status</th>
-                    <th class="px-6 py-4 text-center">Keterangan</th>
-                    <th class="px-6 py-4 rounded-tr-2xl text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-50">
-                @forelse($items as $index => $item)
-                <tr class="hover:bg-slate-50/50">
-                    <td class="px-6 py-6 text-sm text-slate-400 font-medium">{{ str_pad($index + 1 + ($items->currentPage() - 1) * $items->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
-                    <td class="px-6 py-6 text-sm font-bold text-blue-700">{{ $item->produk->sku }}</td>
-                    <td class="px-6 py-6 text-sm font-semibold text-slate-600">{{ $item->produk->nama }}</td>
-                    <td class="px-6 py-6 text-sm font-black text-slate-800 text-center">{{ $item->stok_sistem }}</td>
-                    <td class="px-6 py-6 text-sm font-medium text-slate-500 text-center">{{ $item->stok_fisik }}</td>
-                    <td class="px-6 py-6 text-sm font-black text-center {{ $item->selisih < 0 ? 'text-rose-500' : ($item->selisih > 0 ? 'text-emerald-500' : 'text-slate-600') }}">
-                        {{ $item->selisih > 0 ? '+' : '' }}{{ $item->selisih }}
-                    </td>
-                    <td class="px-6 py-6 text-center">
-                        @if($item->catatan === 'belum dilaporkan')
-                            <span class="px-3 py-1 bg-amber-50 text-amber-600 text-[10px] font-black rounded-full uppercase">BELUM</span>
-                        @elseif($item->selisih === 0)
-                            <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-full uppercase">SESUAI</span>
-                        @else
-                            <span class="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black rounded-full uppercase font-black">SELISIH</span>
-                        @endif
-                    </td>
-                    <td class="px-6 py-6 text-sm text-slate-400 text-center italic">{{ $item->catatan }}</td>
-                    <td class="px-6 py-6 text-center">
-                        <button @click="$dispatch('open-report-modal', {
-                            nama: '{{ $item->produk->nama }}',
-                            sku: '{{ $item->produk->sku }}',
-                            stok_sistem: '{{ $item->stok_sistem }}',
-                            stok_fisik: '{{ $item->stok_fisik }}',
-                            catatan: '{{ $item->catatan === 'belum dilaporkan' ? '' : $item->catatan }}',
-                            action: '{{ route('stok.reportItem', $item->id) }}'
-                        })" class="bg-[#1e40af] text-white text-[10px] font-black px-4 py-1.5 rounded-lg uppercase shadow-lg shadow-blue-100 hover:bg-blue-800 transition-colors">Laporkan</button>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="9" class="px-6 py-8 text-center text-slate-400 font-medium">Tidak ada barang dalam periode stok opname ini.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+        <div class="w-full overflow-x-auto" style="-webkit-overflow-scrolling: touch;">
+            <table class="w-full text-left min-w-[900px]">
+                <thead>
+                    <tr class="bg-[#1e40af] text-white text-[10px] font-black uppercase tracking-widest">
+                        <th class="px-6 py-4 rounded-tl-2xl whitespace-nowrap">No</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Nomor SKU</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Produk</th>
+                        <th class="px-6 py-4 text-center whitespace-nowrap">Stok Sistem</th>
+                        <th class="px-6 py-4 text-center whitespace-nowrap">Stok Fisik Terlapor</th>
+                        <th class="px-6 py-4 text-center whitespace-nowrap">Selisih</th>
+                        <th class="px-6 py-4 text-center whitespace-nowrap">Status</th>
+                        <th class="px-6 py-4 text-center whitespace-nowrap">Keterangan</th>
+                        <th class="px-6 py-4 rounded-tr-2xl text-center whitespace-nowrap">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @forelse($items as $index => $item)
+                    <tr class="hover:bg-slate-50/50">
+                        <td class="px-6 py-6 text-sm text-slate-400 font-medium whitespace-nowrap">{{ str_pad($index + 1 + ($items->currentPage() - 1) * $items->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
+                        <td class="px-6 py-6 text-sm font-bold text-blue-700 whitespace-nowrap">{{ $item->produk->sku }}</td>
+                        <td class="px-6 py-6 text-sm font-semibold text-slate-600 whitespace-nowrap">{{ $item->produk->nama }}</td>
+                        <td class="px-6 py-6 text-sm font-black text-slate-800 text-center whitespace-nowrap">{{ $item->stok_sistem }}</td>
+                        <td class="px-6 py-6 text-sm font-medium text-slate-500 text-center whitespace-nowrap">{{ $item->stok_fisik }}</td>
+                        <td class="px-6 py-6 text-sm font-black text-center whitespace-nowrap {{ $item->selisih < 0 ? 'text-rose-500' : ($item->selisih > 0 ? 'text-emerald-500' : 'text-slate-600') }}">
+                            {{ $item->selisih > 0 ? '+' : '' }}{{ $item->selisih }}
+                        </td>
+                        <td class="px-6 py-6 text-center whitespace-nowrap">
+                            @if($item->catatan === 'belum dilaporkan')
+                                <span class="px-3 py-1 bg-amber-50 text-amber-600 text-[10px] font-black rounded-full uppercase">BELUM</span>
+                            @elseif($item->selisih === 0)
+                                <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-full uppercase">SESUAI</span>
+                            @else
+                                <span class="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black rounded-full uppercase">SELISIH</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-6 text-sm text-slate-400 text-center italic whitespace-nowrap">{{ $item->catatan }}</td>
+                        <td class="px-6 py-6 text-center whitespace-nowrap">
+                            <button @click="$dispatch('open-report-modal', {
+                                nama: '{{ $item->produk->nama }}',
+                                sku: '{{ $item->produk->sku }}',
+                                stok_sistem: '{{ $item->stok_sistem }}',
+                                stok_fisik: '{{ $item->stok_fisik }}',
+                                catatan: '{{ $item->catatan === 'belum dilaporkan' ? '' : $item->catatan }}',
+                                action: '{{ route('stok.reportItem', $item->id) }}'
+                            })" class="bg-[#1e40af] text-white text-[10px] font-black px-4 py-1.5 rounded-lg uppercase shadow-lg shadow-blue-100 hover:bg-blue-800 transition-colors">Laporkan</button>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="9" class="px-6 py-8 text-center text-slate-400 font-medium">Tidak ada barang dalam periode stok opname ini.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
         <!-- Pagination -->
         <div class="mt-8 flex items-center justify-between">
