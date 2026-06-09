@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'StockInfo - Admin Panel')</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}?v=2">
     
     <!-- Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -53,7 +54,7 @@
         @include('partials.sidebar')
 
         <!-- Main Content -->
-        <main class="flex-1 lg:ml-64 p-4 sm:p-6 lg:p-10 min-w-0 transition-all duration-300">
+        <main class="flex-1 lg:ml-64 p-3 sm:p-6 lg:p-10 min-w-0 transition-all duration-300">
             <!-- Mobile Header Bar -->
             <div class="flex lg:hidden items-center justify-between bg-white border border-slate-200/60 px-4 py-3 rounded-2xl mb-6 shadow-sm">
                 <div class="flex items-center gap-3">

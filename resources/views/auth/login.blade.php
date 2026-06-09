@@ -42,10 +42,10 @@
             <!-- Welcome Text -->
             <div class="mb-10">
                 <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">
-                    Selamat Datang
+                    Selamat Datang 
                 </h2>
                 <p class="text-slate-500 font-medium">
-                    Masuk untuk mengelola sistem operasional Mitra Bangunan.
+                    Masuk untuk mengelola sistem operasional Toko Bangunan
                 </p>
             </div>
 

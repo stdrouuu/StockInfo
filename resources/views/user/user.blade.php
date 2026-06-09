@@ -3,21 +3,21 @@
 @section('title', 'StockInfo - Manajemen User')
 
 @section('content')
-<div class="space-y-8">
+<div class="space-y-5 sm:space-y-8">
     <!-- Flash Messages -->
     @if(session('success'))
-        <div class="p-4 rounded-xl bg-emerald-50 text-emerald-700 text-sm font-semibold border border-emerald-200">
+        <div class="p-4 rounded-xl bg-emerald-50 text-emerald-700 text-xs sm:text-sm font-semibold border border-emerald-200">
             {{ session('success') }}
         </div>
     @endif
     @if(session('error'))
-        <div class="p-4 rounded-xl bg-rose-50 text-rose-700 text-sm font-semibold border border-rose-200">
+        <div class="p-4 rounded-xl bg-rose-50 text-rose-700 text-xs sm:text-sm font-semibold border border-rose-200">
             {{ session('error') }}
         </div>
     @endif
     @if($errors->any())
-        <div class="p-4 rounded-xl bg-rose-50 text-rose-700 text-sm font-semibold border border-rose-200">
-            <ul class="list-disc pl-5 space-y-1 text-xs">
+        <div class="p-4 rounded-xl bg-rose-50 text-rose-700 text-xs sm:text-sm font-semibold border border-rose-200">
+            <ul class="list-disc pl-5 space-y-1 text-[10px] sm:text-xs">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -25,14 +25,14 @@
         </div>
     @endif
 
-    <div class="bg-[#0891b2] rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-xl shadow-cyan-900/10">
-        <div class="relative z-10 flex items-center gap-4 sm:gap-6">
-            <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md">
-                <i class="fas fa-users text-3xl"></i>
+    <div class="bg-[#0891b2] rounded-2xl sm:rounded-3xl p-4 sm:p-8 text-white relative overflow-hidden shadow-xl shadow-cyan-900/10">
+        <div class="relative z-10 flex items-center gap-3 sm:gap-6">
+            <div class="bg-white/20 p-2.5 sm:p-4 rounded-xl sm:rounded-2xl backdrop-blur-md flex-shrink-0">
+                <i class="fas fa-users text-lg sm:text-3xl"></i>
             </div>
             <div>
-                <h2 class="text-2xl font-bold">Manajemen User</h2>
-                <div class="flex items-center gap-2 text-cyan-100 text-xs mt-1">
+                <h2 class="text-lg sm:text-2xl font-bold">Manajemen User</h2>
+                <div class="flex items-center gap-2 text-cyan-100 text-[9px] sm:text-xs mt-1">
                     <i class="fas fa-home"></i>
                     <i class="fas fa-chevron-right text-[8px]"></i>
                     <span class="font-bold text-white uppercase tracking-wider">Manajemen User</span>
@@ -42,21 +42,21 @@
         <i class="fas fa-users absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
     </div>
 
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden p-6 space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-sm overflow-hidden p-4 sm:p-6 space-y-4 sm:space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
             <div class="flex flex-1 items-center gap-3 w-full sm:max-w-2xl">
                 <!-- Search Form -->
                 <form method="GET" action="{{ route('user.index') }}" class="flex gap-2 flex-1">
                     <div class="relative flex-1">
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Nama atau Username..." class="w-full px-5 py-3 bg-[#f1f5f9] border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Nama atau Username..." class="w-full px-4 py-2 sm:px-5 sm:py-3 bg-[#f1f5f9] border-none rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400">
                     </div>
-                    <button type="submit" class="bg-[#1e40af] hover:bg-blue-800 text-white px-5 sm:px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 transition-all">
+                    <button type="submit" class="bg-[#1e40af] hover:bg-blue-800 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all flex-shrink-0">
                         <i class="fas fa-search"></i>
                         <span>Cari</span>
                     </button>
                 </form>
             </div>
-            <button @click="$dispatch('open-user-modal', { mode: 'add', action: '{{ route('user.store') }}' })" class="w-full sm:w-auto bg-[#1e40af] hover:bg-blue-800 text-white px-6 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-3 shadow-lg shadow-blue-200 transition-all">
+            <button @click="$dispatch('open-user-modal', { mode: 'add', action: '{{ route('user.store') }}' })" class="w-full sm:w-auto bg-[#1e40af] hover:bg-blue-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2.5 shadow-lg shadow-blue-200 transition-all">
                 <i class="fas fa-user-plus"></i>
                 <span>User Baru</span>
             </button>
@@ -65,47 +65,47 @@
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
-                    <tr class="bg-[#2d46b9] text-white text-[10px] font-black uppercase tracking-widest text-left">
-                        <th class="px-6 py-4 rounded-tl-2xl">No</th>
-                        <th class="px-6 py-4">Nama Lengkap</th>
-                        <th class="px-6 py-4">Username</th>
-                        <th class="px-6 py-4 text-center">Hak Akses (Role)</th>
-                        <th class="px-6 py-4 text-center">Tanggal Terdaftar</th>
-                        <th class="px-6 py-4 text-center rounded-tr-2xl">Aksi</th>
+                    <tr class="bg-[#2d46b9] text-white text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-left">
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 rounded-tl-2xl">No</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4">Nama Lengkap</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4">Username</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 text-center">Hak Akses (Role)</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 text-center">Tanggal Terdaftar</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 text-center rounded-tr-2xl">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
                     @forelse($users as $index => $row)
                     <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-6 py-6 text-sm font-bold text-slate-800">{{ str_pad($index + 1 + ($users->currentPage() - 1) * $users->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
-                        <td class="px-6 py-6 text-sm font-extrabold text-slate-800 tracking-tight">{{ $row->name }}</td>
-                        <td class="px-6 py-6 text-sm text-slate-600 font-medium">{{ $row->username }}</td>
-                        <td class="px-6 py-6 text-center">
+                        <td class="px-3 py-3 sm:px-6 sm:py-6 text-xs sm:text-sm font-bold text-slate-800">{{ str_pad($index + 1 + ($users->currentPage() - 1) * $users->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-6 text-xs sm:text-sm font-extrabold text-slate-800 tracking-tight">{{ $row->name }}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-6 text-xs sm:text-sm text-slate-600 font-medium">{{ $row->username }}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-6 text-center">
                             @if($row->role === 'admin')
-                                <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold uppercase tracking-wider border border-blue-100">ADMIN</span>
+                                <span class="px-2 sm:px-3 py-0.5 sm:py-1 bg-blue-50 text-blue-600 rounded-full text-[8px] sm:text-[10px] font-bold uppercase tracking-wider border border-blue-100">ADMIN</span>
                             @else
-                                <span class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-[10px] font-bold uppercase tracking-wider border border-amber-100">STAFF</span>
+                                <span class="px-2 sm:px-3 py-0.5 sm:py-1 bg-amber-50 text-amber-600 rounded-full text-[8px] sm:text-[10px] font-bold uppercase tracking-wider border border-amber-100">STAFF</span>
                             @endif
                         </td>
-                        <td class="px-6 py-6 text-sm text-slate-500 font-medium text-center">{{ $row->created_at->locale('id')->isoFormat('D MMM YYYY, HH:mm') }}</td>
-                        <td class="px-6 py-8">
-                            <div class="flex justify-center gap-3">
+                        <td class="px-3 py-3 sm:px-6 sm:py-6 text-xs sm:text-sm text-slate-500 font-medium text-center">{{ $row->created_at->locale('id')->isoFormat('D MMM YYYY, HH:mm') }}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-8">
+                            <div class="flex justify-center gap-2.5">
                                 <button @click="$dispatch('open-user-modal', {
                                     mode: 'edit',
                                     name: '{{ $row->name }}',
                                     username: '{{ $row->username }}',
                                     role: '{{ $row->role }}',
                                     action: '{{ route('user.update', $row->id) }}'
-                                })" class="p-2 text-slate-400 hover:text-blue-600 transition-colors">
-                                    <i class="far fa-edit text-sm"></i>
+                                })" class="p-1 text-slate-400 hover:text-blue-600 transition-colors">
+                                    <i class="far fa-edit text-xs sm:text-sm"></i>
                                 </button>
                                 @if($row->id !== auth()->id())
-                                <button @click="showDeleteModal = true; deleteTarget = '{{ $row->name }}'; deleteAction = '{{ route('user.destroy', $row->id) }}'" class="p-2 text-slate-400 hover:text-red-600 transition-colors">
-                                    <i class="far fa-trash-alt text-sm"></i>
+                                <button @click="showDeleteModal = true; deleteTarget = '{{ $row->name }}'; deleteAction = '{{ route('user.destroy', $row->id) }}'" class="p-1 text-slate-400 hover:text-red-600 transition-colors">
+                                    <i class="far fa-trash-alt text-xs sm:text-sm"></i>
                                 </button>
                                 @else
-                                <span class="p-2 text-slate-200 cursor-not-allowed" title="Anda tidak dapat menghapus akun Anda sendiri">
-                                    <i class="far fa-trash-alt text-sm"></i>
+                                <span class="p-1 text-slate-200 cursor-not-allowed" title="Anda tidak dapat menghapus akun Anda sendiri">
+                                    <i class="far fa-trash-alt text-xs sm:text-sm"></i>
                                 </span>
                                 @endif
                             </div>
@@ -113,7 +113,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-8 text-center text-slate-400 font-medium">Tidak ada user ditemukan.</td>
+                        <td colspan="6" class="px-3 py-6 sm:px-6 sm:py-8 text-center text-slate-400 font-medium text-xs sm:text-sm">Tidak ada user ditemukan.</td>
                     </tr>
                     @endforelse
                 </tbody>
