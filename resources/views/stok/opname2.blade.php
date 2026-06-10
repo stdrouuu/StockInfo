@@ -2,7 +2,7 @@
 
 @section('title', 'StockInfo - Form Input Stok Opname')
 
-@@section('content')
+@section('content')
 <div class="space-y-5 sm:space-y-8">
     <!-- Flash Messages -->
     @if(session('success'))
@@ -204,7 +204,6 @@
         </div>
     </form>
 </div>
-@endsection
 
 @push('modals')
 <!-- Local Sync Confirmation Modal -->
