@@ -1,20 +1,36 @@
-<h1 align="center">
+<h1 align="left">
   stockInfo - Inventory Management System
 </h1>
 
-<p align="center">
+<p align="left">
   A full-featured web-based inventory management system for building materials stores and warehouses, built with Laravel 13 and Tailwind CSS v4, equipped with Role-Based Access Control (RBAC), multi-format reporting exports, stock opname management, and an interactive analytics dashboard.
 </p>
 
  ![loginTB.png](https://github.com/user-attachments/assets/f2c06071-9b09-4787-ae74-35feb4909c17)
 
-<p align="center">
+<p align="left">
   <img src="https://img.shields.io/badge/Laravel-13.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" />
   <img src="https://img.shields.io/badge/PHP-8.3-777BB4?style=for-the-badge&logo=php&logoColor=white" />
   <img src="https://img.shields.io/badge/TailwindCSS-v4-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white" />
   <img src="https://img.shields.io/badge/Vite-8.x-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" />
 </p>
+
+---
+
+## Table of Contents
+
+- [About the Project](#about-the-project)
+- [Development Team](#development-team)
+- [Core Features](#core-features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Database Schema](#database-schema)
+- [User Roles & RBAC](#user-roles--rbac)
+- [Installation & Setup](#installation--setup)
+- [Configuration](#configuration)
+- [Default Credentials](#default-credentials)
+- [Available Scripts](#available-scripts)
 
 ---
 
