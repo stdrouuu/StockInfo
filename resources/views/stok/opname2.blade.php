@@ -204,6 +204,7 @@
         </div>
     </form>
 </div>
+@endsection
 
 @push('modals')
 <!-- Local Sync Confirmation Modal -->
