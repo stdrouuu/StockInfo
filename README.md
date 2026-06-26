@@ -1,5 +1,5 @@
 <h1 align="left">
-  stockInfo - Inventory Management System
+  stockInfo — Buildings Material Store & Warehouse Inventory Management System
 </h1>
 
 <p align="left">
