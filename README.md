@@ -36,18 +36,9 @@
 
 ## About the Project
 
-**stockInfo** was built as a real client project. Our team was approached by a building materials warehouse that needed a proper digital inventory management system to replace their manual stock-tracking process. The client required a solution that could handle daily stock movements, manage their supplier relationships, track physical stock counts, and produce business reports — all within a single platform accessible by both management and warehouse staff.
+**stockInfo** is a web-based inventory management system built with Laravel 13, designed specifically for building materials stores and warehouses. It covers the full inventory workflow — stock transactions (in & out), product and category management, supplier records, stock opname (physical count), and multi-format business report exports.
 
-We designed and developed **stockInfo** from the ground up specifically to meet those needs. The system covers the full inventory workflow: recording inbound and outbound stock transactions, managing product catalogs with categories and minimum stock thresholds, running structured stock opname (physical count) periods, and generating PDF and Excel reports for business review.
-
-The system enforces a strict **Role-Based Access Control (RBAC)** policy that separates operational duties between **Admin** (management) and **Staff** (warehouse workers) — ensuring that sensitive financial data and critical inventory adjustments remain under management control, while staff can still carry out their day-to-day operational tasks without friction.
-
-Key design principles:
-- **Built for the Client** — Every feature was defined based on direct requirements from the building materials warehouse client.
-- **Data Integrity First** — Sensitive operations (stock adjustment, deletions, reporting) are locked behind the Admin role.
-- **Audit Trail** — All transactions are recorded and tied to the user who created them.
-- **Multi-format Export** — Business reports can be exported to PDF and Excel for client reporting needs.
-- **Visual Analytics** — The dashboard includes dynamic charts filterable by day, week, and month so management can monitor stock movements at a glance.
+This system was developed as a real client project for a building materials warehouse looking to digitalize their manual inventory process. It implements Role-Based Access Control (RBAC) to separate management (Admin) and operational (Staff) access, ensuring data integrity while keeping daily operations smooth.
 
 ---
 
@@ -55,7 +46,7 @@ Key design principles:
 
 | Name | Role | Responsibilities |
 |---|---|---|
-| **Brandon Jeremiah Sutedja** | Project Manager | Project planning, sprint management, client requirements gathering, defining system scope and feature direction for the client, leading the team on system design decisions, Blade templating, Tailwind CSS styling, frontend interactivity |
+| **Brandon Jeremiah Sutedja** | Project Manager | End-to-end team leadership, project planning, sprint management, defining system scope and feature direction for the client, system design decisions, Blade templating, Tailwind styling |
 | **Cristian Dion** | Backend Developer | Laravel MVC architecture, business logic, Eloquent ORM, API routes, authentication system, session management |
 | **Gaddiel Abiyr Nesher Sitorus** | Export Feature & QC/QA | Excel & PDF export implementation (`maatwebsite/excel`, `barryvdh/laravel-dompdf`), quality control, functional testing, bug reporting |
 | **Owen Antony** | RBAC Implementation | Role-Based Access Control middleware (`CheckRole`), route protection, role-specific view logic, permission enforcement |
