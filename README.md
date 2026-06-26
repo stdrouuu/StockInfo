@@ -118,16 +118,20 @@ This system was developed as a real client project for a building materials ware
 |---|---|---|
 | **PHP** | ^8.3 | Server-side language |
 | **Laravel** | ^13.0 | MVC web framework |
-| **Laravel Tinker** | ^3.0 | REPL for debugging |
+| **Laravel Migrations** | Built-in | Database schema version control & migrations |
 | **maatwebsite/excel** | ^3.1 | Excel export (`.xlsx`) via PhpSpreadsheet |
 | **barryvdh/laravel-dompdf** | ^3.1 | PDF generation |
 | **arielmejiadev/larapex-charts** | ^10.0 | Server-side chart data builder (ApexCharts) |
+| **Laravel Tinker** | ^3.0 | REPL for debugging |
 
 ### Frontend
 | Technology | Version | Purpose |
 |---|---|---|
-| **Blade** | Laravel built-in | Server-side templating engine |
+| **Blade** | Built-in | Server-side templating engine |
 | **Tailwind CSS** | ^4.0 | Utility-first CSS framework |
+| **Alpine.js** | CDN | Reactive UI components (modals, category filters, dropdowns) |
+| **HTML MediaDevices API** | Web API | Camera access via `getUserMedia` for barcode scanning |
+| **FA Icons** | CDN | Font Awesome icon set |
 | **Vite** | ^8.0 | Frontend asset bundler & dev server |
 | **Axios** | ^1.11.0 | HTTP client for AJAX requests |
 | **ApexCharts** | CDN | Interactive JavaScript charts |
@@ -141,9 +145,10 @@ This system was developed as a real client project for a building materials ware
 | **Faker** | ^1.23 | Test data generation |
 | **Concurrently** | ^9.0.1 | Run multiple dev processes in parallel |
 
-### Database
-- **SQLite** (default for development) — zero-config setup
-- Switchable to **MySQL/MariaDB** via `.env` configuration
+### Database & Web Server
+- **MySQL** — Primary Database Management System (DBMS)
+- **SQLite** — Switchable fallback database option for local development
+- **Laragon** — Local WAMP web server environment for development
 
 ---
 
@@ -560,4 +565,4 @@ This project is licensed under the **MIT License**.
 ---
 
 <p align="center">Built by the stockInfo Team</p>
-<p align="center">Brandon Jeremiah Sutedja &bull; Cristian Dion &bull; Gaddiel &bull; Owen</p>
+<p align="center">Brandon &bull; Dion &bull; Gaddiel &bull; Owen</p>
