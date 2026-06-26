@@ -46,7 +46,7 @@ This system was developed as a real client project for a building materials ware
 
 | Name | Role | Responsibilities |
 |---|---|---|
-| **Brandon Jeremiah Sutedja** | Project Manager | End-to-end team leadership, project planning, sprint management, defining system scope and feature direction for the client, system design decisions, Blade templating, Tailwind styling |
+| **Brandon Jeremiah Sutedja** | Project Manager | End-to-end team lead, project planning, defining system scope and features, repository setup and collaboration workflow, tech stack selection, Blade templating, Tailwind styling |
 | **Cristian Dion** | Backend Developer | Laravel MVC architecture, business logic, Eloquent ORM, API routes, authentication system, session management |
 | **Gaddiel Abiyr Nesher Sitorus** | Export Feature & QC/QA | Excel & PDF export implementation (`maatwebsite/excel`, `barryvdh/laravel-dompdf`), quality control, functional testing, bug reporting |
 | **Owen Antony** | RBAC Implementation | Role-Based Access Control middleware (`CheckRole`), route protection, role-specific view logic, permission enforcement |
