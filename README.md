@@ -1,62 +1,556 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<h1 align="center">
+  stockInfo - Inventory Management System
+</h1>
+
+<p align="center">
+  A full-featured web-based inventory management system for building materials stores and warehouses, built with Laravel 13 and Tailwind CSS v4, equipped with Role-Based Access Control (RBAC), multi-format reporting exports, stock opname management, and an interactive analytics dashboard.
+</p>
 
  ![loginTB.png](https://github.com/user-attachments/assets/f2c06071-9b09-4787-ae74-35feb4909c17)
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://img.shields.io/badge/Laravel-13.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" />
+  <img src="https://img.shields.io/badge/PHP-8.3-777BB4?style=for-the-badge&logo=php&logoColor=white" />
+  <img src="https://img.shields.io/badge/TailwindCSS-v4-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white" />
+  <img src="https://img.shields.io/badge/Vite-8.x-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" />
 </p>
 
+---
 
+## About the Project
 
-## About Laravel (v.12)
+**stockInfo** was built as a real client project. Our team was approached by a building materials warehouse that needed a proper digital inventory management system to replace their manual stock-tracking process. The client required a solution that could handle daily stock movements, manage their supplier relationships, track physical stock counts, and produce business reports — all within a single platform accessible by both management and warehouse staff.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+We designed and developed **stockInfo** from the ground up specifically to meet those needs. The system covers the full inventory workflow: recording inbound and outbound stock transactions, managing product catalogs with categories and minimum stock thresholds, running structured stock opname (physical count) periods, and generating PDF and Excel reports for business review.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The system enforces a strict **Role-Based Access Control (RBAC)** policy that separates operational duties between **Admin** (management) and **Staff** (warehouse workers) — ensuring that sensitive financial data and critical inventory adjustments remain under management control, while staff can still carry out their day-to-day operational tasks without friction.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Key design principles:
+- **Built for the Client** — Every feature was defined based on direct requirements from the building materials warehouse client.
+- **Data Integrity First** — Sensitive operations (stock adjustment, deletions, reporting) are locked behind the Admin role.
+- **Audit Trail** — All transactions are recorded and tied to the user who created them.
+- **Multi-format Export** — Business reports can be exported to PDF and Excel for client reporting needs.
+- **Visual Analytics** — The dashboard includes dynamic charts filterable by day, week, and month so management can monitor stock movements at a glance.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Development Team
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Name | Role | Responsibilities |
+|---|---|---|
+| **Brandon Jeremiah Sutedja** | Project Manager | Project planning, sprint management, client requirements gathering, defining system scope and feature direction for the client, leading the team on system design decisions, Blade templating, Tailwind CSS styling, frontend interactivity |
+| **Cristian Dion** | Backend Developer | Laravel MVC architecture, business logic, Eloquent ORM, API routes, authentication system, session management |
+| **Gaddiel Abiyr Nesher Sitorus** | Export Feature & QC/QA | Excel & PDF export implementation (`maatwebsite/excel`, `barryvdh/laravel-dompdf`), quality control, functional testing, bug reporting |
+| **Owen Antony** | RBAC Implementation | Role-Based Access Control middleware (`CheckRole`), route protection, role-specific view logic, permission enforcement |
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## Core Features
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Authentication & Security
+- Username/password login with session-based authentication
+- No email required — uses username as the unique identifier
+- Automatic redirect to login for unauthenticated users
+- RBAC middleware (`CheckRole`) that returns HTTP 403 for unauthorized access attempts
+- Users can update their own password at any time
 
-```bash
-composer require laravel/boost --dev
+### Interactive Dashboard
+- Real-time KPI cards: Total Stock Units, Total SKUs, Low Stock Alerts, Stock In/Out quantities, and Inventory Asset Value
+- Inventory asset value (financial data) is **hidden from Staff** and only visible to Admin
+- Dynamic bar chart (Inbound vs. Outbound) filterable by **Daily**, **Weekly**, and **Monthly** views
+- Low stock alert panel showing the 5 most critical products
 
-php artisan boost:install
+### Product & Category Management
+- Full CRUD for products with SKU, name, category, price, stock, minimum stock threshold, and product image
+- Full CRUD for product categories
+- Low stock indicator based on the configurable minimum stock threshold
+- **Admin Only**: Create, edit, delete products and categories
+
+### Stock Transactions (In & Out)
+- Record stock inbound (`masuk`) and outbound (`keluar`) transactions
+- Multi-item transactions with per-item quantity, unit price, and subtotal calculation
+- Transaction status: `diproses` (processing), `selesai` (completed), `dibatalkan` (cancelled)
+- Print delivery note (Surat Jalan) as a formatted document
+- **Admin Only**: Delete transactions
+
+### Internal Process Tracking
+- Log internal processes linked to transactions (e.g., returns, damaged goods)
+- Process status tracking: `pending`, `on-going`, `completed`
+- **Admin Only**: Edit and delete process records
+
+### Supplier Management
+- Store complete supplier profiles: name, contact person, phone, email, and address
+- Suppliers are referenced in inbound transactions
+- **Admin Only**: Create, edit, delete suppliers
+
+### Stock Opname (Physical Count)
+- Create stock opname **periods** with start/end dates
+- Staff inputs physical count per product item during active periods
+- System auto-calculates **discrepancy** (selisih) between system stock and physical count
+- Period statuses: `aktif` / `tidak_aktif` (operational), and `belum_lengkap` / `lengkap` / `selesai` (reporting)
+- **Admin Only**: Create/edit/delete periods and **approve stock adjustment** (adjust stock to match physical count)
+
+### Reports & Exports *(Admin Only)*
+- **Product Report** — Export to Excel (`.xlsx`)
+- **Transaction Report** — Export to PDF or Excel with filters for transaction type and date range
+- **Stock Opname Report** — Export to PDF or Excel per selected period
+- All exports are timestamped in their filename
+
+### User Management *(Admin Only)*
+- Create, edit, and delete system users
+- Assign roles (`admin` or `staff`) to users
+- All users can update their own passwords
+
+---
+
+## Tech Stack
+
+### Backend
+| Technology | Version | Purpose |
+|---|---|---|
+| **PHP** | ^8.3 | Server-side language |
+| **Laravel** | ^13.0 | MVC web framework |
+| **Laravel Tinker** | ^3.0 | REPL for debugging |
+| **maatwebsite/excel** | ^3.1 | Excel export (`.xlsx`) via PhpSpreadsheet |
+| **barryvdh/laravel-dompdf** | ^3.1 | PDF generation |
+| **arielmejiadev/larapex-charts** | ^10.0 | Server-side chart data builder (ApexCharts) |
+
+### Frontend
+| Technology | Version | Purpose |
+|---|---|---|
+| **Blade** | Laravel built-in | Server-side templating engine |
+| **Tailwind CSS** | ^4.0 | Utility-first CSS framework |
+| **Vite** | ^8.0 | Frontend asset bundler & dev server |
+| **Axios** | ^1.11.0 | HTTP client for AJAX requests |
+| **ApexCharts** | CDN | Interactive JavaScript charts |
+
+### Development Tools
+| Tool | Version | Purpose |
+|---|---|---|
+| **Laravel Pail** | ^1.2.5 | Real-time log tailing |
+| **Laravel Pint** | ^1.27 | PHP code style fixer |
+| **PHPUnit** | ^12.5 | Unit & feature testing |
+| **Faker** | ^1.23 | Test data generation |
+| **Concurrently** | ^9.0.1 | Run multiple dev processes in parallel |
+
+### Database
+- **SQLite** (default for development) — zero-config setup
+- Switchable to **MySQL/MariaDB** via `.env` configuration
+
+---
+
+## Project Structure
+
+```
+stockInfo/
+├── app/
+│   ├── Exports/                    # Excel export classes (Maatwebsite)
+│   │   ├── ProdukExport.php        # Product list export
+│   │   ├── TransaksiExport.php     # Transaction report export
+│   │   └── StokOpnameExport.php    # Stock opname report export
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Auth/
+│   │   │   │   └── LoginController.php
+│   │   │   ├── DashboardController.php     # KPIs, charts, low stock alerts
+│   │   │   ├── KategoriController.php      # Category CRUD
+│   │   │   ├── LaporanController.php       # Report & export hub
+│   │   │   ├── PengaturanController.php    # App settings
+│   │   │   ├── ProdukController.php        # Product CRUD + image upload
+│   │   │   ├── ProsesController.php        # Internal process tracking
+│   │   │   ├── StokOpnameController.php    # Full stock opname workflow
+│   │   │   ├── SupplierController.php      # Supplier CRUD
+│   │   │   ├── TransaksiController.php     # Stock in/out transactions
+│   │   │   └── UserController.php          # User & profile management
+│   │   └── Middleware/
+│   │       └── CheckRole.php               # RBAC middleware
+│   ├── Models/
+│   │   ├── User.php
+│   │   ├── Produk.php
+│   │   ├── Kategori.php
+│   │   ├── Supplier.php
+│   │   ├── Transaksi.php
+│   │   ├── TransaksiItem.php
+│   │   ├── Proses.php
+│   │   ├── StokOpnamePeriode.php
+│   │   └── StokOpnameItem.php
+│   └── Providers/
+├── database/
+│   ├── migrations/                 # All table schema definitions
+│   └── seeders/                    # Default data seeders
+│       ├── UserSeeder.php          # Seeds default admin & staff accounts
+│       ├── KategoriSeeder.php
+│       ├── ProdukSeeder.php
+│       ├── SupplierSeeder.php
+│       ├── TransaksiSeeder.php
+│       ├── StokOpnameSeeder.php
+│       └── ProsesSeeder.php
+├── resources/
+│   └── views/
+│       ├── auth/                   # Login page
+│       ├── dashboard/              # Main dashboard view
+│       ├── produk/                 # Product & category views
+│       ├── transaksi/              # Transaction views + surat jalan
+│       ├── supplier/               # Supplier views
+│       ├── proses/                 # Internal process views
+│       ├── stok/                   # Stock opname views (opname1/2/3)
+│       ├── laporan/                # Report views + PDF templates
+│       ├── user/                   # User management views
+│       ├── layouts/                # Base layout templates
+│       └── partials/               # Reusable partial components
+├── routes/
+│   └── web.php                     # All application routes with RBAC annotations
+├── public/
+├── .env.example                    # Environment variable template
+├── composer.json                   # PHP dependencies
+├── package.json                    # Node.js dependencies
+└── vite.config.js                  # Vite build configuration
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## Database Schema
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+The system uses **11 database tables**:
 
-## Code of Conduct
+```
+users
+├── id              (PK)
+├── name            string
+├── username        string (unique)
+├── password        string (hashed)
+├── role            enum: admin | staff
+├── remember_token
+└── timestamps
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+kategoris
+├── id              (PK)
+├── nama            string(100) (unique)
+└── timestamps
 
-## Security Vulnerabilities
+produks
+├── id              (PK)
+├── sku             string(50) (unique)
+├── nama            string(255)
+├── kategori_id     (FK → kategoris)
+├── stok            integer (default: 0)
+├── harga           decimal(15,2) (default: 0)
+├── stok_minimum    integer (default: 0)
+├── gambar          string (nullable)
+└── timestamps
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+suppliers
+├── id              (PK)
+├── nama            string(255)
+├── kontak_person   string(100)
+├── telepon         string(20)
+├── email           string(255) (nullable)
+├── alamat          text
+└── timestamps
+
+transaksis
+├── id              (PK)
+├── kode            string(50) (unique)
+├── tipe            enum: masuk | keluar
+├── supplier_id     (FK → suppliers, nullable)
+├── tujuan          string(255) (nullable)
+├── alamat          text (nullable)
+├── tanggal         date
+├── keterangan      text (nullable)
+├── status          enum: diproses | selesai | dibatalkan
+├── total_nilai     decimal(15,2)
+├── user_id         (FK → users)
+└── timestamps
+
+transaksi_items
+├── id              (PK)
+├── transaksi_id    (FK → transaksis)
+├── produk_id       (FK → produks)
+├── qty             integer
+├── harga_satuan    decimal(15,2)
+├── subtotal        decimal(15,2)
+└── timestamps
+
+proses
+├── id              (PK)
+├── transaksi_id    (FK → transaksis, nullable)
+├── produk_id       (FK → produks)
+├── no_surat_jalan  string(50)
+├── status          enum: on-going | pending | completed
+├── kategori_proses string(100)
+├── keterangan      text (nullable)
+└── timestamps
+
+stok_opname_periodes
+├── id                  (PK)
+├── tanggal_mulai       date
+├── tanggal_selesai     date
+├── keterangan          text (nullable)
+├── status_kerja        enum: aktif | tidak_aktif
+├── status_pelaporan    enum: belum_lengkap | lengkap | selesai
+├── is_adjusted         boolean (default: false)
+├── user_id             (FK → users)
+└── timestamps
+
+stok_opname_items
+├── id              (PK)
+├── periode_id      (FK → stok_opname_periodes)
+├── produk_id       (FK → produks)
+├── stok_sistem     integer (default: 0)
+├── stok_fisik      integer (default: 0)
+├── selisih         integer (default: 0)
+├── catatan         text (nullable)
+└── timestamps
+
+sessions                (Laravel built-in session table)
+password_reset_tokens   (Laravel built-in)
+```
+
+### Entity Relationship Overview
+
+```
+users ──< transaksis >──< transaksi_items >── produks ──> kategoris
+users ──< stok_opname_periodes >──< stok_opname_items >── produks
+transaksis ──< proses >── produks
+transaksis ──> suppliers
+```
+
+---
+
+## User Roles & RBAC
+
+The system implements two user roles enforced by the `CheckRole` middleware and route-level protection.
+
+### Role Comparison Matrix
+
+| Feature / Action | Admin | Staff |
+|---|:---:|:---:|
+| **Dashboard** | Yes - Full (incl. asset value) | Yes - Limited (asset value hidden) |
+| **Products** — View | Yes | Yes |
+| **Products** — Create / Edit / Delete | Yes | No |
+| **Categories** — View | Yes | Yes |
+| **Categories** — Create / Edit / Delete | Yes | No |
+| **Transactions** — View / Create | Yes | Yes |
+| **Transactions** — Print Delivery Note | Yes | Yes |
+| **Transactions** — Delete | Yes | No |
+| **Suppliers** — View | Yes | Yes |
+| **Suppliers** — Create / Edit / Delete | Yes | No |
+| **Internal Processes** — View / Create | Yes | Yes |
+| **Internal Processes** — Edit / Delete | Yes | No |
+| **Stock Opname** — View Periods & Input | Yes | Yes |
+| **Stock Opname** — Create / Edit / Delete Period | Yes | No |
+| **Stock Opname** — Approve Stock Adjustment | Yes | No |
+| **Reports & Exports** (PDF/Excel) | Yes | No |
+| **App Settings** | Yes | No |
+| **User Management** | Yes | No |
+| **Update Own Password** | Yes | Yes |
+
+### How RBAC Works
+
+The `CheckRole` middleware (`app/Http/Middleware/CheckRole.php`) acts as a request gatekeeper:
+
+```php
+// Example route protection
+Route::middleware(['role:admin'])->group(function () {
+    Route::delete('/{produk}', [ProdukController::class, 'destroy']);
+    // ...other admin-only routes
+});
+```
+
+If a Staff user attempts to access an Admin-only route, the middleware immediately aborts with **HTTP 403 Forbidden**.
+
+---
+
+## Installation & Setup
+
+### Prerequisites
+
+Ensure the following are installed on your machine:
+
+| Requirement | Minimum Version |
+|---|---|
+| PHP | 8.3+ |
+| Composer | 2.x |
+| Node.js | 18+ |
+| npm | 9+ |
+| SQLite extension | (for default setup) |
+
+> **Using Laragon?** Laragon bundles PHP, MySQL, and SQLite out of the box — no additional setup required.
+
+---
+
+### Quick Setup (Recommended)
+
+A `setup` Composer script is provided that automates all installation steps in one command:
+
+```bash
+composer run setup
+```
+
+This single command will:
+1. Install all PHP dependencies (`composer install`)
+2. Copy `.env.example` to `.env` (if not already present)
+3. Generate the application encryption key (`php artisan key:generate`)
+4. Run all database migrations (`php artisan migrate --force`)
+5. Install Node.js dependencies (`npm install`)
+6. Build frontend assets (`npm run build`)
+
+---
+
+### Manual Step-by-Step Setup
+
+If you prefer to run each step manually:
+
+**1. Clone the repository**
+```bash
+git clone <repository-url> stockInfo
+cd stockInfo
+```
+
+**2. Install PHP dependencies**
+```bash
+composer install
+```
+
+**3. Create environment file**
+```bash
+cp .env.example .env
+```
+
+**4. Generate application key**
+```bash
+php artisan key:generate
+```
+
+**5. Configure your database** *(see [Configuration](#configuration))*
+
+**6. Run database migrations**
+```bash
+php artisan migrate
+```
+
+**7. Seed default data** *(optional but recommended)*
+```bash
+php artisan db:seed
+```
+
+**8. Install Node.js dependencies**
+```bash
+npm install
+```
+
+**9. Build frontend assets**
+```bash
+npm run build
+```
+
+**10. Start the development server**
+```bash
+php artisan serve
+```
+
+Visit: **http://localhost:8000**
+
+---
+
+## Configuration
+
+All configuration is managed through the `.env` file. Copy `.env.example` and adjust as needed.
+
+### Application Settings
+
+```env
+APP_NAME=stockInfo
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://localhost
+```
+
+### Database Configuration
+
+**Option A — SQLite (Default, zero-config)**
+```env
+DB_CONNECTION=sqlite
+# The SQLite file will be auto-created at database/database.sqlite
+```
+
+**Option B — MySQL / MariaDB**
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=stockinfo
+DB_USERNAME=root
+DB_PASSWORD=your_password
+```
+
+### Session Configuration
+
+```env
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+```
+
+---
+
+## Default Credentials
+
+After running `php artisan db:seed`, the following accounts are available:
+
+| Role | Username | Password |
+|---|---|---|
+| **Admin** | `admin_utama` | `admin123` |
+| **Staff** | `staff_toko` | `staff123` |
+
+> **Security Warning:** Change these credentials immediately in any production environment.
+
+---
+
+## Available Scripts
+
+### Composer Scripts
+
+| Command | Description |
+|---|---|
+| `composer run setup` | Full one-command project setup |
+| `composer run dev` | Start all dev services concurrently (Laravel server, queue, log tailing, Vite) |
+| `composer run test` | Clear config cache and run PHPUnit test suite |
+
+### NPM Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start Vite dev server with HMR |
+| `npm run build` | Build optimized production assets |
+
+### Artisan Commands
+
+| Command | Description |
+|---|---|
+| `php artisan migrate` | Run pending migrations |
+| `php artisan migrate:fresh --seed` | Drop all tables, re-run migrations, and seed data |
+| `php artisan db:seed` | Run all database seeders |
+| `php artisan serve` | Start the built-in PHP development server |
+| `php artisan tinker` | Open the interactive REPL for debugging |
+
+---
+
+## Running Tests
+
+```bash
+composer run test
+# or
+php artisan test
+```
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the **MIT License**.
+
+---
+
+<p align="center">Built by the stockInfo Team</p>
+<p align="center">Brandon Jeremiah Sutedja &bull; Cristian Dion &bull; Gaddiel &bull; Owen</p>
