@@ -30,6 +30,10 @@ class KategoriController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $request->validate([
             'nama' => 'required|string|max:255|unique:kategoris,nama',
         ]);
@@ -46,6 +50,10 @@ class KategoriController extends Controller
      */
     public function update(Request $request, Kategori $kategori)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $request->validate([
             'nama' => 'required|string|max:255|unique:kategoris,nama,' . $kategori->id,
         ]);
@@ -62,6 +70,10 @@ class KategoriController extends Controller
      */
     public function destroy(Kategori $kategori)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         // Check if there are products inside this category
         if ($kategori->produks()->count() > 0) {
             return redirect()->route('kategori.index')->with('error', 'Kategori tidak dapat dihapus karena masih memiliki produk!');

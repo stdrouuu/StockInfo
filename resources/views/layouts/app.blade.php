@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'StockInfo - Admin Panel')</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}?v=2">
     
     <!-- Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -31,7 +32,7 @@
     deleteTarget: '',
     deleteAction: '',
     sidebarOpen: false,
-    showProfileModal: false,
+    showProfileModal: {{ session('password_success') || session('password_error') ? 'true' : 'false' }},
     showEmail: false
 }">
 
@@ -53,7 +54,7 @@
         @include('partials.sidebar')
 
         <!-- Main Content -->
-        <main class="flex-1 lg:ml-64 p-4 sm:p-6 lg:p-10 min-w-0 transition-all duration-300">
+        <main class="flex-1 lg:ml-64 p-3 sm:p-6 lg:p-10 min-w-0 transition-all duration-300">
             <!-- Mobile Header Bar -->
             <div class="flex lg:hidden items-center justify-between bg-white border border-slate-200/60 px-4 py-3 rounded-2xl mb-6 shadow-sm">
                 <div class="flex items-center gap-3">
@@ -79,8 +80,8 @@
                 <div class="flex items-center gap-8">
                     <div @click="showProfileModal = true; showEmail = false" class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
                         <div class="text-right">
-                            <p class="text-sm font-extrabold text-slate-800">{{ session('user.name', 'Administrator') }}</p>
-                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tight">Admin</p>
+                            <p class="text-sm font-extrabold text-slate-800">{{ auth()->user()->name }}</p>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tight">{{ auth()->user()->role }}</p>
                         </div>
                         <img src="{{ asset('storage/images/tokobangunan2.jpg') }}" class="w-10 h-10 rounded-xl shadow-md border-2 border-white object-cover">
                     </div>
@@ -103,7 +104,7 @@
          x-transition:leave-end="opacity-0">
         
         <div @click.away="showModal = false" 
-             :class="modalType === 'add-transaction' || modalType === 'add-proses' ? 'max-w-4xl' : 'max-w-2xl'"
+             :class="modalType === 'add-transaction' || modalType === 'add-proses' || modalType === 'view-image' ? 'max-w-4xl' : 'max-w-2xl'"
              class="bg-white w-full rounded-[32px] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden transition-all duration-300"
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="opacity-0 scale-95"
@@ -187,33 +188,78 @@
             </button>
             
             <!-- Modal Body -->
-            <div class="p-8 text-center">
+            <div class="p-8 text-center" x-data="{ editingPassword: {{ session('password_success') || session('password_error') ? 'true' : 'false' }} }">
+                <!-- Session status for profile password update -->
+                @if(session('password_success'))
+                    <div class="mb-4 p-3.5 bg-emerald-50 border border-emerald-100 text-emerald-700 rounded-2xl text-xs font-bold text-center">
+                        {{ session('password_success') }}
+                    </div>
+                @endif
+                @if(session('password_error'))
+                    <div class="mb-4 p-3.5 bg-rose-50 border border-rose-100 text-rose-700 rounded-2xl text-xs font-bold text-center">
+                        {{ session('password_error') }}
+                    </div>
+                @endif
+
                 <!-- Avatar & Header info -->
                 <div class="relative inline-block mb-4 mt-4">
                     <img src="{{ asset('storage/images/tokobangunan2.jpg') }}" class="w-24 h-24 rounded-[2rem] object-cover shadow-lg shadow-blue-200/50 border border-slate-100">
                     <span class="absolute bottom-0 right-0 w-5 h-5 bg-emerald-500 rounded-full border-4 border-white"></span>
                 </div>
                 
-                <h3 class="text-2xl font-extrabold text-slate-800">{{ session('user.name', 'Administrator') }}</h3>
+                <h3 class="text-2xl font-extrabold text-slate-800">{{ auth()->user()->name }}</h3>
                 <div class="flex items-center justify-center gap-2 mt-1.5">
-                    <span class="text-xs text-slate-400 font-extrabold uppercase tracking-widest">{{ session('user.role', 'admin') }}</span>
+                    <span class="text-xs text-slate-400 font-extrabold uppercase tracking-widest">{{ auth()->user()->role }}</span>
                 </div>
                 
                 <!-- Information Fields -->
                 <div class="mt-8 space-y-4 text-left">
                     <div class="bg-slate-50/60 p-4 rounded-2xl border border-slate-100/50">
                         <label class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest block mb-1">Nama Lengkap</label>
-                        <p class="text-sm font-bold text-slate-700">{{ session('user.name', 'Administrator') }}</p>
+                        <p class="text-sm font-bold text-slate-700">{{ auth()->user()->name }}</p>
+                    </div>
+
+                    <div class="bg-slate-50/60 p-4 rounded-2xl border border-slate-100/50">
+                        <label class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest block mb-1">Username</label>
+                        <p class="text-sm font-bold text-slate-700">{{ auth()->user()->username }}</p>
                     </div>
                     
                     <div class="bg-slate-50/60 p-4 rounded-2xl border border-slate-100/50">
-                        <label class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest block mb-1">Password</label>
-                        <p class="text-sm font-bold text-slate-700 tracking-wider">••••••••</p>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <label class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest block mb-1">Password</label>
+                                <p x-show="!editingPassword" class="text-sm font-bold text-slate-700 tracking-wider">••••••••</p>
+                            </div>
+                            <button type="button" @click="editingPassword = !editingPassword" class="text-xs font-bold text-blue-600 hover:underline">
+                                <span x-show="!editingPassword">Ubah</span>
+                                <span x-show="editingPassword" x-cloak>Batal</span>
+                            </button>
+                        </div>
+                        
+                        <form x-show="editingPassword" x-cloak action="{{ route('profile.password.update') }}" method="POST" class="mt-3 space-y-3">
+                            @csrf
+                            @method('PUT')
+                            <div class="space-y-1">
+                                <label class="text-[8px] font-bold text-slate-400 uppercase tracking-wider block ml-1">Password Saat Ini</label>
+                                <input type="password" name="current_password" required placeholder="Masukkan password saat ini" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500 font-medium text-slate-700">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[8px] font-bold text-slate-400 uppercase tracking-wider block ml-1">Password Baru</label>
+                                <input type="password" name="password" required placeholder="Masukkan password baru" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500 font-medium text-slate-700">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[8px] font-bold text-slate-400 uppercase tracking-wider block ml-1">Konfirmasi Password Baru</label>
+                                <input type="password" name="password_confirmation" required placeholder="Ulangi password baru" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500 font-medium text-slate-700">
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-[#1e40af] hover:bg-blue-800 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-100 hover:shadow-lg transition-all mt-2 uppercase tracking-wider">
+                                Simpan Password
+                            </button>
+                        </form>
                     </div>
                     
                     <div class="bg-slate-50/60 p-4 rounded-2xl border border-slate-100/50">
                         <label class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest block mb-1">Hak Akses</label>
-                        <p class="text-sm font-bold text-slate-700 capitalize">{{ session('user.role', 'admin') }}</p>
+                        <p class="text-sm font-bold text-slate-700 capitalize">{{ auth()->user()->role }}</p>
                     </div>
                 </div>
             </div>

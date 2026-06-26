@@ -3,7 +3,7 @@
 @section('title', 'StockInfo - Data Produk')
 
 @section('content')
-<div class="space-y-8">
+<div class="space-y-5 sm:space-y-8">
     <!-- Flash Messages -->
     @if(session('success'))
         <div class="mb-4 p-4 rounded-xl bg-emerald-50 text-emerald-700 text-sm font-semibold border border-emerald-200 flex items-center gap-3 shadow-sm">
@@ -27,14 +27,14 @@
     @endif
 
     <!-- Page Title Card -->
-    <div class="bg-[#1e40af] rounded-3xl p-8 text-white relative overflow-hidden shadow-xl shadow-blue-900/10">
-        <div class="relative z-10 flex items-center gap-6">
-            <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md">
-                <i class="fas fa-box text-3xl"></i>
+    <div class="bg-[#1e40af] rounded-2xl sm:rounded-3xl p-4 sm:p-8 text-white relative overflow-hidden shadow-xl shadow-blue-900/10">
+        <div class="relative z-10 flex items-center gap-3 sm:gap-6">
+            <div class="bg-white/20 p-2.5 sm:p-4 rounded-xl sm:rounded-2xl backdrop-blur-md flex-shrink-0">
+                <i class="fas fa-box text-lg sm:text-3xl"></i>
             </div>
             <div>
-                <h2 class="text-2xl font-bold">Data Produk</h2>
-                <div class="flex items-center gap-2 text-blue-100 text-xs mt-1">
+                <h2 class="text-lg sm:text-2xl font-bold">Data Produk</h2>
+                <div class="flex items-center gap-2 text-blue-100 text-[9px] sm:text-xs mt-1">
                     <i class="fas fa-home"></i>
                     <i class="fas fa-chevron-right text-[8px]"></i>
                     <span class="font-bold uppercase tracking-wider">Produk</span>
@@ -48,48 +48,50 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
-        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-5">
-            <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
-                <i class="fas fa-boxes-stacked text-xl"></i>
+    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 {{ auth()->user()->isAdmin() ? 'xl:grid-cols-4' : 'xl:grid-cols-3' }} gap-3 sm:gap-4 md:gap-6">
+        <div class="bg-white p-3.5 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-2.5 sm:gap-5">
+            <div class="w-10 h-10 sm:w-14 sm:h-14 bg-blue-50 rounded-xl sm:rounded-2xl flex items-center justify-center text-blue-600 flex-shrink-0">
+                <i class="fas fa-boxes-stacked text-sm sm:text-xl"></i>
             </div>
             <div>
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total SKU</p>
-                <p class="text-2xl font-bold">{{ number_format($totalSKU, 0, ',', '.') }}</p>
+                <p class="text-[9px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Total SKU</p>
+                <p class="text-base sm:text-2xl font-bold">{{ number_format($totalSKU, 0, ',', '.') }}</p>
             </div>
         </div>
-        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-5">
-            <div class="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-600">
-                <i class="fas fa-exclamation-triangle text-xl"></i>
+        <div class="bg-white p-3.5 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-2.5 sm:gap-5">
+            <div class="w-10 h-10 sm:w-14 sm:h-14 bg-rose-50 rounded-xl sm:rounded-2xl flex items-center justify-center text-rose-600 flex-shrink-0">
+                <i class="fas fa-exclamation-triangle text-sm sm:text-xl"></i>
             </div>
             <div>
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Stok Rendah</p>
-                <p class="text-2xl font-bold">{{ $stokRendahCount }}</p>
+                <p class="text-[9px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Stok Rendah</p>
+                <p class="text-base sm:text-2xl font-bold">{{ $stokRendahCount }}</p>
             </div>
         </div>
-        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-5">
-            <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600">
-                <i class="fas fa-truck text-xl"></i>
+        <div class="bg-white p-3.5 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-2.5 sm:gap-5">
+            <div class="w-10 h-10 sm:w-14 sm:h-14 bg-amber-50 rounded-xl sm:rounded-2xl flex items-center justify-center text-amber-600 flex-shrink-0">
+                <i class="fas fa-truck text-sm sm:text-xl"></i>
             </div>
             <div>
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Dalam Proses</p>
-                <p class="text-2xl font-bold">{{ $dalamTransit }}</p>
+                <p class="text-[9px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Dalam Proses</p>
+                <p class="text-base sm:text-2xl font-bold">{{ $dalamTransit }}</p>
             </div>
         </div>
-        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-5">
-            <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
-                <i class="fas fa-hand-holding-dollar text-xl"></i>
+        @if(auth()->user()->isAdmin())
+        <div class="bg-white p-3.5 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-2.5 sm:gap-5">
+            <div class="w-10 h-10 sm:w-14 sm:h-14 bg-emerald-50 rounded-xl sm:rounded-2xl flex items-center justify-center text-emerald-600 flex-shrink-0">
+                <i class="fas fa-hand-holding-dollar text-sm sm:text-xl"></i>
             </div>
-            <div>
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nilai Inventaris</p>
-                <p class="text-2xl font-bold">Rp {{ number_format($invValue, 0, ',', '.') }}</p>
+            <div class="min-w-0">
+                <p class="text-[9px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Nilai Inventaris</p>
+                <p class="text-sm sm:text-2xl font-bold truncate" title="Rp {{ number_format($invValue, 0, ',', '.') }}">Rp {{ number_format($invValue, 0, ',', '.') }}</p>
             </div>
         </div>
+        @endif
     </div>
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden" x-data="{ openFilter: false, openKategori: false }">
+    <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-sm overflow-hidden" x-data="{ openFilter: false, openKategori: false }">
         <!-- Table Toolbar -->
-        <div class="p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 flex-1 w-full">
+        <div class="p-3 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 flex-1 w-full">
                 <!-- Search Form -->
                 <form method="GET" action="{{ route('produk.index') }}" class="flex flex-row items-center gap-2 flex-1 w-full sm:max-w-md">
                     @if(request('filter'))
@@ -99,10 +101,10 @@
                         <input type="hidden" name="kategori_id" value="{{ request('kategori_id') }}">
                     @endif
                     <div class="relative flex-1">
-                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari SKU atau Nama Produk..." class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                        <i class="fas fa-search absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs sm:text-base"></i>
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari SKU atau Nama Produk..." class="w-full pl-8 sm:pl-11 pr-4 py-2 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     </div>
-                    <button type="submit" class="bg-[#1e40af] hover:bg-blue-800 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition-all">
+                    <button type="submit" class="bg-[#1e40af] hover:bg-blue-800 text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all flex-shrink-0">
                         <i class="fas fa-search"></i>
                         <span class="hidden sm:inline">Cari</span>
                     </button>
@@ -110,7 +112,7 @@
                 
                 <!-- Category Filter Dropdown -->
                 <div class="relative w-full sm:w-auto">
-                    <button @click="openKategori = !openKategori" class="w-full sm:w-auto px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold flex items-center justify-between sm:justify-start gap-2 hover:bg-slate-100 transition-all">
+                    <button @click="openKategori = !openKategori" class="w-full sm:w-auto px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-between sm:justify-start gap-2 hover:bg-slate-100 transition-all">
                         <span class="flex items-center gap-2">
                             <i class="fas fa-tags text-slate-400"></i>
                             @php
@@ -134,7 +136,7 @@
 
                 <!-- Filter Dropdown -->
                 <div class="relative w-full sm:w-auto">
-                    <button @click="openFilter = !openFilter" class="w-full sm:w-auto px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold flex items-center justify-between sm:justify-start gap-2 hover:bg-slate-100 transition-all">
+                    <button @click="openFilter = !openFilter" class="w-full sm:w-auto px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-between sm:justify-start gap-2 hover:bg-slate-100 transition-all">
                         <span class="flex items-center gap-2">
                             <i class="fas fa-sort-amount-down text-slate-400"></i>
                             @if(request('filter') === 'tinggi_rendah')
@@ -162,55 +164,69 @@
                 </div>
             </div>
             
-            <button @click="$dispatch('open-product-modal', { mode: 'add', action: '{{ route('produk.store') }}' })" class="w-full md:w-auto bg-[#1e40af] hover:bg-blue-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-200 transition-all">
+            @if(auth()->user()->isAdmin())
+            <button type="button" @click="$dispatch('open-product-modal', { mode: 'add', action: '{{ route('produk.store') }}' })" class="w-full md:w-auto bg-[#1e40af] hover:bg-blue-800 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-200 transition-all relative z-10">
                 <i class="fas fa-plus"></i>
                 <span>Produk Baru</span>
             </button>
+            @endif
         </div>
 
         <!-- Table -->
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
-                    <tr class="bg-[#1e40af] text-white text-[10px] font-black uppercase tracking-widest text-left">
-                        <th class="px-6 py-4 rounded-tl-2xl">No</th>
-                        <th class="px-6 py-4">Gambar</th>
-                        <th class="px-6 py-4">SKU</th>
-                        <th class="px-6 py-4">Nama Produk</th>
-                        <th class="px-6 py-4">Kategori</th>
-                        <th class="px-6 py-4">Stok</th>
-                        <th class="px-6 py-4">Harga</th>
-                        <th class="px-6 py-4 text-center rounded-tr-2xl">Aksi</th>
+                    <tr class="bg-[#1e40af] text-white text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-left">
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 rounded-tl-2xl">No</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4">Gambar</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4">SKU</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4">Nama Produk</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4">Kategori</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4">Stok</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4">Harga</th>
+                        @if(auth()->user()->isAdmin())
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 text-center rounded-tr-2xl">Aksi</th>
+                        @else
+                        <th class="rounded-tr-2xl"></th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse ($produks as $index => $produk)
                      <tr class="hover:bg-slate-50/50 transition-colors">
-                        <td class="px-6 py-5 text-slate-400 text-sm">{{ str_pad($index + 1 + ($produks->currentPage() - 1) * $produks->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
-                        <td class="px-6 py-5">
-                            <div class="w-24 h-24 bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200 shadow-sm flex-shrink-0">
+                        <td class="px-3 py-3 sm:px-6 sm:py-5 text-slate-400 text-[10px] sm:text-sm">{{ str_pad($index + 1 + ($produks->currentPage() - 1) * $produks->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-5">
+                            <div class="w-14 h-14 sm:w-24 sm:h-24 bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200 rounded-xl sm:rounded-2xl shadow-sm flex-shrink-0 group relative cursor-pointer"
+                                 @if ($produk->gambar)
+                                 @click="$dispatch('open-image-modal', { url: '{{ asset('storage/' . $produk->gambar) }}', title: '{{ $produk->nama }}' })"
+                                 title="Klik untuk memperbesar gambar"
+                                 @endif>
                                 @if ($produk->gambar)
-                                    <img src="{{ asset('storage/' . $produk->gambar) }}" class="w-full h-full object-cover">
+                                    <img src="{{ asset('storage/' . $produk->gambar) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200">
+                                    <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <i class="fas fa-search-plus text-white text-base sm:text-lg drop-shadow-md"></i>
+                                    </div>
                                 @else
-                                    <i class="far fa-image text-slate-300 text-xl"></i>
+                                    <i class="far fa-image text-slate-300 text-lg sm:text-xl"></i>
                                 @endif
                             </div>
                         </td>
-                        <td class="px-6 py-5 font-bold text-slate-700 text-sm">{{ $produk->sku }}</td>
-                        <td class="px-6 py-5 text-sm font-bold text-slate-800">{{ $produk->nama }}</td>
-                        <td class="px-6 py-5 text-sm text-slate-600 font-medium">{{ $produk->kategori->nama ?? 'Umum' }}</td>
-                        <td class="px-6 py-5">
+                        <td class="px-3 py-3 sm:px-6 sm:py-5 font-bold text-slate-700 text-xs sm:text-sm">{{ $produk->sku }}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-5 text-xs sm:text-sm font-bold text-slate-800">{{ $produk->nama }}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-5 text-xs sm:text-sm text-slate-600 font-medium">{{ $produk->kategori->nama ?? 'Umum' }}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-5">
                             @if ($produk->isLowStock())
-                                <div class="flex items-center gap-2">
-                                    <span class="text-sm font-bold text-rose-600">{{ $produk->stok }}</span>
-                                    <span class="px-2 py-0.5 bg-rose-50 text-rose-600 text-[9px] font-bold uppercase rounded">Low</span>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-xs sm:text-sm font-bold text-rose-600">{{ $produk->stok }}</span>
+                                    <span class="px-1.5 py-0.5 bg-rose-50 text-rose-600 text-[8px] font-bold uppercase rounded">Low</span>
                                 </div>
                             @else
-                                <span class="text-sm font-bold text-slate-700">{{ $produk->stok }}</span>
+                                <span class="text-xs sm:text-sm font-bold text-slate-700">{{ $produk->stok }}</span>
                             @endif
                         </td>
-                        <td class="px-6 py-5 text-sm font-bold text-slate-700">Rp {{ number_format($produk->harga, 0, ',', '.') }}</td>
-                        <td class="px-6 py-5">
+                        <td class="px-3 py-3 sm:px-6 sm:py-5 text-xs sm:text-sm font-bold text-slate-700">Rp {{ number_format($produk->harga, 0, ',', '.') }}</td>
+                        @if(auth()->user()->isAdmin())
+                        <td class="px-3 py-3 sm:px-6 sm:py-5">
                             <div class="flex justify-center gap-2">
                                 <button @click="$dispatch('open-product-modal', {
                                     mode: 'edit',
@@ -223,18 +239,21 @@
                                     stok_minimum: '{{ $produk->stok_minimum }}',
                                     gambar: '{{ $produk->gambar }}',
                                     action: '{{ route('produk.update', $produk->id) }}'
-                                })" class="p-2 text-slate-400 hover:text-blue-600 transition-colors">
-                                    <i class="far fa-edit"></i>
+                                })" class="p-1.5 text-slate-400 hover:text-blue-600 transition-colors">
+                                    <i class="far fa-edit text-xs sm:text-sm"></i>
                                 </button>
-                                <button @click="showDeleteModal = true; deleteTarget = '{{ $produk->nama }}'; deleteAction = '{{ route('produk.destroy', $produk->id) }}'" class="p-2 text-slate-400 hover:text-rose-600 transition-colors">
-                                    <i class="far fa-trash-alt"></i>
+                                <button @click="showDeleteModal = true; deleteTarget = '{{ $produk->nama }}'; deleteAction = '{{ route('produk.destroy', $produk->id) }}'" class="p-1.5 text-slate-400 hover:text-rose-600 transition-colors">
+                                    <i class="far fa-trash-alt text-xs sm:text-sm"></i>
                                 </button>
                             </div>
                         </td>
+                        @else
+                        <td></td>
+                        @endif
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="px-6 py-8 text-center text-slate-400 font-medium">Tidak ada produk ditemukan.</td>
+                        <td colspan="8" class="px-3 py-6 sm:px-6 sm:py-8 text-center text-slate-400 font-medium text-xs sm:text-sm">Tidak ada produk ditemukan.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -347,16 +366,9 @@
             const ctx = canvas.getContext('2d');
             ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
             
-            canvas.toBlob((blob) => {
+            canvas.toBlob(async (blob) => {
                 const file = new File([blob], 'camera_capture_' + Date.now() + '.jpg', { type: 'image/jpeg' });
-                
-                const inputEl = document.getElementById('file-upload');
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                inputEl.files = dataTransfer.files;
-                
-                this.fileName = file.name;
-                this.previewUrl = URL.createObjectURL(file);
+                await this.handleImageUpload(file);
                 this.stopCamera();
             }, 'image/jpeg', 0.9);
         },
@@ -365,6 +377,87 @@
             if (inputEl) inputEl.value = '';
             this.fileName = '';
             this.previewUrl = '';
+        },
+        async handleImageUpload(file) {
+            if (!file) return;
+            try {
+                this.fileName = 'Mengompres...';
+                // Panggil fungsi kompresi gambar
+                const compressedFile = await this.compressImageFile(file);
+                
+                // Masukkan file hasil kompresi ke input file (#file-upload)
+                const inputEl = document.getElementById('file-upload');
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(compressedFile);
+                inputEl.files = dataTransfer.files;
+                
+                this.fileName = compressedFile.name;
+                this.previewUrl = URL.createObjectURL(compressedFile);
+            } catch (err) {
+                console.error('Gagal mengompres gambar, menggunakan file asli:', err);
+                
+                // Fallback: Jika kompresi gagal, tetap gunakan file asli agar user tetap bisa upload
+                const inputEl = document.getElementById('file-upload');
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                inputEl.files = dataTransfer.files;
+                
+                this.fileName = file.name;
+                this.previewUrl = URL.createObjectURL(file);
+            }
+        },
+        
+        // Fungsi utama untuk melakukan resize dan kompresi gambar menggunakan HTML5 Canvas
+        compressImageFile(file, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                // Membaca file gambar sebagai DataURL
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        // Algoritma menghitung dimensi baru secara proporsional (aspect ratio dipertahankan)
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = Math.round((height * maxWidth) / width);
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = Math.round((width * maxHeight) / height);
+                                height = maxHeight;
+                            }
+                        }
+
+                        // Menggambar ulang gambar ke Canvas dengan dimensi baru yang lebih kecil
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Konversi gambar di Canvas menjadi Blob JPEG dengan kualitas yang dioptimalkan (70%)
+                        canvas.toBlob((blob) => {
+                            if (blob) {
+                                // Bungkus kembali blob menjadi objek File siap upload
+                                const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, '') + '_compressed.jpg', {
+                                    type: 'image/jpeg',
+                                    lastModified: Date.now()
+                                });
+                                resolve(compressedFile);
+                            } else {
+                                reject(new Error('Konversi canvas ke blob gagal'));
+                            }
+                        }, 'image/jpeg', quality);
+                    };
+                    img.onerror = (err) => reject(err);
+                };
+                reader.onerror = (err) => reject(err);
+            });
         }
      }"
      @open-product-modal.window="
@@ -407,7 +500,7 @@
                        :class="isSkuDup() ? 'border-rose-300 focus:ring-rose-500 focus:border-rose-400 bg-rose-50/20 text-rose-700' : 'border-slate-200 focus:ring-blue-500 focus:border-blue-400'"
                        class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm text-slate-600 focus:outline-none transition-all">
                 <template x-if="isSkuDup()">
-                    <p class="text-xs text-rose-600 font-semibold flex items-center gap-1.5 mt-1.5 animate-pulse">
+                    <p class="text-xs text-rose-600 font-semibold flex items-center gap- 1.5 mt-1.5 animate-pulse">
                         <i class="fas fa-exclamation-circle text-rose-500"></i>
                         <span>No. SKU ini sudah pernah digunakan oleh produk lain!</span>
                     </p>
@@ -428,7 +521,7 @@
             </div>
             <div class="space-y-2">
                 <label class="text-[10px] font-black text-slate-800 uppercase tracking-wider">Jumlah Produk (Stok)</label>
-                <input type="number" name="stok" x-model="stok" readonly class="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-400 cursor-not-allowed focus:outline-none transition-all">
+                <input type="number" name="stok" x-model="stok" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
             </div>
 
             <div class="space-y-2">
@@ -468,8 +561,7 @@
                            @change="
                                const file = $event.target.files[0];
                                if (file) {
-                                   fileName = file.name;
-                                   previewUrl = URL.createObjectURL(file);
+                                   handleImageUpload(file);
                                } else {
                                    fileName = '';
                                    previewUrl = gambar ? '/storage/' + gambar : '';
@@ -480,13 +572,7 @@
                            @change="
                                const file = $event.target.files[0];
                                if (file) {
-                                   fileName = file.name;
-                                   previewUrl = URL.createObjectURL(file);
-                                   
-                                   const inputEl = document.getElementById('file-upload');
-                                   const dataTransfer = new DataTransfer();
-                                   dataTransfer.items.add(file);
-                                   inputEl.files = dataTransfer.files;
+                                   handleImageUpload(file);
                                }
                            ">
                     <label for="file-upload" class="w-full h-24 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50 flex items-center justify-center flex-col gap-2 hover:bg-slate-100 transition-all cursor-pointer group">
@@ -530,6 +616,31 @@
                     class="px-8 py-2.5 text-white rounded-xl text-sm font-bold transition-all">Simpan</button>
         </div>
     </form>
+</div>
+
+<!-- Image Viewer Modal Popup -->
+<div x-show="modalType === 'view-image'" 
+     x-data="{ imageUrl: '', imageTitle: '' }"
+     @open-image-modal.window="
+        showModal = true;
+        modalType = 'view-image';
+        imageUrl = $event.detail.url;
+        imageTitle = $event.detail.title;
+     "
+     x-cloak
+     class="space-y-4">
+    <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+        <h3 class="text-xs font-black text-slate-800 uppercase tracking-widest" x-text="imageTitle"></h3>
+        <button type="button" @click="showModal = false" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 hover:text-slate-600 hover:bg-slate-200 transition-colors">
+            <i class="fas fa-times text-sm"></i>
+        </button>
+    </div>
+    <div class="w-full flex items-center justify-center overflow-hidden bg-transparent">
+        <img :src="imageUrl" class="w-full max-h-[75vh] object-contain rounded-2xl shadow-xl">
+    </div>
+    <div class="flex justify-end pt-2">
+        <button type="button" @click="showModal = false" class="px-6 py-2 bg-slate-100 text-slate-800 rounded-xl text-xs font-bold hover:bg-slate-200 transition-all">Tutup</button>
+    </div>
 </div>
 @endsection
 

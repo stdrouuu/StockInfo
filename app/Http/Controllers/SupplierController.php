@@ -35,6 +35,10 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $request->validate([
             'nama' => 'required|string|max:255',
             'kontak_person' => 'required|string|max:255',
@@ -61,6 +65,10 @@ class SupplierController extends Controller
      */
     public function update(Request $request, Supplier $supplier)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $request->validate([
             'nama' => 'required|string|max:255',
             'kontak_person' => 'required|string|max:255',
@@ -79,6 +87,10 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         // Check if there are transactions associated with this supplier
         if ($supplier->transaksis()->count() > 0) {
             return redirect()->route('supplier.index')->with('error', 'Supplier tidak dapat dihapus karena memiliki riwayat transaksi!');

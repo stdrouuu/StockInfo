@@ -13,16 +13,18 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        // RBAC Role: Admin
         User::create([
             'name'     => 'Administrator',
-            'email'    => 'admin@stockinfo.com',
+            'username' => 'admin_utama',
             'password' => Hash::make('admin123'),
             'role'     => 'admin',
         ]);
 
+        // RBAC Role: Staff
         User::create([
-            'name'     => 'Staff Gudang',
-            'email'    => 'staff@stockinfo.com',
+            'name'     => 'Staff Toko 1',
+            'username' => 'staff_toko',
             'password' => Hash::make('staff123'),
             'role'     => 'staff',
         ]);

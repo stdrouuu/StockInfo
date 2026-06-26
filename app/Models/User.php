@@ -18,7 +18,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
+        'username',
         'password',
         'role',
     ];
@@ -39,13 +39,16 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
 
     /**
      * Check if user is admin.
+     * 
+     * Digunakan untuk pengecekan cepat apakah user memiliki role 'admin'.
+     * Sangat berguna di Blade template (misal: @if(auth()->user()->isAdmin())) 
+     * atau di dalam Controller untuk proteksi logic/fitur tambahan.
      */
     public function isAdmin(): bool
     {

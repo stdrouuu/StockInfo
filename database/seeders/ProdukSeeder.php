@@ -32,7 +32,7 @@ class ProdukSeeder extends Seeder
                 'stok' => 850,
                 'harga' => 65000,
                 'stok_minimum' => 100,
-                'gambar' => 'produk/sementr50.jpg',
+                'gambar' => 'produk/semen3.jpg',
             ],
             [
                 'sku' => 'SM-002-MP',
@@ -41,7 +41,7 @@ class ProdukSeeder extends Seeder
                 'stok' => 620,
                 'harga' => 62000,
                 'stok_minimum' => 80,
-                'gambar' => 'produk/semen.jpg',
+                'gambar' => 'produk/semen2.jpg',
             ],
             [
                 'sku' => 'SM-003-HC',
@@ -61,7 +61,7 @@ class ProdukSeeder extends Seeder
                 'stok' => 15,
                 'harga' => 45000,
                 'stok_minimum' => 50,
-                'gambar' => 'produk/besi.jpg',
+                'gambar' => 'produk/besi4.jpg',
             ],
             [
                 'sku' => 'BS-003-10MM',
@@ -70,7 +70,7 @@ class ProdukSeeder extends Seeder
                 'stok' => 500,
                 'harga' => 95000,
                 'stok_minimum' => 100,
-                'gambar' => 'produk/besi.jpg',
+                'gambar' => 'produk/besi3.jpg',
             ],
             [
                 'sku' => 'BS-004-12MM',
@@ -79,7 +79,7 @@ class ProdukSeeder extends Seeder
                 'stok' => 320,
                 'harga' => 120000,
                 'stok_minimum' => 80,
-                'gambar' => 'produk/besi.jpg',
+                'gambar' => 'produk/besi2.jpg',
             ],
             [
                 'sku' => 'BS-005-WM',
@@ -99,7 +99,7 @@ class ProdukSeeder extends Seeder
                 'stok' => 180,
                 'harga' => 285000,
                 'stok_minimum' => 30,
-                'gambar' => 'produk/cat.jpg',
+                'gambar' => 'produk/cat2.jpg',
             ],
             [
                 'sku' => 'CT-002-JTN',

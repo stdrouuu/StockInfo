@@ -83,6 +83,10 @@ class ProdukController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $request->validate([
             'nama' => 'required|string|max:255',
             'sku' => 'required|string|unique:produks,sku|max:255',
@@ -120,6 +124,10 @@ class ProdukController extends Controller
      */
     public function update(Request $request, Produk $produk)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $request->validate([
             'nama' => 'required|string|max:255',
             'sku' => 'required|string|max:255|unique:produks,sku,'.$produk->id,
@@ -151,6 +159,10 @@ class ProdukController extends Controller
      */
     public function destroy(Produk $produk)
     {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         // Delete image file
         if ($produk->gambar && Storage::disk('public')->exists($produk->gambar)) {
             Storage::disk('public')->delete($produk->gambar);

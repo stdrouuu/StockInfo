@@ -14,9 +14,6 @@ use Illuminate\Support\Facades\Auth;
  
 class TransaksiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -66,9 +63,6 @@ class TransaksiController extends Controller
         ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -76,8 +70,8 @@ class TransaksiController extends Controller
             'tanggal' => 'required|date',
             'keterangan' => 'nullable|string',
             'supplier_id' => 'required_if:tipe,Masuk|exists:suppliers,id|nullable',
-            'tujuan' => 'required_if:tipe,Keluar|string|nullable',
-            'alamat' => 'required_if:tipe,Keluar|string|nullable',
+            'tujuan' => 'nullable|string',
+            'alamat' => 'nullable|string',
             'items' => 'required|array|min:1',
             'items.*.produk_id' => 'required|exists:produks,id',
             'items.*.qty' => 'required|integer|min:1',
@@ -163,11 +157,15 @@ class TransaksiController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Transaksi $transaksi)
     {
+        // RBAC (Defense in Depth): Walaupun route sudah dilindungi middleware 'role:admin',
+        // pengecekan di controller tetap dilakukan sebagai lapisan keamanan tambahan (double confirmation/safety).
+        // Penghapusan transaksi adalah aksi berisiko tinggi karena dapat memanipulasi stok.
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         try {
             DB::beginTransaction();
 
@@ -201,9 +199,9 @@ class TransaksiController extends Controller
      */
     public function cetakSuratJalan(Transaksi $transaksi)
     {
-        // 1. Pastikan transaksi bertipe keluar
-        if (strtolower($transaksi->tipe) !== 'keluar') {
-            return redirect()->back()->with('error', 'Surat Jalan hanya dapat dicetak untuk Transaksi Keluar!');
+        // 1. Pastikan transaksi bertipe keluar dan bukan Kerugian Operasional (Hasil Stok Opname)
+        if (strtolower($transaksi->tipe) !== 'keluar' || $transaksi->tujuan === 'Kerugian Operasional') {
+            return redirect()->back()->with('error', 'Surat Jalan tidak dapat dicetak untuk tipe transaksi ini!');
         }
 
         // 2. Hubungkan data Proses secara otomatis jika belum dibuat

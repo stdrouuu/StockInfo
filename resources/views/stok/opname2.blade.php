@@ -3,7 +3,7 @@
 @section('title', 'StockInfo - Form Input Stok Opname')
 
 @section('content')
-<div class="space-y-8">
+<div class="space-y-5 sm:space-y-8">
     <!-- Flash Messages -->
     @if(session('success'))
         <div class="p-4 rounded-xl bg-emerald-50 text-emerald-700 text-sm font-semibold border border-emerald-200">
@@ -16,16 +16,16 @@
         </div>
     @endif
 
-    <div class="bg-[#d35400] rounded-3xl p-8 text-white relative overflow-hidden shadow-xl shadow-orange-900/10">
-        <div class="relative z-10 flex items-center justify-between gap-6">
-            <div class="flex items-center gap-6">
-                <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md">
-                    <i class="fas fa-clipboard-check text-3xl"></i>
+    <div class="bg-[#d35400] rounded-2xl sm:rounded-3xl p-4 sm:p-8 text-white relative overflow-hidden shadow-xl shadow-orange-900/10">
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
+            <div class="flex items-center gap-4 sm:gap-6">
+                <div class="bg-white/20 p-3 sm:p-4 rounded-xl sm:rounded-2xl backdrop-blur-md">
+                    <i class="fas fa-clipboard-check text-2xl sm:text-3xl"></i>
                 </div>
 
                 <div>
-                    <h2 class="text-2xl font-bold">Input Stok Opname</h2>
-                    <div class="flex items-center gap-2 text-orange-100 text-[10px] mt-1 font-bold">
+                    <h2 class="text-lg sm:text-2xl font-bold">Input Stok Opname</h2>
+                    <div class="flex items-center gap-2 text-orange-100 text-[9px] sm:text-[10px] mt-1 font-bold">
                         <i class="fas fa-home"></i>
                         <i class="fas fa-chevron-right text-[8px]"></i>
                         <span class="uppercase">STOK OPNAME</span>
@@ -35,15 +35,15 @@
                 </div>
             </div>
 
-            <div class="bg-white/10 px-5 py-3 rounded-2xl backdrop-blur-md text-right">
-                <span class="text-xs text-orange-100 font-bold block">Periode Aktif</span>
-                <span class="text-sm font-black">{{ $periode->tanggal_mulai->locale('id')->isoFormat('DD MMM YYYY') }} - {{ $periode->tanggal_selesai->locale('id')->isoFormat('DD MMM YYYY') }}</span>
+            <div class="bg-white/10 px-4 py-2.5 md:px-5 md:py-3 rounded-xl md:rounded-2xl backdrop-blur-md text-left md:text-right">
+                <span class="text-[10px] md:text-xs text-orange-100 font-bold block">Periode Aktif</span>
+                <span class="text-xs md:text-sm font-black">{{ $periode->tanggal_mulai->locale('id')->isoFormat('DD MMM YYYY') }} - {{ $periode->tanggal_selesai->locale('id')->isoFormat('DD MMM YYYY') }}</span>
             </div>
         </div>
-        <i class="fas fa-clipboard-check absolute -right-8 -bottom-10 text-[180px] opacity-10 rotate-12"></i>
+        <i class="fas fa-clipboard-check absolute -right-8 -bottom-10 text-[120px] sm:text-[180px] opacity-10 rotate-12"></i>
     </div>
 
-    <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden p-6">
+    <div class="bg-white rounded-2xl sm:rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden p-4 sm:p-6">
         @if($periode->is_adjusted)
             <div class="mb-6 p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3 text-emerald-800">
@@ -57,7 +57,7 @@
                 </div>
             </div>
         @else
-            <div class="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="mb-6 p-3 sm:p-4 bg-blue-50 border border-blue-100 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div class="flex items-center gap-3 text-blue-800">
                     <div class="p-2 bg-[#2d46b9] text-white rounded-xl">
                         <i class="fas fa-exclamation-triangle text-lg"></i>
@@ -67,81 +67,85 @@
                         <p class="text-xs text-blue-600 font-medium">Jika pelaporan stok opname sudah selesai, silahkan sinkronkan stok opname dengan data produk utama.</p>
                     </div>
                 </div>
-                <button type="button" @click="$dispatch('open-sync-modal', { action: '{{ route('stok.adjustStock', $periode->id) }}', message: 'Apakah Anda yakin ingin menyinkronkan stok untuk periode ini? Tindakan ini akan memperbarui stok produk utama dan mencatat selisihnya sebagai kerugian/penyesuaian operasional.' })" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#2d46b9] hover:bg-blue-800 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/10 hover:shadow-lg transition-all shrink-0">
+                @if(auth()->user()->isAdmin())
+                <button type="button" @click="$dispatch('open-sync-modal', { action: '{{ route('stok.adjustStock', $periode->id) }}', message: 'Apakah Anda yakin ingin menyinkronkan stok untuk periode ini? Tindakan ini akan memperbarui stok produk utama and mencatat selisihnya sebagai kerugian/penyesuaian operasional.' })" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#2d46b9] hover:bg-blue-800 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/10 hover:shadow-lg transition-all shrink-0">
                     <i class="fas fa-sync-alt"></i> Terapkan & Sinkronkan Stok
                 </button>
+                @endif
             </div>
         @endif
-        <table class="w-full text-left">
-            <thead>
-                <tr class="bg-[#1e40af] text-white text-[10px] font-black uppercase tracking-widest">
-                    <th class="px-6 py-4 rounded-tl-2xl">No</th>
-                    <th class="px-6 py-4">Nomor SKU</th>
-                    <th class="px-6 py-4">Produk</th>
-                    <th class="px-6 py-4 text-center">Stok Sistem</th>
-                    <th class="px-6 py-4 text-center">Stok Fisik Terlapor</th>
-                    <th class="px-6 py-4 text-center">Selisih</th>
-                    <th class="px-6 py-4 text-center">Status</th>
-                    <th class="px-6 py-4 text-center">Keterangan</th>
-                    <th class="px-6 py-4 rounded-tr-2xl text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-50">
-                @forelse($items as $index => $item)
-                <tr class="hover:bg-slate-50/50">
-                    <td class="px-6 py-6 text-sm text-slate-400 font-medium">{{ str_pad($index + 1 + ($items->currentPage() - 1) * $items->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
-                    <td class="px-6 py-6 text-sm font-bold text-blue-700">{{ $item->produk->sku }}</td>
-                    <td class="px-6 py-6 text-sm font-semibold text-slate-600">{{ $item->produk->nama }}</td>
-                    <td class="px-6 py-6 text-sm font-black text-slate-800 text-center">{{ $item->stok_sistem }}</td>
-                    <td class="px-6 py-6 text-sm font-medium text-slate-500 text-center">{{ $item->stok_fisik }}</td>
-                    <td class="px-6 py-6 text-sm font-black text-center {{ $item->selisih < 0 ? 'text-rose-500' : ($item->selisih > 0 ? 'text-emerald-500' : 'text-slate-600') }}">
-                        {{ $item->selisih > 0 ? '+' : '' }}{{ $item->selisih }}
-                    </td>
-                    <td class="px-6 py-6 text-center">
-                        @if($item->catatan === 'belum dilaporkan')
-                            <span class="px-3 py-1 bg-amber-50 text-amber-600 text-[10px] font-black rounded-full uppercase">BELUM</span>
-                        @elseif($item->selisih === 0)
-                            <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-full uppercase">SESUAI</span>
-                        @else
-                            <span class="px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black rounded-full uppercase font-black">SELISIH</span>
-                        @endif
-                    </td>
-                    <td class="px-6 py-6 text-sm text-slate-400 text-center italic">{{ $item->catatan }}</td>
-                    <td class="px-6 py-6 text-center">
-                        <button @click="$dispatch('open-report-modal', {
-                            nama: '{{ $item->produk->nama }}',
-                            sku: '{{ $item->produk->sku }}',
-                            stok_sistem: '{{ $item->stok_sistem }}',
-                            stok_fisik: '{{ $item->stok_fisik }}',
-                            catatan: '{{ $item->catatan === 'belum dilaporkan' ? '' : $item->catatan }}',
-                            action: '{{ route('stok.reportItem', $item->id) }}'
-                        })" class="bg-[#1e40af] text-white text-[10px] font-black px-4 py-1.5 rounded-lg uppercase shadow-lg shadow-blue-100 hover:bg-blue-800 transition-colors">Laporkan</button>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="9" class="px-6 py-8 text-center text-slate-400 font-medium">Tidak ada barang dalam periode stok opname ini.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+        <div class="w-full overflow-x-auto" style="-webkit-overflow-scrolling: touch;">
+            <table class="w-full text-left min-w-[900px]">
+                <thead>
+                    <tr class="bg-[#1e40af] text-white text-[9px] sm:text-[10px] font-black uppercase tracking-widest">
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 rounded-tl-2xl whitespace-nowrap">No</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">Nomor SKU</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">Produk</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 text-center whitespace-nowrap">Stok Sistem</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 text-center whitespace-nowrap">Stok Fisik Terlapor</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 text-center whitespace-nowrap">Selisih</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 text-center whitespace-nowrap">Status</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 text-center whitespace-nowrap">Keterangan</th>
+                        <th class="px-3 py-2 sm:px-6 sm:py-4 rounded-tr-2xl text-center whitespace-nowrap">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @forelse($items as $index => $item)
+                    <tr class="hover:bg-slate-50/50">
+                        <td class="px-3 py-3 sm:px-6 sm:py-6 text-xs sm:text-sm text-slate-400 font-medium whitespace-nowrap">{{ str_pad($index + 1 + ($items->currentPage() - 1) * $items->perPage(), 2, '0', STR_PAD_LEFT) }}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-6 text-xs sm:text-sm font-bold text-blue-700 whitespace-nowrap">{{ $item->produk->sku }}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-6 text-xs sm:text-sm font-semibold text-slate-600 whitespace-nowrap">{{ $item->produk->nama }}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-6 text-xs sm:text-sm font-black text-slate-800 text-center whitespace-nowrap">{{ $item->stok_sistem }}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-6 text-xs sm:text-sm font-medium text-slate-500 text-center whitespace-nowrap">{{ $item->stok_fisik }}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-6 text-xs sm:text-sm font-black text-center whitespace-nowrap {{ $item->selisih < 0 ? 'text-rose-500' : ($item->selisih > 0 ? 'text-emerald-500' : 'text-slate-600') }}">
+                            {{ $item->selisih > 0 ? '+' : '' }}{{ $item->selisih }}
+                        </td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-6 text-center whitespace-nowrap">
+                            @if($item->catatan === 'belum dilaporkan')
+                                <span class="px-2 py-0.5 sm:px-3 sm:py-1 bg-amber-50 text-amber-600 text-[8px] sm:text-[10px] font-black rounded-full uppercase">BELUM</span>
+                            @elseif($item->selisih === 0)
+                                <span class="px-2 py-0.5 sm:px-3 sm:py-1 bg-emerald-50 text-emerald-600 text-[8px] sm:text-[10px] font-black rounded-full uppercase">SESUAI</span>
+                            @else
+                                <span class="px-2 py-0.5 sm:px-3 sm:py-1 bg-rose-50 text-rose-600 text-[8px] sm:text-[10px] font-black rounded-full uppercase">SELISIH</span>
+                            @endif
+                        </td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-6 text-xs sm:text-sm text-slate-400 text-center italic whitespace-nowrap">{{ $item->catatan }}</td>
+                        <td class="px-3 py-3 sm:px-6 sm:py-6 text-center whitespace-nowrap">
+                            <button @click="$dispatch('open-report-modal', {
+                                nama: '{{ $item->produk->nama }}',
+                                sku: '{{ $item->produk->sku }}',
+                                stok_sistem: '{{ $item->stok_sistem }}',
+                                stok_fisik: '{{ $item->stok_fisik }}',
+                                catatan: '{{ $item->catatan === 'belum dilaporkan' ? '' : $item->catatan }}',
+                                action: '{{ route('stok.reportItem', $item->id) }}'
+                            })" class="bg-[#1e40af] text-white text-[8px] sm:text-[10px] font-black px-2.5 py-1 sm:px-4 sm:py-1.5 rounded-lg uppercase shadow-lg shadow-blue-100 hover:bg-blue-800 transition-colors">Laporkan</button>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="9" class="px-3 py-6 sm:px-6 sm:py-8 text-center text-slate-400 font-medium text-xs sm:text-sm">Tidak ada barang dalam periode stok opname ini.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
         <!-- Pagination -->
-        <div class="mt-8 flex items-center justify-between">
-            <p class="text-xs text-slate-400 font-medium">
+        <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <p class="text-[11px] sm:text-xs text-slate-400 font-medium">
                 Menampilkan {{ $items->firstItem() ?? 0 }}-{{ $items->lastItem() ?? 0 }} dari {{ $items->total() }} Produk
             </p>
             <div class="flex items-center gap-2">
                 @if ($items->onFirstPage())
-                    <span class="px-4 py-2 border border-slate-100 rounded-xl text-xs font-bold text-slate-300 cursor-not-allowed">Sebelumnya</span>
+                    <span class="px-3 py-1.5 sm:px-4 sm:py-2 border border-slate-100 rounded-xl text-[11px] sm:text-xs font-bold text-slate-300 cursor-not-allowed">Sebelumnya</span>
                 @else
-                    <a href="{{ $items->appends(request()->query())->previousPageUrl() }}" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all">Sebelumnya</a>
+                    <a href="{{ $items->appends(request()->query())->previousPageUrl() }}" class="px-3 py-1.5 sm:px-4 sm:py-2 border border-slate-200 rounded-xl text-[11px] sm:text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all">Sebelumnya</a>
                 @endif
 
                 @if ($items->hasMorePages())
-                    <a href="{{ $items->appends(request()->query())->nextPageUrl() }}" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all">Selanjutnya</a>
+                    <a href="{{ $items->appends(request()->query())->nextPageUrl() }}" class="px-3 py-1.5 sm:px-4 sm:py-2 border border-slate-200 rounded-xl text-[11px] sm:text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all">Selanjutnya</a>
                 @else
-                    <span class="px-4 py-2 border border-slate-100 rounded-xl text-xs font-bold text-slate-300 cursor-not-allowed">Selanjutnya</span>
+                    <span class="px-3 py-1.5 sm:px-4 sm:py-2 border border-slate-100 rounded-xl text-[11px] sm:text-xs font-bold text-slate-300 cursor-not-allowed">Selanjutnya</span>
                 @endif
             </div>
         </div>

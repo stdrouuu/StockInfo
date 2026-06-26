@@ -28,6 +28,12 @@ class StokOpnameController extends Controller
      */
     public function storePeriode(Request $request)
     {
+        // RBAC: Hanya Admin yang dapat membuat periode opname baru.
+        // Hal ini untuk mencegah staff memanipulasi waktu/jadwal stok opname untuk menyembunyikan selisih stok.
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $request->validate([
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
@@ -179,6 +185,12 @@ class StokOpnameController extends Controller
      */
     public function adjustStock(Request $request, StokOpnamePeriode $periode)
     {
+        // RBAC: Menyelaraskan/Menyesuaikan stok (Adjust Stock) merupakan keputusan finansial/inventaris yang krusial.
+        // Hanya Admin yang diperbolehkan mengeksekusi penyesuaian ini setelah memverifikasi laporan selisih opname.
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         // 1. Pastikan belum pernah disesuaikan
         if ($periode->is_adjusted) {
             return redirect()->back()->with('error', 'Stok untuk periode ini sudah disesuaikan sebelumnya.');
@@ -340,6 +352,11 @@ class StokOpnameController extends Controller
      */
     public function updatePeriode(Request $request, StokOpnamePeriode $periode)
     {
+        // RBAC: Hanya Admin yang boleh memodifikasi detail periode opname.
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $request->validate([
             'keterangan' => 'required|string',
         ]);
@@ -356,6 +373,12 @@ class StokOpnameController extends Controller
      */
     public function destroyPeriode(StokOpnamePeriode $periode)
     {
+        // RBAC: Menghapus riwayat stok opname adalah tindakan destruktif.
+        // Dibatasi hanya untuk Admin demi menjaga integritas data audit.
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         try {
             DB::beginTransaction();
 
